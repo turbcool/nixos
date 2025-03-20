@@ -6,12 +6,11 @@
   };
   outputs = { self, nixpkgs, disko, ... }:
     let
-      # TODO: Adjust these values to your needs
       system = "x86_64-linux";
-      hostName = "oneclick";
+      hostName = "nixos";
       rootAuthorizedKeys = [
         # This user can ssh using `ssh root@<ip>`
-        "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIHQRxPoqlThDrkR58pKnJgmeWPY9/wleReRbZ2MOZRyd"
+        # "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIHQRxPoqlThDrkR58pKnJgmeWPY9/wleReRbZ2MOZRyd"
       ];
     in
     {
