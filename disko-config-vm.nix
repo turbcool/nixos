@@ -1,32 +1,32 @@
 {
-  disko.devices.disk.vda = {
+  disko.devices.disk.main = {
     type = "disk";
     device = "/dev/vda";
     content = {
-      type = "table";
-      format = "gpt";
-      partitions = [
-        {
-          name = "root";
-          start = "1MiB";
-          end = "10GiB";
+      type = "gpt";
+      partitions = {
+        MBR = {
+          type = "EF02"; # for grub MBR
+          size = "1M";
+        };
+        ESP = {
+          type = "EF00";
+          size = "500M";
+          content = {
+            type = "filesystem";
+            format = "vfat";
+            mountpoint = "/boot";
+          };
+        };
+        root = {
+          size = "100%";
           content = {
             type = "filesystem";
             format = "ext4";
             mountpoint = "/";
           };
-        }
-        {
-          name = "home";
-          start = "10GiB";
-          end = "100%";
-          content = {
-            type = "filesystem";
-            format = "ext4";
-            mountpoint = "/home";
-          };
-        }
-      ];
+        };
+      };
     };
   };
 }
