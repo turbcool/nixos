@@ -121,8 +121,11 @@
 
      lazygit
      lazydocker
+     lutris
+     prismlauncher
   ];
 
+  programs.steam.enable = true;
   programs.git = {
      enable = true;
      config = {
