@@ -123,6 +123,18 @@
      lazydocker
   ];
 
+  programs.git = {
+     enable = true;
+     config = {
+       user = {
+         email = "turbcool@gmail.com";
+         name = "Ilya Naidanov";
+       };
+       push = { autoSetupRemote = true; };
+     };
+  };
+
+
 #  networking.proxy.default = "http://127.0.0.1:20172";
 
   fonts = {
