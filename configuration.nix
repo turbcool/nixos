@@ -4,6 +4,13 @@
 
 { config, pkgs, ... }:
 
+let
+  pkgsUnstable = import <nixos-unstable> {
+    # inherit the configuration from your main stable channel
+    # ensures things like `allowUnfree` are respected if needed by the unstable package    
+    config = config.nixpkgs.config;
+  };
+in
 {
   imports =
     [ # Include the results of the hardware scan.
@@ -107,7 +114,7 @@
      brave
      git
      telegram-desktop
-     aider-chat
+     pkgsUnstable.aider-chat
 
      networkmanagerapplet
      networkmanager-l2tp
