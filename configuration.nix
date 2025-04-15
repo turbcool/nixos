@@ -27,10 +27,12 @@ in
       ./modules/hardware.nix
       ./modules/networking.nix
       ./modules/user.nix
-      # Pass pkgsUnstable to modules that need it
-      (import ./modules/packages.nix { inherit pkgsUnstable; })
+      ./modules/packages.nix # Include packages module normally
       ./modules/desktop.nix
     ];
+
+  # Pass custom arguments like pkgsUnstable to modules
+  _module.args = { inherit pkgsUnstable; };
 
   # Pass pkgsUnstable down to modules that might need it implicitly
   # This makes pkgsUnstable available within the modules via the top-level args
