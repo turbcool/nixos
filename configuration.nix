@@ -6,16 +6,7 @@
 # your system.  Help is available in the configuration.nix(5) man page
 # and in the NixOS manual (accessible by running ‘nixos-help’).
 
-{ config, pkgs, lib, ... }: # Added lib for potential future use
-
-let
-  # Import unstable packages channel
-  pkgsUnstable = import <nixos-unstable> {
-    # inherit the configuration from your main stable channel
-    # ensures things like `allowUnfree` are respected if needed by the unstable package
-    config = config.nixpkgs.config;
-  };
-in
+# Note: The { config, pkgs, lib, pkgsUnstable, ... } arguments are now implicitly passed by nixosSystem in flake.nix
 {
   imports =
     [
@@ -32,9 +23,10 @@ in
     ];
 
   # Pass custom arguments like pkgsUnstable to modules
-  _module.args = { inherit pkgsUnstable; };
+  # pkgsUnstable is now passed via specialArgs from the flake
+  _module.args = { inherit pkgsUnstable; }; # This line should still work as pkgsUnstable is in specialArgs
 
-  # Pass pkgsUnstable down to modules that might need it implicitly
+  # Pass pkgsUnstable down to modules that might need it implicitly (handled by specialArgs now)
   # This makes pkgsUnstable available within the modules via the top-level args
   # Note: Explicitly passing via import like above (packages.nix) is often clearer.
   # Choose one method or be consistent. Let's keep the explicit pass for packages.nix
