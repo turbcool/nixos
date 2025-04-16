@@ -33,8 +33,7 @@
 
      xdg-desktop-portal-gtk # Dependency for portals, often needed by desktop apps
 
-     yazi
-     dolphin
+     pkgsUnstable.yazi
 
      lazygit
      lazydocker
@@ -42,6 +41,7 @@
      prismlauncher
   ];
 
+  programs.thunar.enable = true;
   programs.steam.enable = true;
 
   programs.neovim = {
