@@ -3,7 +3,7 @@
 
   inputs = {
     # Nixpkgs stable branch
-    nixpkgs.url = "github:NixOS/nixpkgs/nixos-24.05"; # Or your preferred stable branch
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-24.11"; # Or your preferred stable branch
 
     # Nixpkgs unstable branch
     nixpkgs-unstable.url = "github:NixOS/nixpkgs/nixos-unstable";
