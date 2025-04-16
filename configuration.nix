@@ -23,8 +23,8 @@
     ];
 
   # Pass custom arguments like pkgsUnstable to modules
-  # pkgsUnstable is now passed via specialArgs from the flake
-  _module.args = { inherit pkgsUnstable; }; # This line should still work as pkgsUnstable is in specialArgs
+  # pkgsUnstable is now passed via specialArgs from the flake, making it available to modules.
+  # The line below is removed as pkgsUnstable is not defined in this scope and specialArgs handles the injection.
 
   # Pass pkgsUnstable down to modules that might need it implicitly (handled by specialArgs now)
   # This makes pkgsUnstable available within the modules via the top-level args
