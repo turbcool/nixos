@@ -39,7 +39,7 @@
 
     in
     {
-      nixosConfigurations.nixos = hydenixConfig;
+#      nixosConfigurations.nixos = hydenixConfig;
       nixosConfigurations.${HOSTNAME} = hydenixConfig;
     };
 }
