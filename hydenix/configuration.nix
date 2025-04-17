@@ -110,9 +110,9 @@ in
   };
 
   #! EDIT THESE VALUES (must match users defined above)
-  users.users.hydenix = {
+  users.users.turb = {
     isNormalUser = true; # Regular user account
-    initialPassword = "hydenix"; # Default password (CHANGE THIS after first login with passwd)
+    initialPassword = "1"; # Default password (CHANGE THIS after first login with passwd)
     extraGroups = [
       "wheel" # For sudo access
       "networkmanager" # For network management
