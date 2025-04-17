@@ -26,6 +26,7 @@
   };
 
   xdg.portal.enable = true;
+  xdg.portal.xdgOpenUsePortal = true;
   xdg.portal.extraPortals = [ pkgs.xdg-desktop-portal-gtk ]; # Ensure this matches package list if needed elsewhere
 
   programs.hyprland = {

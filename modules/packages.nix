@@ -43,6 +43,8 @@
 
   programs.thunar.enable = true;
   programs.steam.enable = true;
+  programs.alvr.enable = true;
+  programs.alvr.openFirewall = true;
 
   programs.neovim = {
     enable = true;
