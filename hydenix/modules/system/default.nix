@@ -2,6 +2,11 @@
 
 {
   imports = [
+    ./core.nix
+    ./desktop.nix
+    ./networking.nix
+    ./packages.nix
+    ./user.nix
     # ./example.nix - add your modules here
   ];
 

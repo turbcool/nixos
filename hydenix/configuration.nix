@@ -56,6 +56,8 @@ in
     inputs.hydenix.inputs.nixos-hardware.nixosModules.common-pc-ssd
   ];
 
+  hardware.nvidia.open = false;
+
   home-manager = {
     useGlobalPkgs = true;
     useUserPackages = true;
