@@ -19,6 +19,7 @@
     "x-scheme-handler/unknown" = ["brave-browser.desktop"];
   };
 
+  home.keyboard = null;
   # hydenix home-manager options go here
   hydenix.hm = {
     #! Important options
@@ -27,6 +28,22 @@
     social.enable = false;
     shell.pokego.enable = false;
 
+    /*
+    hyprland.extraConfig = ''
+      bind = SUPER, Return, exec, kitty
+      bind = SUPER, M, exec, telegram-desktop
+      bind = SUPER SHIFT, O, exec, hyprctl dispatch toggleopaque
+      
+      # Keyboard layout configuration
+      input {
+        kb_layout = us,ru
+        kb_options = grp:alt_shift_toggle
+      }
+    '';*/
+    git = {
+      name = "Ilya Naidanov";
+      email = "turbcool@gmail.com";
+    };
     /*
       ! Below are defaults
 
@@ -58,15 +75,6 @@
       hyde.enable = true; # enable hyde module
       hyprland.enable = true; # enable hyprland module
       hyprland.extraConfig = ''
-        bind = SUPER, Return, exec, kitty
-        bind = SUPER, T, exec, telegram-desktop
-        bind = SUPER SHIFT, O, exec, hyprctl dispatch toggleopaque
-        
-        # Keyboard layout configuration
-        input {
-          kb_layout = us,ru
-          kb_options = grp:alt_shift_toggle
-        }
       '';
       lockscreen = {
         enable = true; # enable lockscreen module
