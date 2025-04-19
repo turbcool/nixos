@@ -13,6 +13,7 @@ let
       inputs.hydenix.lib.overlays
       (final: prev: {
         userPkgs = import inputs.nixpkgs {
+          system = "x86_64-linux";
           config.allowUnfree = true;
         };
       })
