@@ -15,6 +15,9 @@
   hydenix.hm = {
     #! Important options
     enable = true;
+    spotify.enable = false;
+    social.enable = false;
+    shell.pokego.enable = false;
 
     /*
       ! Below are defaults
