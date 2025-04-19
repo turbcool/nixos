@@ -39,7 +39,7 @@ in
 
     #! EDIT THIS SECTION
     # For NVIDIA setups
-    inputs.hydenix.inputs.nixos-hardware.nixosModules.common-gpu-nvidia
+    #inputs.hydenix.inputs.nixos-hardware.nixosModules.common-gpu-nvidia
 
     # For AMD setups
     # inputs.hydenix.inputs.nixos-hardware.nixosModules.common-gpu-amd

@@ -1,5 +1,5 @@
 # Package definitions and program configurations
-{ config, pkgs, pkgsUnstable, ... }:
+{ config, pkgs, ... }:
 
 {
   # List packages installed in system profile. To search, run:
@@ -7,18 +7,18 @@
   environment.systemPackages = with pkgs; [
   #  vim # Do not forget to add an editor to edit configuration.nix! The Nano editor is also installed by default.
   #  wget
-     remmina
-     brave
-     git
-     telegram-desktop
-     pkgsUnstable.aider-chat # Using unstable package defined in configuration.nix
-     networkmanager-l2tp
-     vscode
-     pkgsUnstable.yazi
-     lazygit
-     lazydocker
-     lutris
-     prismlauncher
+     pkgs.remmina
+     pkgs.brave
+     pkgs.git
+     pkgs.telegram-desktop
+     pkgs.userPkgs.aider-chat # Using unstable package defined in configuration.nix
+     pkgs.networkmanager-l2tp
+     pkgs.vscode
+     pkgs.userPkgs.yazi
+     pkgs.lazygit
+     pkgs.lazydocker
+     pkgs.lutris
+     pkgs.prismlauncher
   ];
 
   programs.steam.enable = true;

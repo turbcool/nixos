@@ -2,6 +2,17 @@
 { config, pkgs, ... }:
 
 {
+  hardware = {
+    graphics.enable = true;
+    nvidia = {
+      modesetting.enable = true;
+      powerManagement.enable = false;
+      powerManagement.finegrained = false;
+      open = false;
+      nvidiaSettings = true;
+    };
+  };
+  services.xserver.videoDrivers = ["nvidia"];
 #  Configure keymap in X11 (relevant for graphical sessions)
 #  services.xserver.xkb = {
 #    layout = "ru";

@@ -17,8 +17,4 @@
     fsType = "ntfs-3g";
     options = [ "rw" "uid=1000" ];
   };
-  fileSystems."/mnt/hdd" = {
-    device = "/dev/sda5";
-    fsType = "btrfs";
-  };
 }
