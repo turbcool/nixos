@@ -50,6 +50,7 @@
       hyde.enable = true; # enable hyde module
       hyprland.enable = true; # enable hyprland module
       hyprland.extraConfig = ''
+        bind = SUPER, Return, exec, kitty
         bind = SUPER SHIFT, O, exec, hyprctl dispatch toggleopaque
       '';
       lockscreen = {
