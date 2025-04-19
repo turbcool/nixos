@@ -20,6 +20,12 @@
   };
 
   home.keyboard = null;
+  
+  # Add custom hyprland config
+  xdg.configFile."hypr/userprefs.conf".text = ''
+    test
+  '';
+
   # hydenix home-manager options go here
   hydenix.hm = {
     #! Important options
