@@ -26,9 +26,10 @@
     { ... }@inputs:
     let
       HOSTNAME = "nixos";
+      system = "x86_64-linux"; # Match the main flake.nix system
 
       hydenixConfig = inputs.hydenix.inputs.hydenix-nixpkgs.lib.nixosSystem {
-        inherit (inputs.hydenix.lib) system;
+        inherit system;
         specialArgs = {
           inherit inputs;
         };
