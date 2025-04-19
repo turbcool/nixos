@@ -52,6 +52,12 @@
       hyprland.extraConfig = ''
         bind = SUPER, Return, exec, kitty
         bind = SUPER SHIFT, O, exec, hyprctl dispatch toggleopaque
+        
+        # Keyboard layout configuration
+        input {
+          kb_layout = us,ru
+          kb_options = grp:win_space_toggle
+        }
       '';
       lockscreen = {
         enable = true; # enable lockscreen module
