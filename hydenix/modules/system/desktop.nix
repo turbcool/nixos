@@ -13,11 +13,12 @@
     };
   };
   services.xserver.videoDrivers = ["nvidia"];
-#  Configure keymap in X11 (relevant for graphical sessions)
-#  services.xserver.xkb = {
-#    layout = "ru";
-#    variant = "";
-#  };
+
+# Configure keymap in X11 (relevant for graphical sessions)
+  services.xserver.xkb = {
+    layout = "us,ru";
+    options = "grp:alt_shift_toggle";
+  };
 
 #  fonts = {
 #    enableDefaultPackages = true;

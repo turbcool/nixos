@@ -22,8 +22,16 @@
   home.keyboard = null;
   
   # Add custom hyprland config
-  xdg.configFile."hypr/userprefs.conf".text = ''
-    test
+  home.file.".local/share/hyde/custom.conf".text = ''
+    bind = SUPER, Return, exec, kitty
+    bind = SUPER, M, exec, telegram-desktop
+    bind = SUPER SHIFT, O, exec, hyprctl dispatch toggleopaque
+    
+    # Keyboard layout configuration
+    input {
+      kb_layout = us,ru
+      kb_options = grp:alt_shift_toggle
+    }
   '';
 
   # hydenix home-manager options go here
@@ -34,18 +42,6 @@
     social.enable = false;
     shell.pokego.enable = false;
 
-    /*
-    hyprland.extraConfig = ''
-      bind = SUPER, Return, exec, kitty
-      bind = SUPER, M, exec, telegram-desktop
-      bind = SUPER SHIFT, O, exec, hyprctl dispatch toggleopaque
-      
-      # Keyboard layout configuration
-      input {
-        kb_layout = us,ru
-        kb_options = grp:alt_shift_toggle
-      }
-    '';*/
     git = {
       name = "Ilya Naidanov";
       email = "turbcool@gmail.com";
