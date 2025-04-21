@@ -46,6 +46,24 @@
       name = "Ilya Naidanov";
       email = "turbcool@gmail.com";
     };
+
+    theme = {
+      # active = "Catppuccin Mocha";
+      themes = [
+        "Another-World"
+        "AbyssGreen"
+        "Cat-Latte"
+        "Green-Lush"
+        "Greenify"
+        "Mac-OS"
+        "Monokai"
+        "Pixel-Dream"
+        "Windows-11"
+        "Catppuccin Mocha"
+        "Catppuccin Latte"
+      ]; # default enabled themes, full list in https://github.com/richen604/hydenix/tree/main/hydenix/sources/themes
+    };
+
     /*
       ! Below are defaults
 

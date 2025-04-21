@@ -10,6 +10,7 @@
   networking.networkmanager.enableStrongSwan = true;
   services.xl2tpd.enable = true;
   services.strongswan.enable = true;
+  # to make it work do once: touch /etc/strongswan.conf
 
   # VLESS
   services.v2raya.enable = true;

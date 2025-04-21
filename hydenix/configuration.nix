@@ -83,10 +83,11 @@ in
   hydenix = {
     enable = true; # Enable the Hydenix module
 
-    #! EDIT THESE VALUES
-    hostname = "nixos"; # Change to your preferred hostname
-    timezone = "Asia/Yekaterinburg"; # Change to your timezone
-    locale = "ru_RU.UTF-8"; # Change to your preferred locale
+    hostname = "nixos";
+    timezone = "Asia/Yekaternbiurg";
+    locale = "ru_RU.UTF-8";
+
+    boot.kernelPackages = pkgs.linuxPackages_latest; # non-zen kernel
 
     /*
       Optionally edit the below values, or leave to use hydenix defaults
@@ -114,7 +115,7 @@ in
 
   #! EDIT THESE VALUES (must match users defined above)
   users.users.turb = {
-    isNormalUser = true; # Regular user account
+    isNormalUser = true;
     initialPassword = "1"; # Default password (CHANGE THIS after first login with passwd)
     extraGroups = [
       "wheel" # For sudo access

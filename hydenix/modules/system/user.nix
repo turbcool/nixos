@@ -9,8 +9,8 @@
      enable = true;
      config = {
        user = {
-         email = "turbcool@gmail.com";
          name = "Ilya Naidanov";
+         email = "turbcool@gmail.com";
        };
        push = { autoSetupRemote = true; };
      };

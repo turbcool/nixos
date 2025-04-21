@@ -24,6 +24,7 @@
     pkgs.lazydocker
     pkgs.ripgrep
     pkgs.gdu
+    pkgs.gcc
   ];
 
   programs.steam.enable = true;
