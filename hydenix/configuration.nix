@@ -57,8 +57,6 @@ in
     inputs.hydenix.inputs.nixos-hardware.nixosModules.common-pc-ssd
   ];
 
-  hardware.nvidia.open = false;
-
   home-manager = {
     useGlobalPkgs = true;
     useUserPackages = true;
@@ -84,7 +82,7 @@ in
     enable = true; # Enable the Hydenix module
 
     hostname = "nixos";
-    timezone = "Asia/Yekaternbiurg";
+    timezone = "Asia/Yekaterinburg";
     locale = "ru_RU.UTF-8";
 
     boot.kernelPackages = pkgs.linuxPackages_latest; # non-zen kernel

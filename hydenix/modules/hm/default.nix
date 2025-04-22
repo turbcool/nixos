@@ -1,4 +1,7 @@
-{ ... }:
+{ 
+  lib,
+  ...
+}:
 
 {
   imports = [
@@ -34,6 +37,24 @@
     }
   '';
 
+  home.file = {
+    ".config/hypr/userprefs.conf" = lib.mkForce {
+      text = ''
+        bind = SUPER, Return, exec, kitty
+        bind = SUPER, M, exec, telegram-desktop
+        bind = SUPER SHIFT, O, exec, hyprctl dispatch toggleopaque
+        
+        # Keyboard layout configuration
+        input {
+          kb_layout = us,ru
+          kb_options = grp:alt_shift_toggle
+        }
+      '';
+      force = true;
+      mutable = true;
+    };
+  };
+
   # hydenix home-manager options go here
   hydenix.hm = {
     #! Important options
@@ -48,17 +69,17 @@
     };
 
     theme = {
-      # active = "Catppuccin Mocha";
+      active = "Greenify";
       themes = [
-        "Another-World"
+        "Another World"
         "AbyssGreen"
-        "Cat-Latte"
-        "Green-Lush"
+        "Cat Latte"
+        "Green Lush"
         "Greenify"
-        "Mac-OS"
+        "Mac OS"
         "Monokai"
-        "Pixel-Dream"
-        "Windows-11"
+        "Pixel Dream"
+        "Windows 11"
         "Catppuccin Mocha"
         "Catppuccin Latte"
       ]; # default enabled themes, full list in https://github.com/richen604/hydenix/tree/main/hydenix/sources/themes

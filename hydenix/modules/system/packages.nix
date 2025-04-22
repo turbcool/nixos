@@ -7,17 +7,24 @@
   environment.systemPackages = with pkgs; [
   #  vim # Do not forget to add an editor to edit configuration.nix! The Nano editor is also installed by default.
   #  wget
-    pkgs.remmina
     pkgs.brave
-    pkgs.git
     pkgs.telegram-desktop
     pkgs.userPkgs.aider-chat # Using unstable package defined in configuration.nix
-    pkgs.networkmanager-l2tp
-    pkgs.vscode
     pkgs.userPkgs.yazi
+    pkgs.yt-dlp
+
+    # Games:
     pkgs.lutris
     pkgs.prismlauncher
-    pkgs.yt-dlp
+
+    # Work:
+    pkgs.zoom-us
+    pkgs.remmina
+    pkgs.networkmanager-l2tp
+
+    # Coding:
+    pkgs.git
+    pkgs.vscode
 
     # Nvim:
     pkgs.lazygit
@@ -25,6 +32,9 @@
     pkgs.ripgrep
     pkgs.gdu
     pkgs.gcc
+
+    pkgs.xdg-desktop-portal
+    pkgs.xdg-desktop-portal-hyprland
   ];
 
   programs.steam.enable = true;
