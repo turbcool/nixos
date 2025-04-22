@@ -42,7 +42,7 @@
 
   home.file = {
     ".config/hypr/hypridle.conf" = lib.mkForce {
-      source = "../config/hypridle.conf";
+      source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/.config/hypridle.conf";
     };
   };
 
