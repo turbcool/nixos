@@ -22,21 +22,6 @@
     "x-scheme-handler/unknown" = ["brave-browser.desktop"];
   };
 
-  home.keyboard = null;
-  
-  # Add custom hyprland config
-  home.file.".local/share/hyde/custom.conf".text = ''
-    bind = SUPER, Return, exec, kitty
-    bind = SUPER, M, exec, telegram-desktop
-    bind = SUPER SHIFT, O, exec, hyprctl dispatch toggleopaque
-    
-    # Keyboard layout configuration
-    input {
-      kb_layout = us,ru
-      kb_options = grp:alt_shift_toggle
-    }
-  '';
-
   home.file = {
     ".config/hypr/userprefs.conf" = lib.mkForce {
       text = ''
@@ -52,6 +37,12 @@
       '';
       force = true;
       mutable = true;
+    };
+  };
+
+  home.file = {
+    ".config/hypr/hypridle.conf" = lib.mkForce {
+      source = "../config/hypridle.conf";
     };
   };
 
