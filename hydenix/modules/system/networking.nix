@@ -13,5 +13,8 @@
   # to make it work do once: touch /etc/strongswan.conf
 
   # VLESS
-  services.v2raya.enable = true;
+  services.v2raya = {
+    enable = true;
+    cliPackage = pkgs.xray;
+  };
 }

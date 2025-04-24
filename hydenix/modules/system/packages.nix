@@ -21,7 +21,9 @@
     pkgs.zoom-us
     pkgs.remmina
     pkgs.networkmanager-l2tp
-
+    (pkgs.harlequin.override {
+      withBigQueryAdapter = false;
+    })
     # Coding:
     pkgs.git
     pkgs.vscode
@@ -32,9 +34,6 @@
     pkgs.ripgrep
     pkgs.gdu
     pkgs.gcc
-
-    pkgs.xdg-desktop-portal
-    pkgs.xdg-desktop-portal-hyprland
   ];
 
   programs.steam.enable = true;
