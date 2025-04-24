@@ -7,6 +7,7 @@
     ./networking.nix
     ./packages.nix
     ./user.nix
+    ./virt.nix
     # ./example.nix - add your modules here
   ];
 
