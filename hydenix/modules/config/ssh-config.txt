@@ -1,0 +1,14 @@
+Host opi
+  Hostname 192.168.1.100 
+  User orangepi 
+  Port 22 
+
+Host bee 
+  Hostname 192.168.1.101 
+  User turb 
+  Port 22 
+
+Host work 
+  Hostname 10.150.7.42 
+  User turb 
+  Port 2222 

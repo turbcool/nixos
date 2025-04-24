@@ -24,25 +24,13 @@
 
   home.file = {
     ".config/hypr/userprefs.conf" = lib.mkForce {
-      text = ''
-        bind = SUPER, Return, exec, kitty
-        bind = SUPER, M, exec, telegram-desktop
-        bind = SUPER SHIFT, O, exec, hyprctl dispatch toggleopaque
-        
-        # Keyboard layout configuration
-        input {
-          kb_layout = us,ru
-          kb_options = grp:alt_shift_toggle
-        }
-      '';
-      force = true;
-      mutable = true;
+      source = ../config/userprefs.conf;
     };
-  };
-
-  home.file = {
     ".config/hypr/hypridle.conf" = lib.mkForce {
       source = ../config/hypridle.conf;
+    };
+    ".ssh/config" = lib.mkForce {
+      source = ../config/ssh-config.txt;
     };
   };
 
