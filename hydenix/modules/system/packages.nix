@@ -24,6 +24,7 @@
     (pkgs.harlequin.override {
       withBigQueryAdapter = false;
     })
+
     # Coding:
     pkgs.git
     pkgs.vscode
@@ -35,6 +36,8 @@
     pkgs.gdu
     pkgs.gcc
   ];
+
+  programs.partition-manager.enable = true;
 
   programs.steam.enable = true;
   programs.alvr.enable = true;
