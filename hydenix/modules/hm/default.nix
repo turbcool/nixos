@@ -35,6 +35,9 @@
     ".config/hypr/hyde.conf" = lib.mkForce {
       source = ../config/hyde.conf;
     };
+    ".config/hyde/config.toml" = lib.mkForce {
+      source = ../config/config.toml;
+    };
   };
 
   # hydenix home-manager options go here
