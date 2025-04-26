@@ -38,6 +38,9 @@
     ".config/hyde/config.toml" = lib.mkForce {
       source = ../config/config.toml;
     };
+    ".config/kitty/kitty.conf" = lib.mkForce {
+      source = ../config/kitty.conf;
+    };
   };
 
   # hydenix home-manager options go here

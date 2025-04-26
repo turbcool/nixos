@@ -28,6 +28,7 @@
     # Coding:
     pkgs.git
     pkgs.vscode
+    pkgs.nodejs
 
     # Nvim:
     pkgs.lazygit
@@ -36,6 +37,8 @@
     pkgs.gdu
     pkgs.gcc
   ];
+
+  programs.npm.enable = true;
 
   programs.partition-manager.enable = true;
 
