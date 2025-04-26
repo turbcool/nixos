@@ -47,10 +47,16 @@
     enable = true;
     extensions = [
     	"nngceckbapebfimnlniiiahkandclblb" # bitwarden
+    	"dbepggeogbaibhgnhhndojpepiihcmeb" # vimium
     ];
     extraOpts = {
-      #"PasswordManagerEnabled" = false;
-      "SyncDisabled" = true;
+      # Brave-specific
+      "BraveRewardsDisabled" = 1;
+      "BraveWalletDisabled" = 1;
+      "BraveVPNDisabled" = 1;
+
+      # Chrome-specific:
+      "PasswordManagerEnabled" = false;
       "SpellcheckEnabled" = true;
       "SpellcheckLanguage" = [
         "ru-RU"

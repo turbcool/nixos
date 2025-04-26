@@ -32,6 +32,9 @@
     ".ssh/config" = lib.mkForce {
       source = ../config/ssh-config.txt;
     };
+    ".config/hypr/hyde.conf" = lib.mkForce {
+      source = ../config/hyde.conf;
+    };
   };
 
   # hydenix home-manager options go here
