@@ -35,9 +35,9 @@
     #".config/hypr/hyde.conf" = lib.mkForce {
     #  source = ../config/hyde.conf;
     #};
-    ".config/hyde/config.toml" = lib.mkForce {
-      source = ../config/config.toml;
-    };
+    #".config/hyde/config.toml" = lib.mkForce {
+    #  source = ../config/config.toml;
+    #};
     ".config/kitty/kitty.conf" = lib.mkForce {
       source = ../config/kitty.conf;
     };
