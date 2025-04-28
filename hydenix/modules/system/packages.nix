@@ -1,7 +1,9 @@
 # Package definitions and program configurations
 { config, pkgs, ... }:
 
-{
+let
+  tsSql = pkgs.tree-sitter.withPlugins (p: [ p.tree-sitter-sql ]);
+in {
   # List packages installed in system profile. To search, run:
   # $ nix search wget
   environment.systemPackages = with pkgs; [
@@ -24,6 +26,7 @@
     (pkgs.harlequin.override {
       withBigQueryAdapter = false;
     })
+    tsSql
 
     # Coding:
     pkgs.git
