@@ -41,13 +41,16 @@
     ".config/kitty/kitty.conf" = lib.mkForce {
       source = ../config/kitty.conf;
     };
+    ".local/share/remmina/work-pc.remmina" = lib.mkForce {
+      source = ../config/remmina/work-pc.remmina;
+    };
   };
 
   # hydenix home-manager options go here
   hydenix.hm = {
     #! Important options
     enable = true;
-    spotify.enable = false;
+    spotify.enable = true;
     social.enable = false;
     shell.pokego.enable = false;
 
@@ -60,14 +63,10 @@
       active = "Greenify";
       themes = [
         "Another World"
-        "AbyssGreen"
         "Cat Latte"
         "Green Lush"
         "Greenify"
-        "Mac OS"
         "Monokai"
-        "Pixel Dream"
-        "Windows 11"
         "Catppuccin Mocha"
         "Catppuccin Latte"
       ]; # default enabled themes, full list in https://github.com/richen604/hydenix/tree/main/hydenix/sources/themes
