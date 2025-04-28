@@ -32,9 +32,9 @@
     ".ssh/config" = lib.mkForce {
       source = ../config/ssh-config.txt;
     };
-    ".config/hypr/hyde.conf" = lib.mkForce {
-      source = ../config/hyde.conf;
-    };
+    #".config/hypr/hyde.conf" = lib.mkForce {
+    #  source = ../config/hyde.conf;
+    #};
     ".config/hyde/config.toml" = lib.mkForce {
       source = ../config/config.toml;
     };
