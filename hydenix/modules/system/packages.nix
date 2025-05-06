@@ -54,6 +54,7 @@ in {
     extensions = [
     	"nngceckbapebfimnlniiiahkandclblb" # bitwarden
     	"dbepggeogbaibhgnhhndojpepiihcmeb" # vimium
+	"fnaicdffflnofjppbagibeoednhnbjhg" # floccus
     ];
     extraOpts = {
       # Brave-specific

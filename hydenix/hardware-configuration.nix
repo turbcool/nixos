@@ -14,7 +14,7 @@
   boot.extraModulePackages = [ ];
 
   fileSystems."/" =
-    { device = "/dev/disk/by-uuid/1d6e8101-6e85-4445-8a9d-4a115a121ad4";
+    { device = "/dev/disk/by-uuid/3af09f78-dbb1-4cd9-a358-dfdb92c5ae44";
       fsType = "ext4";
     };
 
@@ -22,11 +22,6 @@
     { device = "/dev/disk/by-uuid/A11B-F1A2";
       fsType = "vfat";
       options = [ "fmask=0077" "dmask=0077" ];
-    };
-
-  fileSystems."/mnt/hdd" =
-    { device = "/dev/disk/by-uuid/3b27cd01-057f-443b-9b11-9691723572a8";
-      fsType = "btrfs";
     };
 
   swapDevices = [ ];
@@ -37,7 +32,6 @@
   # with explicit per-interface declarations with `networking.interfaces.<interface>.useDHCP`.
   networking.useDHCP = lib.mkDefault true;
   # networking.interfaces.enp6s0.useDHCP = lib.mkDefault true;
-  # networking.interfaces.ppp0.useDHCP = lib.mkDefault true;
 
   nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
   hardware.cpu.intel.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
