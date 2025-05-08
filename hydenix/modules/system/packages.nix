@@ -31,7 +31,8 @@ in {
     # Coding:
     pkgs.git
     pkgs.vscode
-    #pkgs.nodejs
+    pkgs.nodejs
+    pkgs.dotnet-aspnetcore_8
 
     # Nvim:
     pkgs.lazygit
@@ -41,7 +42,7 @@ in {
     pkgs.gcc
   ];
 
-  #programs.npm.enable = true;
+  programs.npm.enable = true;
 
   programs.partition-manager.enable = true;
 

@@ -36,6 +36,10 @@
     ".local/share/remmina/work-pc.remmina" = lib.mkForce {
       source = ../config/remmina/work-pc.remmina;
     };
+    "/build.sh" = lib.mkForce {
+      source = ../config/build.sh;
+    };
+
   };
 
   # hydenix home-manager options go here
