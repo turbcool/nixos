@@ -48,6 +48,7 @@
   hydenix.hm = {
     #! Important options
     enable = true;
+    home-manager.backupFileExtension = "backup";
     spotify.enable = true;
     social.enable = false;
     shell.pokego.enable = false;
