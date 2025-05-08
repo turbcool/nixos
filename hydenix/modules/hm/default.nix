@@ -35,9 +35,11 @@
     };
     ".local/share/remmina/work-pc.remmina" = lib.mkForce {
       source = ../config/remmina/work-pc.remmina;
+      force = true;
     };
     "/build.sh" = lib.mkForce {
       source = ../config/build.sh;
+      force = true;
     };
 
   };
