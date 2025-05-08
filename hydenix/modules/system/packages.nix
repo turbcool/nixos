@@ -32,7 +32,9 @@ in {
     pkgs.git
     pkgs.vscode
     pkgs.nodejs
-    pkgs.dotnet-aspnetcore_8
+    pkgs.dotnet-sdk_8
+    pkgs.unzip
+    pkgs.omnisharp-roslyn
 
     # Nvim:
     pkgs.lazygit
