@@ -63,6 +63,7 @@ in
     extraSpecialArgs = {
       inherit inputs;
     };
+    backupFileExtension = "backup";
 
     #! EDIT THIS USER (must match users defined below)
     users."turb" =
