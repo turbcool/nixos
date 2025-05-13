@@ -44,5 +44,5 @@
       "MemorySaverModeSavings" = 1;
       "SearchSuggestEnabled" = true;
     };
-  }
+  };
 }

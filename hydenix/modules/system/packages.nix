@@ -16,8 +16,9 @@ in {
     pkgs.yt-dlp
 
     # Games:
-    #pkgs.lutris
-    #pkgs.prismlauncher
+    pkgs.lutris
+    pkgs.prismlauncher
+    pkgs.qbittorrent-enhanced
 
     # Work:
     pkgs.zoom-us
@@ -45,12 +46,19 @@ in {
     pkgs.ripgrep
     pkgs.gdu
     pkgs.gcc
+
   ];
 
   programs.npm.enable = true;
 
-  #programs.steam.enable = true;
-  #programs.alvr.enable = true;
-  #programs.alvr.openFirewall = true;
+  programs.steam.enable = true;
+  programs.alvr.enable = true;
+  programs.alvr.openFirewall = true;
+
+  services.sunshine = {
+    enable = true;
+    autoStart = true;
+    capSysAdmin = true;
+    openFirewall = true;
   };
 }
