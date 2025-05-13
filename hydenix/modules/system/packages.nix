@@ -35,6 +35,9 @@ in {
     pkgs.dotnet-sdk_8
     pkgs.unzip
     pkgs.omnisharp-roslyn
+    
+    # Organize:
+    pkgs.neomutt 
 
     # Nvim:
     pkgs.lazygit

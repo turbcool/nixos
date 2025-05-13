@@ -1,0 +1,6 @@
+[remmina]
+name=AutoCam
+server=194.147.78.232:57624
+protocol=RDP
+username=Administrator
+window_maximize=1
