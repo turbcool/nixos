@@ -16,17 +16,17 @@
 
   home.file = {
     ".config/hypr/userprefs.conf" = lib.mkForce {
-      source = ../config/userprefs.conf;
+      source = ../config/hyprland/userprefs.conf;
     };
     ".config/hypr/hypridle.conf" = lib.mkForce {
-      source = ../config/hypridle.conf;
+      source = ../config/hyprland/hypridle.conf;
     };
     ".ssh/config" = lib.mkForce {
       source = ../config/ssh-config.txt;
     };
-    #".config/hypr/hyde.conf" = lib.mkForce {
-    #  source = ../config/hyde.conf;
-    #};
+    ".config/hypr/hyde.conf" = lib.mkForce {
+      source = ../config/hyprland/hyde.conf;
+    };
     #".config/hyde/config.toml" = lib.mkForce {
     #  source = ../config/config.toml;
     #};
