@@ -8,6 +8,7 @@
     ./packages.nix
     ./user.nix
     ./virt.nix
+    ./browser.nix
     # ./example.nix - add your modules here
   ];
 

@@ -26,7 +26,7 @@ in {
     #(pkgs.harlequin.override {
     #  withBigQueryAdapter = false;
     #})
-    tsSql
+    #tsSql
 
     # Coding:
     pkgs.git
@@ -52,27 +52,5 @@ in {
   #programs.steam.enable = true;
   #programs.alvr.enable = true;
   #programs.alvr.openFirewall = true;
-
-  programs.chromium = {
-    enable = true;
-    extensions = [
-    	"nngceckbapebfimnlniiiahkandclblb" # bitwarden
-    	"dbepggeogbaibhgnhhndojpepiihcmeb" # vimium
-    	"fnaicdffflnofjppbagibeoednhnbjhg" # floccus
-    ];
-    extraOpts = {
-      # Brave-specific
-      "BraveRewardsDisabled" = 1;
-      "BraveWalletDisabled" = 1;
-      "BraveVPNDisabled" = 1;
-
-      # Chrome-specific:
-      "PasswordManagerEnabled" = false;
-      "SpellcheckEnabled" = true;
-      "SpellcheckLanguage" = [
-        "ru-RU"
-        "en-US"
-      ];
-    };
   };
 }
