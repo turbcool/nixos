@@ -16,16 +16,16 @@ in {
     pkgs.yt-dlp
 
     # Games:
-    pkgs.lutris
-    pkgs.prismlauncher
+    #pkgs.lutris
+    #pkgs.prismlauncher
 
     # Work:
     pkgs.zoom-us
     pkgs.remmina
     pkgs.networkmanager-l2tp
-    (pkgs.harlequin.override {
-      withBigQueryAdapter = false;
-    })
+    #(pkgs.harlequin.override {
+    #  withBigQueryAdapter = false;
+    #})
     tsSql
 
     # Coding:
@@ -49,18 +49,16 @@ in {
 
   programs.npm.enable = true;
 
-  programs.partition-manager.enable = true;
-
-  programs.steam.enable = true;
-  programs.alvr.enable = true;
-  programs.alvr.openFirewall = true;
+  #programs.steam.enable = true;
+  #programs.alvr.enable = true;
+  #programs.alvr.openFirewall = true;
 
   programs.chromium = {
     enable = true;
     extensions = [
     	"nngceckbapebfimnlniiiahkandclblb" # bitwarden
     	"dbepggeogbaibhgnhhndojpepiihcmeb" # vimium
-	"fnaicdffflnofjppbagibeoednhnbjhg" # floccus
+    	"fnaicdffflnofjppbagibeoednhnbjhg" # floccus
     ];
     extraOpts = {
       # Brave-specific

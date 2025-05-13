@@ -61,10 +61,10 @@
       active = "Greenify";
       themes = [
         "Another World"
-        "Cat Latte"
-        "Green Lush"
+        #"Cat Latte"
+        #"Green Lush"
         "Greenify"
-        "Monokai"
+        #"Monokai"
         "Catppuccin Mocha"
         "Catppuccin Latte"
       ]; # default enabled themes, full list in https://github.com/richen604/hydenix/tree/main/hydenix/sources/themes
