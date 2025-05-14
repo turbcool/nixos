@@ -24,6 +24,7 @@ in {
     pkgs.zoom-us
     pkgs.remmina
     pkgs.networkmanager-l2tp
+    pkgs.onlyoffice-bin
     #(pkgs.harlequin.override {
     #  withBigQueryAdapter = false;
     #})
