@@ -2,11 +2,11 @@
 
 {
   imports = [
-    ./core.nix
-    ./desktop.nix
-    ./networking.nix
+    ./base/boot.nix
+    ./base/desktop.nix
+    ./base/networking.nix
+    ./base/user.nix
     ./packages.nix
-    ./user.nix
     ./virt.nix
     ./browser.nix
     # ./example.nix - add your modules here
