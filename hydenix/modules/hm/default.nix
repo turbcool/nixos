@@ -58,12 +58,12 @@
     };
 
     theme = {
-      active = "Greenify";
+      active = "Catppuccin Latte";
       themes = [
-        "Another World"
+        #"Another World"
         #"Cat Latte"
         #"Green Lush"
-        "Greenify"
+        #"Greenify"
         #"Monokai"
         "Catppuccin Mocha"
         "Catppuccin Latte"

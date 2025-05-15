@@ -2,7 +2,7 @@
 
 {
   environment.systemPackages = with pkgs; [
-    pkgs.nvim
+    pkgs.neovim
     pkgs.vscode
     pkgs.nodejs
     pkgs.dotnet-sdk_8
@@ -14,5 +14,5 @@
     pkgs.gdu
     pkgs.gcc
   ];
-  // TODO: HM copy git to ~/.config/nvim
+  # TODO: HM copy git to ~/.config/nvim
 }
