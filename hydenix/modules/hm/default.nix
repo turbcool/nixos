@@ -37,6 +37,10 @@
       source = ../config/remmina/work-pc.remmina;
       force = true;
     };
+    ".local/share/remmina/autocam.remmina" = lib.mkForce {
+      source = ../config/remmina/autocam.remmina;
+      force = true;
+    };
     "/build.sh" = lib.mkForce {
       source = ../config/build.sh;
       force = true;

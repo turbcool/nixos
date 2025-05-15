@@ -17,14 +17,12 @@ in {
     pkgs.remmina
     pkgs.networkmanager-l2tp
     pkgs.onlyoffice-bin
+    pkgs.neomutt 
     #(pkgs.harlequin.override {
     #  withBigQueryAdapter = false;
     #})
     #tsSql
     
-    # Organize:
-    pkgs.neomutt 
-
     # Security:
     pkgs.bitwarden-cli
   ];
