@@ -6,7 +6,7 @@
   users.users.turb = {
     isNormalUser = true;
     description = "turb";
-    extraGroups = [ "networkmanager" "wheel" ];
+    extraGroups = [ "networkmanager" "wheel" "docker" ];
     packages = with pkgs; [];
   };
 
