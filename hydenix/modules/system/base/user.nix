@@ -1,9 +1,12 @@
-# User accounts and user-specific settings
 { config, pkgs, ... }:
 
 {
   # Enable automatic login for the user.
   services.getty.autologinUser = "turb";
+
+  environment.systemPackages = [
+    pkgs.git
+  ];
 
   programs.git = {
      enable = true;

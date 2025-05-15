@@ -2,6 +2,10 @@
 { config, pkgs, ... }:
 
 {
+  environment.systemPackages = with pkgs; [
+    pkgs.brave
+  ];
+
   programs.chromium = {
     enable = true;
     extensions = [

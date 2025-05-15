@@ -7,18 +7,10 @@ in {
   # List packages installed in system profile. To search, run:
   # $ nix search wget
   environment.systemPackages = with pkgs; [
-  #  vim # Do not forget to add an editor to edit configuration.nix! The Nano editor is also installed by default.
-  #  wget
-    pkgs.brave
     pkgs.telegram-desktop
     pkgs.userPkgs.aider-chat # Using unstable package defined in configuration.nix
     pkgs.userPkgs.yazi
     pkgs.yt-dlp
-
-    # Games:
-    pkgs.lutris
-    pkgs.prismlauncher
-    pkgs.qbittorrent-enhanced
 
     # Work:
     pkgs.zoom-us
@@ -29,37 +21,13 @@ in {
     #  withBigQueryAdapter = false;
     #})
     #tsSql
-
-    # Coding:
-    pkgs.git
-    pkgs.vscode
-    pkgs.nodejs
-    pkgs.dotnet-sdk_8
-    pkgs.unzip
-    pkgs.omnisharp-roslyn
     
     # Organize:
     pkgs.neomutt 
 
-    # Nvim:
-    pkgs.lazygit
-    pkgs.lazydocker
-    pkgs.ripgrep
-    pkgs.gdu
-    pkgs.gcc
-
+    # Security:
+    pkgs.bitwarden-cli
   ];
 
   programs.npm.enable = true;
-
-  programs.steam.enable = true;
-  programs.alvr.enable = true;
-  programs.alvr.openFirewall = true;
-
-  services.sunshine = {
-    enable = true;
-    autoStart = true;
-    capSysAdmin = true;
-    openFirewall = true;
-  };
 }

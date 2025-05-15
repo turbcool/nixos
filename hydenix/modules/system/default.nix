@@ -9,6 +9,8 @@
     ./packages.nix
     ./virt.nix
     ./browser.nix
+    ./gaming.nix
+    ./nvim.nix
     # ./example.nix - add your modules here
   ];
 
