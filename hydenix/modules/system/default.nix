@@ -11,7 +11,6 @@
     ./browser.nix
     ./gaming.nix
     ./nvim.nix
-    ./vscode.nix
     # ./example.nix - add your modules here
   ];
 

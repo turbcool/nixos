@@ -7,7 +7,7 @@
 
 {
   imports = [
-    # ./example.nix - add your modules here
+    ./vscode.nix
   ];
 
   # home-manager options go here
