@@ -8,7 +8,6 @@
 {
   imports = [
     # ./example.nix - add your modules here
-    ./nvim.nix
   ];
 
   # home-manager options go here
