@@ -6,13 +6,14 @@
     pkgs.vscode
     pkgs.nodejs
     pkgs.dotnet-sdk_8
-    pkgs.unzip
-    pkgs.omnisharp-roslyn
+    pkgs.dotnet-runtime_8
+    pkgs.dotnet-aspnetcore_8
+    pkgs.roslyn-ls
     pkgs.lazygit
     pkgs.lazydocker
     pkgs.ripgrep
     pkgs.gdu
     pkgs.gcc
   ];
-  # TODO: HM copy git to ~/.config/nvim
+  # TODO: HM copy nvim config from git to ~/.config/nvim
 }

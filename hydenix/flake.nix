@@ -20,6 +20,9 @@
       url = "github:nix-community/nix-index-database";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    anime.url = "github:ezKEa/aagl-gtk-on-nix";
+    anime.inputs.nixpkgs.follows = "nixpkgs";
   };
 
   outputs =

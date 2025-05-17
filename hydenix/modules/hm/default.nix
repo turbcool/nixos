@@ -1,11 +1,14 @@
 { 
   lib,
+  pkgs,
+  config,
   ...
 }:
 
 {
   imports = [
     # ./example.nix - add your modules here
+    ./nvim.nix
   ];
 
   # home-manager options go here
@@ -32,6 +35,7 @@
     #};
     ".config/kitty/kitty.conf" = lib.mkForce {
       source = ../config/kitty.conf;
+      force = true;
     };
     ".local/share/remmina/work-pc.remmina" = lib.mkForce {
       source = ../config/remmina/work-pc.remmina;
@@ -45,7 +49,6 @@
       source = ../config/build.sh;
       force = true;
     };
-
   };
 
   # hydenix home-manager options go here
@@ -62,18 +65,20 @@
     };
 
     theme = {
-      active = "Catppuccin Latte";
+      active = "Cat Latte";
       themes = [
         #"Another World"
         #"Cat Latte"
         #"Green Lush"
         #"Greenify"
         #"Monokai"
+        "Cat Latte"
         "Catppuccin Mocha"
         "Catppuccin Latte"
       ]; # default enabled themes, full list in https://github.com/richen604/hydenix/tree/main/hydenix/sources/themes
     };
 
+    editors.neovim.enable = false; # use custom non-hyde neovim configuration
     /*
       ! Below are defaults
 
