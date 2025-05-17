@@ -77,8 +77,6 @@
         "Catppuccin Latte"
       ]; # default enabled themes, full list in https://github.com/richen604/hydenix/tree/main/hydenix/sources/themes
     };
-
-    editors.neovim.enable = false; # use custom non-hyde neovim configuration
     /*
       ! Below are defaults
 

@@ -3,7 +3,6 @@
 {
   environment.systemPackages = with pkgs; [
     pkgs.neovim
-    pkgs.vscode
     pkgs.nodejs
     pkgs.dotnet-sdk_8
     pkgs.dotnet-runtime_8
