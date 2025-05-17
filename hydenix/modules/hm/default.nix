@@ -76,6 +76,8 @@
         "Catppuccin Latte"
       ]; # default enabled themes, full list in https://github.com/richen604/hydenix/tree/main/hydenix/sources/themes
     };
+    editors.vscode.enable = false;
+    editors.vscode.wallbash = false;
     /*
       ! Below are defaults
 
