@@ -8,6 +8,7 @@
 {
   imports = [
     ./vscode.nix
+    ./neovim.nix
   ];
 
   # home-manager options go here
