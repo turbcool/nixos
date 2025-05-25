@@ -8,7 +8,7 @@
     ./base/user.nix
     ./packages.nix
     ./virt.nix
-    ./browser.nix
+    ./browsers/brave.nix
     ./gaming.nix
     ./nvim.nix
     # ./example.nix - add your modules here

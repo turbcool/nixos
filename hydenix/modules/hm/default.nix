@@ -79,6 +79,7 @@
     };
     editors.vscode.enable = false;
     editors.vscode.wallbash = false;
+    editors.neovim = false;
     /*
       ! Below are defaults
 

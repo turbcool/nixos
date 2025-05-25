@@ -14,6 +14,7 @@ in
 {
   environment.systemPackages = with pkgs; [
     dotnet-8
+    pkgs.dotnetCorePackages.sdk_8_0
     pkgs.neovim
     pkgs.nodejs
     pkgs.roslyn-ls
@@ -23,8 +24,8 @@ in
     pkgs.gdu
     pkgs.gcc
   ];
-  environment.sessionVariables = {
-    DOTNET_ROOT = "${dotnet-8.outPath}/share/dotnet";
-  };
+  #environment.sessionVariables = {
+    #DOTNET_ROOT = "${dotnet-8.outPath}/share/dotnet";
+  #};
   # TODO: HM copy nvim config from git to ~/.config/nvim
 }
