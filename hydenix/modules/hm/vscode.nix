@@ -11,6 +11,7 @@
       ];
       userSettings = {
         "editor.fontFamily" = "CaskaydiaCove Nerd Font Mono";
+        "explorer.confirmDelete" = false;
       };
     };     
   };

@@ -18,6 +18,7 @@ in {
     pkgs.networkmanager-l2tp
     pkgs.onlyoffice-bin
     pkgs.neomutt 
+    pkgs.sqlitebrowser
     #(pkgs.harlequin.override {
     #  withBigQueryAdapter = false;
     #})

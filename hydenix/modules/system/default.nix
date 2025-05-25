@@ -11,6 +11,7 @@
     ./browsers/brave.nix
     ./gaming.nix
     ./nvim.nix
+    ./syncthing.nix
     # ./example.nix - add your modules here
   ];
 
