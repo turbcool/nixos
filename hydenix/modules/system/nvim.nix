@@ -9,12 +9,11 @@ let
       sdk_9_0
       aspnetcore_9_0
     ]);
-  dotnet-8 = pkgs.dotnetCorePackages.sdk_8_0;
+  dotnet-9 = pkgs.dotnetCorePackages.sdk_9_0;
 in
 {
   environment.systemPackages = with pkgs; [
-    dotnet-8
-    pkgs.dotnetCorePackages.sdk_8_0
+    dotnet-9
     pkgs.neovim
     pkgs.nodejs
     pkgs.roslyn-ls
