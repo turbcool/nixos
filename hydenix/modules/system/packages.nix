@@ -11,6 +11,8 @@ in {
     pkgs.userPkgs.aider-chat # Using unstable package defined in configuration.nix
     pkgs.userPkgs.yazi
     pkgs.yt-dlp
+    pkgs.kdePackages.ark
+    pkgs.easyeffects
 
     # Work:
     pkgs.zoom-us
