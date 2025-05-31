@@ -12,7 +12,7 @@
       userSettings = {
         "editor.fontFamily" = "CaskaydiaCove Nerd Font Mono";
         "explorer.confirmDelete" = false;
-        "omnisharp.useModernNet" = true; # Ensures OmniSharp uses modern .NET features
+        "omnisharp.useModernNet" = true;
       };
     };     
   };

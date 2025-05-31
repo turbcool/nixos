@@ -1,19 +1,17 @@
 { config, pkgs, ... }:
 
 let
-  dotnet-full =
+  dotnet-8-9 =
     (with pkgs.dotnetCorePackages;
     combinePackages [
       sdk_8_0
-      aspnetcore_8_0
       sdk_9_0
-      aspnetcore_9_0
     ]);
   dotnet-9 = pkgs.dotnetCorePackages.sdk_9_0;
 in
 {
   environment.systemPackages = with pkgs; [
-    dotnet-9
+    dotnet-8-9
     pkgs.neovim
     pkgs.nodejs
     pkgs.roslyn-ls
