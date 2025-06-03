@@ -20,7 +20,12 @@ in
     pkgs.ripgrep
     pkgs.gdu
     pkgs.gcc
+    pkgs.userPkgs.aider-chat
+    pkgs.userPkgs.yazi
   ];
+
+  programs.npm.enable = true;
+
   #environment.sessionVariables = {
     #DOTNET_ROOT = "${dotnet-8.outPath}/share/dotnet";
   #};

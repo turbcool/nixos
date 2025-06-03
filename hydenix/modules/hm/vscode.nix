@@ -12,6 +12,7 @@
       userSettings = {
         "editor.fontFamily" = "CaskaydiaCove Nerd Font Mono";
         "explorer.confirmDelete" = false;
+        "explorer.confirmDragAndDrop" = false;
         "omnisharp.useModernNet" = true;
       };
     };     

@@ -31,10 +31,10 @@
       source = ../config/hyprland/hyde.conf;
     };
     #".config/hyde/config.toml" = lib.mkForce {
-    #  source = ../config/config.toml;
+    #  source = ../config/hyde/config.toml;
     #};
     ".config/kitty/kitty.conf" = lib.mkForce {
-      source = ../config/kitty.conf;
+      source = ../config/hyde/kitty.conf;
       force = true;
     };
     ".local/share/remmina/work-pc.remmina" = lib.mkForce {

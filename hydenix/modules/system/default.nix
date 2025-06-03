@@ -6,18 +6,14 @@
     ./base/desktop.nix
     ./base/networking.nix
     ./base/user.nix
-    ./packages.nix
-    ./virt.nix
     ./browsers/brave.nix
+    ./work/development.nix
+    ./work/syncthing.nix
+    ./work/virt.nix
+    ./work/work.nix
     ./gaming.nix
-    ./nvim.nix
-    ./syncthing.nix
+    ./packages.nix
     # ./example.nix - add your modules here
-  ];
-
-  environment.systemPackages = [
-    # pkgs.vscode - hydenix's vscode version
-    # pkgs.userPkgs.vscode - your personal nixpkgs version
   ];
 
   environment.sessionVariables = {

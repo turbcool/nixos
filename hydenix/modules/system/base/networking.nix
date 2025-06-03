@@ -8,9 +8,10 @@
   networking.firewall.allowedTCPPorts = [ 5173 5174 ];
 
   # L2TP
-  networking.networkmanager.enableStrongSwan = true;
   services.xl2tpd.enable = true;
   services.strongswan.enable = true;
+  networking.networkmanager.enableStrongSwan = true;
+  environment.systemPackages = with pkgs; [ pkgs.networkmanager-l2tp ];
   # to make it work do once: touch /etc/strongswan.conf
 
   # VLESS
