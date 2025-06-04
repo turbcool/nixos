@@ -11,7 +11,7 @@
     ./work/syncthing.nix
     ./work/virt.nix
     ./work/work.nix
-    ./gaming.nix
+    #./gaming.nix
     ./packages.nix
     # ./example.nix - add your modules here
   ];

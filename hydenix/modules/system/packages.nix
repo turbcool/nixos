@@ -12,8 +12,5 @@
       ps.pytorchWithCuda
       # ps.torchvisionWithCuda # Uncomment if torchvision is needed
     ]))
-
-    # Security:
-    pkgs.bitwarden-cli
   ];
 }

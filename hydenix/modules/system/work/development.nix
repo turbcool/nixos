@@ -22,6 +22,12 @@ in
     pkgs.gcc
     pkgs.userPkgs.aider-chat
     pkgs.userPkgs.yazi
+
+    #pkgs.cudatoolkit
+    #(python3.withPackages (ps: [
+    #  ps.pytorchWithCuda
+      # ps.torchvisionWithCuda # Uncomment if torchvision is needed
+    #]))
   ];
 
   programs.npm.enable = true;
