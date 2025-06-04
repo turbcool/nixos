@@ -10,6 +10,7 @@
       powerManagement.finegrained = false;
       open = false;
       nvidiaSettings = true;
+      cudaSupport = true; # Ensures CUDA is available for the driver
     };
   };
   services.xserver.videoDrivers = ["nvidia"];

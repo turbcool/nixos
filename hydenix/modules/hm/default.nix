@@ -65,7 +65,7 @@
     };
 
     theme = {
-      active = "Cat Latte";
+      active = "Catppuccin Mocha";
       themes = [
         #"Another World"
         #"Cat Latte"
