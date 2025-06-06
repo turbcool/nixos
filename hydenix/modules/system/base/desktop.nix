@@ -11,7 +11,6 @@
       open = false;
       nvidiaSettings = true;
     };
-    nvidia-container-toolkit.enable = true;
   };
   services.xserver.videoDrivers = ["nvidia"];
 

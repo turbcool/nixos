@@ -4,5 +4,6 @@
 {
   #virtualisation.waydroid.enable = true;  
   virtualisation.docker.enable = true;
+  hardware.nvidia-container-toolkit.enable = true;
 }
 
