@@ -15,6 +15,7 @@
         "explorer.confirmDelete" = false;
         "explorer.confirmDragAndDrop" = false;
         "omnisharp.useModernNet" = true;
+        "git.enableSmartCommit" = true;
       };
     };     
   };
