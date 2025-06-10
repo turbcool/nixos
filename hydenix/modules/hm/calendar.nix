@@ -7,19 +7,30 @@ let
   # ["pass" "show" "radicale/password"];
 in
 {
-  home.packages = with pkgs; [
-    vdirsyncer
-    khal
-    khard
-    neomutt
-  ];
+  programs.khal = {
+    enable = true;
+  };
+
+  programs.khard = {
+    enable = true;
+  }
+
+  programs.vdirsyncer = {
+    enable = true;
+    statusPath = "${config.home.homeDirectory}/.cache/vdirsyncer/status/";
+  };
+
+  services.vdirsyncer = {
+    enable = true;
+    frequency = "*:0/10";
+  };
 
   accounts.calendar.accounts.personal = {
     primary = true;
     remote = {
       type = "caldav";
       url = radicaleUrl;
-      username = username;
+      userName = username;
       passwordCommand = passwordCommand;
     };
     local = {
@@ -32,7 +43,7 @@ in
     };
     khal = {
       enable = true;
-      color = "light green";
+      type = "discover";
     };
   };
 
@@ -40,7 +51,7 @@ in
     remote = {
       type = "carddav";
       url = radicaleUrl;
-      username = username;
+      userName = username;
       passwordCommand = passwordCommand;
     };
     local = {
