@@ -3,7 +3,7 @@
 let
   radicaleUrl = "https://cal.naidanov.ru";
   username = "turbcool";
-  passwordCommand = ["cat" "/home/turb/.radicale-pass"]
+  passwordCommand = ["cat" "/home/turb/.radicale-pass"];
   # ["pass" "show" "radicale/password"];
 in
 {
@@ -24,7 +24,7 @@ in
     };
     local = {
       type = "filesystem";
-      path = "${config.xdg.dataHome}/.calendar";
+      path = "${config.home.homeDirectory}/.calendar";
       fileExt = ".ics";
     };
     vdirsyncer = {
@@ -46,7 +46,7 @@ in
     };
     local = {
       type = "filesystem";
-      path = "${config.xdg.dataHome}/.contacts";
+      path = "${config.home.homeDirectory}/.contacts";
       fileExt = ".vcf";
     };
     vdirsyncer = {

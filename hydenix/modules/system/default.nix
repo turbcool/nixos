@@ -13,7 +13,6 @@
     ./work/work.nix
     #./gaming.nix
     ./packages.nix
-    # ./example.nix - add your modules here
   ];
 
   environment.sessionVariables = {

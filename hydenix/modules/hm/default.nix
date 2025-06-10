@@ -9,6 +9,7 @@
   imports = [
     ./vscode.nix
     ./neovim.nix
+    ./calendar.nix
   ];
 
   # home-manager options go here
