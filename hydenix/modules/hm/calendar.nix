@@ -15,7 +15,7 @@ in
   ];
 
   accounts.calendar.accounts.personal = {
-    enable = true;
+    primary = true;
     remote = {
       type = "caldav";
       url = radicaleUrl;
@@ -37,7 +37,6 @@ in
   };
 
   accounts.contact.accounts.contacts = {
-    enable = true;
     remote = {
       type = "carddav";
       url = radicaleUrl;
@@ -62,17 +61,5 @@ in
     extraConfig = ''
       set query_command = "khard email --parsable %s"
     '';
-  };
-
-  systemd.user.timers.vdirsyncer-sync = {
-    description = "Periodic vdirsyncer sync";
-    wantedBy = [ "timers.target" ];
-    timerConfig = {
-      OnCalendar = "*:0/5"; # Sync every 5 minutes
-      Persistent = true;
-    };
-    serviceConfig = {
-      ExecStart = "${pkgs.vdirsyncer}/bin/vdirsyncer sync";
-    };
   };
 }
