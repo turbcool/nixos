@@ -13,7 +13,7 @@ in
 
   programs.khard = {
     enable = true;
-  }
+  };
 
   programs.vdirsyncer = {
     enable = true;
@@ -40,6 +40,7 @@ in
     };
     vdirsyncer = {
       enable = true;
+      collections = ["from a" "from b"]; # sync both sides (local + remote)
     };
     khal = {
       enable = true;
@@ -61,6 +62,10 @@ in
     };
     vdirsyncer = {
       enable = true;
+      collections = [
+        "from a"
+        "from b"
+      ];
     };
     khard = {
       enable = true;
