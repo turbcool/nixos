@@ -20,7 +20,7 @@ in
     pkgs.ripgrep
     pkgs.gdu
     pkgs.gcc
-    pkgs.userPkgs.aider-chat
+    pkgs.userPkgs.aider-chat-with-playwright
     pkgs.userPkgs.yazi
 
     #pkgs.cudatoolkit

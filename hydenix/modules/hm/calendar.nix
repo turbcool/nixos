@@ -41,12 +41,13 @@ in
     vdirsyncer = {
       enable = true;
       collections = ["from a" "from b"]; # sync both sides (local + remote)
-      metadata = ["color" "displayname" ];
+      metadata = ["color"];
     };
     khal = {
       enable = true;
       type = "discover";
     };
+    primaryCollection = "notify"; # без этого khal не находит календарь
   };
 
   accounts.contact.accounts.contacts = {
