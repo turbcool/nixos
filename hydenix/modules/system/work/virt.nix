@@ -2,8 +2,10 @@
 { config, pkgs, ... }:
 
 {
-  #virtualisation.waydroid.enable = true;  
-  virtualisation.docker.enable = true;
-  hardware.nvidia-container-toolkit.enable = true;
+  virtualisation = {
+    waydroid.enable = false;  
+    docker.enable = true;
+  };
+  #hardware.nvidia-container-toolkit.enable = true;
 }
 
