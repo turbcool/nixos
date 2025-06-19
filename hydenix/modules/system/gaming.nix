@@ -41,9 +41,9 @@
   programs.alvr.openFirewall = true;
 
   services.sunshine = {
-    enable = true;
-    autoStart = true;
-    capSysAdmin = true;
+    enable = false;
+    autoStart = false;
+    capSysAdmin = false;
     openFirewall = true;
   };
 }

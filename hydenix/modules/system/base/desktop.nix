@@ -3,7 +3,10 @@
 
 {
   hardware = {
-    graphics.enable = true;
+    graphics = {
+      enable = true;
+      enable32Bit = true; # Wine
+    };
     nvidia = {
       modesetting.enable = true;
       powerManagement.enable = true;
@@ -13,8 +16,8 @@
     };
   };
   services.xserver.videoDrivers = ["nvidia"];
+  
 
-# Configure keymap in X11 (relevant for graphical sessions)
   services.xserver.xkb = {
     layout = "us,ru";
     options = "grp:alt_shift_toggle";

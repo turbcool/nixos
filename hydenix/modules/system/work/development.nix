@@ -22,6 +22,7 @@ in
     pkgs.gcc
     pkgs.userPkgs.aider-chat-with-playwright
     pkgs.userPkgs.yazi
+    pkgs.unrar
 
     #pkgs.cudatoolkit
     #(python3.withPackages (ps: [
