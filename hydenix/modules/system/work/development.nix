@@ -20,11 +20,11 @@ in
     pkgs.ripgrep
     pkgs.gdu
     pkgs.gcc
-    pkgs.userPkgs.aider-chat-with-playwright
+    pkgs.userPkgs.aider-chat
     pkgs.userPkgs.yazi
     pkgs.unrar
-
-    #pkgs.cudatoolkit
+    pkgs.cudatoolkit
+    pkgs.jan
     #(python3.withPackages (ps: [
     #  ps.pytorchWithCuda
       # ps.torchvisionWithCuda # Uncomment if torchvision is needed

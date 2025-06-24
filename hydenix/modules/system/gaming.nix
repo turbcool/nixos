@@ -5,7 +5,7 @@
     pkgs.lutris
     pkgs.prismlauncher
     pkgs.qbittorrent-enhanced
-    inputs.anime.packages.${pkgs.stdenv.hostPlatform.system}.sleepy-launcher
+    #inputs.anime.packages.${pkgs.stdenv.hostPlatform.system}.sleepy-launcher
   ];
 
   # Disable mihoyo telemetry
