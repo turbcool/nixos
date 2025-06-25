@@ -25,6 +25,7 @@ in
     pkgs.unrar
     pkgs.cudatoolkit
     pkgs.jan
+    pkgs.postgresql_17
     #(python3.withPackages (ps: [
     #  ps.pytorchWithCuda
       # ps.torchvisionWithCuda # Uncomment if torchvision is needed

@@ -17,7 +17,7 @@
         "omnisharp.useModernNet" = true;
         "git.enableSmartCommit" = true;
         "editor.minimap.enabled" = false;
-        "workbench.colorTheme": "Kanagawa Vague Dark";
+        "workbench.colorTheme" = "Kanagawa Vague Dark";
       };
     };     
   };
