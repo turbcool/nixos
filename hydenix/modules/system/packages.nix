@@ -2,6 +2,7 @@
 { config, pkgs, ... }:
 
 {
+  programs.mpv.enable = true;
   environment.systemPackages = with pkgs; [
     pkgs.telegram-desktop
     pkgs.yt-dlp
