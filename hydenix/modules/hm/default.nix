@@ -18,6 +18,8 @@
     # pkgs.userPkgs.vscode - your personal nixpkgs version
   ];
 
+  programs.mpv.enable = true;
+
   home.file = {
     ".config/hypr/userprefs.conf" = lib.mkForce {
       source = ../config/hyprland/userprefs.conf;
