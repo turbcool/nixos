@@ -6,7 +6,6 @@
     profiles.default = {
       extensions = with pkgs.vscode-extensions; [
         ms-dotnettools.csdevkit
-        ms-dotnettools.csharp
         ms-dotnettools.vscode-dotnet-runtime
         ms-vscode-remote.remote-containers
       ];

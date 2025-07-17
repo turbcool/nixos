@@ -1,17 +1,17 @@
 { config, pkgs, ... }:
 
 let
-  dotnet-8-9 =
+  dotnet-sdk =
     (with pkgs.dotnetCorePackages;
     combinePackages [
       sdk_8_0
       sdk_9_0
     ]);
-  dotnet-9 = pkgs.dotnetCorePackages.sdk_9_0;
+  dotnetRoot = "${dotnet-sdk}/share/dotnet";
 in
 {
   environment.systemPackages = with pkgs; [
-    dotnet-8-9
+    dotnet-sdk
     pkgs.neovim
     pkgs.nodejs
     pkgs.roslyn-ls
@@ -20,22 +20,20 @@ in
     pkgs.ripgrep
     pkgs.gdu
     pkgs.gcc
-    pkgs.userPkgs.aider-chat
+    pkgs.aider-chat
     pkgs.userPkgs.yazi
     pkgs.unrar
     pkgs.cudatoolkit
     pkgs.jan
     pkgs.postgresql_17
-    #(python3.withPackages (ps: [
-    #  ps.pytorchWithCuda
-      # ps.torchvisionWithCuda # Uncomment if torchvision is needed
-    #]))
+    pkgs.zotero
+    pkgs.nmap
   ];
 
   programs.npm.enable = true;
 
-  #environment.sessionVariables = {
-    #DOTNET_ROOT = "${dotnet-8.outPath}/share/dotnet";
-  #};
+  environment.sessionVariables = {
+    DOTNET_ROOT = dotnetRoot;
+  };
   # TODO: HM copy nvim config from git to ~/.config/nvim
 }

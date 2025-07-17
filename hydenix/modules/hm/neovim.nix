@@ -7,7 +7,9 @@
       ripgrep
       fd
       csharp-ls
+      unzip # for mason installs
       netcoredbg
+      omnisharp-roslyn
     ];
   };
 }
