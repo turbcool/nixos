@@ -2,6 +2,16 @@
 { config, pkgs, ... }:
 
 {
+  networking.firewall = {
+    allowedTCPPorts = [
+      5173 5174 # development
+      47984 47989 48010 # wolf
+    ];
+
+    allowedUDPPorts = [
+      47999 48100 48200 # wolf
+    ];
+  };
   # L2TP
   services.xl2tpd.enable = true;
   services.strongswan.enable = true;

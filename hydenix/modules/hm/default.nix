@@ -10,6 +10,7 @@
     ./vscode.nix
     ./neovim.nix
     ./calendar.nix
+    ./wolf.nix
   ];
 
   # home-manager options go here

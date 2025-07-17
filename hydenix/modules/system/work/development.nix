@@ -36,9 +36,5 @@ in
     DOTNET_ROOT = dotnetRoot;
   };
 
-  networking.firewall = {
-    allowedTCPPorts = [ 5173 5174 ];
-  };
-
   # TODO: HM copy nvim config from git to ~/.config/nvim
 }
