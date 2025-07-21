@@ -41,7 +41,8 @@
     ".config/nvim" = {
       source = pkgs.fetchgit {
         url = "https://github.com/turbcool/nvim";
-        rev = "1.0.0"; 
+        rev = "2fe7ed3af7fec69c9112cd54ab2a363e59c041b3"; 
+        sha256 = "kYb3zgsWY7xQ3u1UsbpwCd9XW34Q23iRAThUBjVtyaA=";
       };
       recursive = true;
     };
