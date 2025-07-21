@@ -2,17 +2,18 @@
 
 {
   imports = [
-    ./base/boot.nix
-    ./base/desktop.nix
-    ./base/networking.nix
-    ./base/user.nix
-    ./browsers/brave.nix
-    ./work/development.nix
-    ./work/syncthing.nix
-    ./work/virt.nix
-    ./work/work.nix
-    ./gaming.nix
-    ./packages.nix
+    ./base/default.nix
+    ./browsers/default.nix
+    ./gaming/default.nix
+    ./work/default.nix
+  ];
+
+  environment.systemPackages = with pkgs; [
+    pkgs.telegram-desktop
+    pkgs.yt-dlp
+    pkgs.kdePackages.ark
+    pkgs.easyeffects
+    pkgs.qbittorrent-enhanced
   ];
 
   environment.sessionVariables = {

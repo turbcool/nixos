@@ -1,11 +1,9 @@
+
 { config, pkgs, inputs, ... }:
 
 {
   environment.systemPackages = with pkgs; [
-    pkgs.lutris
-    pkgs.prismlauncher
-    pkgs.qbittorrent-enhanced
-    #inputs.anime.packages.${pkgs.stdenv.hostPlatform.system}.sleepy-launcher
+    inputs.anime.packages.${pkgs.stdenv.hostPlatform.system}.sleepy-launcher
   ];
 
   # Disable mihoyo telemetry
@@ -34,21 +32,5 @@
 
       "pc.crashsight.wetest.net"
     ];
-  };
-
-  programs.steam = {
-    enable = true;
-    remotePlay.openFirewall = true;
-    localNetworkGameTransfers.openFirewall = true;
-    extest.enable = true; # Steam Input on Wayland
-  };
-  programs.alvr.enable = true;
-  programs.alvr.openFirewall = true;
-
-  services.sunshine = {
-    enable = false;
-    autoStart = false;
-    capSysAdmin = false;
-    openFirewall = true;
   };
 }

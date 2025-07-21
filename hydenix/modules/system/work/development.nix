@@ -1,20 +1,9 @@
 { config, pkgs, ... }:
 
-let
-  dotnet-sdk =
-    (with pkgs.dotnetCorePackages;
-    combinePackages [
-      sdk_8_0
-      sdk_9_0
-    ]);
-  dotnetRoot = "${dotnet-sdk}/share/dotnet";
-in
 {
   environment.systemPackages = with pkgs; [
-    dotnet-sdk
     pkgs.neovim
     pkgs.nodejs
-    pkgs.roslyn-ls
     pkgs.lazygit
     pkgs.lazydocker
     pkgs.ripgrep
@@ -32,9 +21,9 @@ in
 
   programs.npm.enable = true;
 
-  environment.sessionVariables = {
-    DOTNET_ROOT = dotnetRoot;
+  services.v2raya = {
+    enable = true;
+    cliPackage = pkgs.xray;
   };
-
   # TODO: HM copy nvim config from git to ~/.config/nvim
 }

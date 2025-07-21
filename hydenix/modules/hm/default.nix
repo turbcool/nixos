@@ -7,9 +7,10 @@
 
 {
   imports = [
-    ./vscode.nix
-    ./neovim.nix
     ./calendar.nix
+    ./hyprland.nix
+    ./neovim.nix
+    ./vscode.nix
     ./wolf.nix
   ];
 
@@ -22,24 +23,8 @@
   programs.mpv.enable = true;
 
   home.file = {
-    ".config/hypr/userprefs.conf" = lib.mkForce {
-      source = ../config/hyprland/userprefs.conf;
-    };
-    ".config/hypr/hypridle.conf" = lib.mkForce {
-      source = ../config/hyprland/hypridle.conf;
-    };
     ".ssh/config" = lib.mkForce {
       source = ../config/ssh-config.txt;
-    };
-    ".config/hypr/hyde.conf" = lib.mkForce {
-      source = ../config/hyprland/hyde.conf;
-    };
-    #".config/hyde/config.toml" = lib.mkForce {
-    #  source = ../config/hyde/config.toml;
-    #};
-    ".config/kitty/kitty.conf" = lib.mkForce {
-      source = ../config/hyde/kitty.conf;
-      force = true;
     };
     ".local/share/remmina/work-pc.remmina" = lib.mkForce {
       source = ../config/remmina/work-pc.remmina;
