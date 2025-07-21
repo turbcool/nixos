@@ -41,10 +41,7 @@
     ".config/nvim" = {
       source = pkgs.fetchgit {
         url = "https://github.com/turbcool/nvim";
-        # It's highly recommended to pin a specific commit hash for reproducibility.
-        # Replace "main" with a specific commit hash, e.g., "a1b2c3d4e5f67890abcdef1234567890abcdef"
-        rev = "main"; 
-        sha256 = "sha256-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA="; # Replace with the actual SHA256 hash
+        rev = "1.0.0"; 
       };
       recursive = true;
     };

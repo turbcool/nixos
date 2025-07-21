@@ -17,6 +17,7 @@
     pkgs.postgresql_17
     pkgs.zotero
     pkgs.nmap
+    pkgs.platformio
   ];
 
   programs.npm.enable = true;
