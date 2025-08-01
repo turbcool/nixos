@@ -39,12 +39,12 @@
       force = true;
     };
     ".config/nvim" = {
-      source = pkgs.fetchgit {
-        url = "https://github.com/turbcool/nvim";
-        rev = "2fe7ed3af7fec69c9112cd54ab2a363e59c041b3"; 
-        sha256 = "kYb3zgsWY7xQ3u1UsbpwCd9XW34Q23iRAThUBjVtyaA=";
+      source = pkgs.fetchFromGitHub {
+        owner = "turbcool";
+        repo = "nvim";
+        rev = "64164a15cd6bcdaa83a17f0ea6169c6daa1686ea";
+        hash = "sha256-kYb3zgsWY7xQ3u1UsbpwCd9XW34Q23iRAThUBjVtyaA=";
       };
-      recursive = true;
     };
   };
 

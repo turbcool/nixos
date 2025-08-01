@@ -22,6 +22,8 @@
     options = "grp:alt_shift_toggle";
   };
 
+  services.udev.packages = with pkgs; [ platformio-core.udev ];
+
 #  fonts = {
 #    enableDefaultPackages = true;
 #    packages = with pkgs; [

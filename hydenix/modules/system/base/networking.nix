@@ -12,4 +12,6 @@
       47999 48100 48200 # wolf
     ];
   };
+
+  networking.interfaces.enp6s0.wakeOnLan.enable = true;
 }
