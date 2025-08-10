@@ -9,6 +9,7 @@
     ];
 
     allowedUDPPorts = [
+      5353 # Ensure the system can resolve multicast DNS (mDNS) for Wi-Fi printers
       47999 48100 48200 # wolf
     ];
   };

@@ -6,6 +6,7 @@
     ./desktop.nix
     ./git.nix
     ./networking.nix
+    ./printing.nix
     ./user.nix
   ];
 
