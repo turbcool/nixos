@@ -18,6 +18,7 @@
     pkgs.zotero
     pkgs.nmap
     pkgs.platformio
+    pkgs.dnsutils
   ];
 
   programs.npm.enable = true;
