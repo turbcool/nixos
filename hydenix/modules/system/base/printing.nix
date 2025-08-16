@@ -10,7 +10,7 @@
   # Enable Avahi for automatic printer discovery over the network
   services.avahi = {
     enable = true;
-    nssmdns = true;  # For hostname resolution
+    nssmdns4 = true;  # For hostname resolution
     openFirewall = true;  # Allow necessary ports
   };
 }
