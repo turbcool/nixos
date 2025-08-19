@@ -8,6 +8,7 @@
     ./syncthing.nix
     ./virt.nix
     ./work.nix
+    ./llm-cli.nix
   ];
 
   environment.sessionVariables = {
