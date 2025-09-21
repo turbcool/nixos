@@ -13,13 +13,15 @@
     pkgs.userPkgs.yazi
     pkgs.unrar
     pkgs.cudatoolkit
-    pkgs.jan
     pkgs.postgresql_17
     pkgs.zotero
     pkgs.nmap
-    pkgs.platformio
     pkgs.dnsutils
+    #pkgs.jan
+    #pkgs.platformio
   ];
+
+  #services.udev.packages = with pkgs; [ platformio-core.udev ];
 
   programs.npm.enable = true;
 
