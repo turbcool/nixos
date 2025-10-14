@@ -2,7 +2,6 @@
 { config, pkgs, ... }:
 
 {
-  # Define a user account. Don't forget to set a password with ‘passwd’.
   users.users.turb = {
     isNormalUser = true;
     description = "turb";
@@ -27,6 +26,5 @@
   environment.sessionVariables = {
     WLR_NO_HARDWARE_CURSORS = "1";
     NIXOS_OZONE_WL = "1";
-    WEATHER_LOCATION = "Perm";
   };
 }

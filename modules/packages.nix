@@ -2,11 +2,8 @@
 { config, pkgs, pkgsUnstable, ... }:
 
 {
-  # List packages installed in system profile. To search, run:
-  # $ nix search wget
   environment.systemPackages = with pkgs; [
-  #  vim # Do not forget to add an editor to edit configuration.nix! The Nano editor is also installed by default.
-  #  wget
+     wget
      remmina
 
      # Hyprland dependencies/tools (kept here for clarity, could move to desktop.nix)
@@ -24,7 +21,6 @@
      brave
      git
      telegram-desktop
-     pkgsUnstable.aider-chat # Using unstable package defined in configuration.nix
 
      networkmanagerapplet
      networkmanager-l2tp
@@ -37,14 +33,9 @@
 
      lazygit
      lazydocker
-     lutris
-     prismlauncher
   ];
 
   programs.thunar.enable = true;
-  programs.steam.enable = true;
-  programs.alvr.enable = true;
-  programs.alvr.openFirewall = true;
 
   programs.neovim = {
     enable = true;
@@ -54,7 +45,7 @@
   programs.chromium = {
     enable = true;
     extensions = [
-	"nngceckbapebfimnlniiiahkandclblb" # bitwarden
+	    "nngceckbapebfimnlniiiahkandclblb" # bitwarden
     ];
     extraOpts = {
       "PasswordManagerEnabled" = false;

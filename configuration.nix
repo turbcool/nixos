@@ -15,11 +15,11 @@
 
       # Import modularized configuration files
       ./modules/core.nix
+      ./modules/desktop.nix
       ./modules/hardware.nix
       ./modules/networking.nix
+      ./modules/packages.nix
       ./modules/user.nix
-      ./modules/packages.nix # Include packages module normally
-      ./modules/desktop.nix
     ];
 
   # Pass custom arguments like pkgsUnstable to modules
