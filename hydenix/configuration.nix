@@ -3,128 +3,96 @@
   ...
 }:
 let
-  # Package declaration
-  # ---------------------
+  # FOLLOW THE BELOW INSTRUCTIONS LINE BY LINE TO SET UP YOUR SYSTEM
 
-  pkgs = import inputs.hydenix.inputs.hydenix-nixpkgs {
-    inherit (inputs.hydenix.lib) system;
+  # Package configuration - sets up package system with proper overlays
+  # Most users won't need to modify this section
+  system = "x86_64-linux";
+  pkgs = import inputs.nixpkgs {
+    inherit system;
     config.allowUnfree = true;
     overlays = [
-      inputs.hydenix.lib.overlays
-      (final: prev: {
-        userPkgs = import inputs.nixpkgs {
-          system = "x86_64-linux";
-          config.allowUnfree = true;
-        };
-      })
+      inputs.hydenix.overlays.default
     ];
   };
 in
 {
-
-  # Set pkgs for hydenix globally, any file that imports pkgs will use this
-  nixpkgs.pkgs = pkgs;
+  nixpkgs.pkgs = pkgs; # Set pkgs for hydenix globally
 
   imports = [
-    inputs.hydenix.inputs.home-manager.nixosModules.home-manager
-    ./hardware-configuration.nix
-    inputs.hydenix.lib.nixOsModules
-    ./modules/system
+    # hydenix inputs - Required modules, don't modify unless you know what you're doing
+    inputs.home-manager.nixosModules.home-manager
+    inputs.hydenix.nixosModules.default
+    ./modules/system # Your custom system modules
+    ./hardware-configuration.nix # Auto-generated hardware config
 
-    # === GPU-specific configurations ===
+    # Hardware Configuration - Uncomment lines that match your hardware
+    # Run `lshw -short` or `lspci` to identify your hardware
 
-    /*
-      For drivers, we are leveraging nixos-hardware
-      Most common drivers are below, but you can see more options here: https://github.com/NixOS/nixos-hardware
-    */
+    # GPU Configuration (choose one):
+    inputs.nixos-hardware.nixosModules.common-gpu-nvidia # NVIDIA
+    # inputs.nixos-hardware.nixosModules.common-gpu-amd # AMD
 
-    #! EDIT THIS SECTION
-    # For NVIDIA setups
-    #inputs.hydenix.inputs.nixos-hardware.nixosModules.common-gpu-nvidia
+    # CPU Configuration (choose one):
+    # inputs.nixos-hardware.nixosModules.common-cpu-amd # AMD CPUs
+    inputs.nixos-hardware.nixosModules.common-cpu-intel # Intel CPUs
 
-    # For AMD setups
-    # inputs.hydenix.inputs.nixos-hardware.nixosModules.common-gpu-amd
-
-    # === CPU-specific configurations ===
-    # For AMD CPUs
-    # inputs.hydenix.inputs.nixos-hardware.nixosModules.common-cpu-amd
-
-    # For Intel CPUs
-    inputs.hydenix.inputs.nixos-hardware.nixosModules.common-cpu-intel
-
-    # === Other common modules ===
-    inputs.hydenix.inputs.nixos-hardware.nixosModules.common-pc
-    inputs.hydenix.inputs.nixos-hardware.nixosModules.common-pc-ssd
+    # Additional Hardware Modules - Uncomment based on your system type:
+    # inputs.nixos-hardware.nixosModules.common-hidpi # High-DPI displays
+    # inputs.nixos-hardware.nixosModules.common-pc-laptop # Laptops
+    inputs.nixos-hardware.nixosModules.common-pc-ssd # SSD storage
   ];
 
+  # If enabling NVIDIA, you will be prompted to configure hardware.nvidia
+  # hardware.nvidia = {
+  #   open = true; # For newer cards, you may want open drivers
+  #   prime = { # For hybrid graphics (laptops), configure PRIME:
+  #     amdBusId = "PCI:0:2:0"; # Run `lspci | grep VGA` to get correct bus IDs
+  #     intelBusId = "PCI:0:2:0"; # if you have intel graphics
+  #     nvidiaBusId = "PCI:1:0:0";
+  #     offload.enable = false; # Or disable PRIME offloading if you don't care
+  #   };
+  # };
+
+  # Home Manager Configuration - manages user-specific configurations (dotfiles, themes, etc.)
   home-manager = {
     useGlobalPkgs = true;
     useUserPackages = true;
-    extraSpecialArgs = {
-      inherit inputs;
-    };
-    backupFileExtension = "backup";
-
-    #! EDIT THIS USER (must match users defined below)
+    extraSpecialArgs = { inherit inputs; };
+    # User Configuration - REQUIRED: Change "hydenix" to your actual username
+    # This must match the username you define in users.users below
     users."turb" =
       { ... }:
       {
         imports = [
-          inputs.hydenix.lib.homeModules
-          # Nix-index-database - for comma and command-not-found
-          inputs.nix-index-database.homeModules.nix-index
-          ./modules/hm
+          inputs.hydenix.homeModules.default
+          ./modules/hm # Your custom home-manager modules (configure hydenix.hm here!)
         ];
       };
   };
 
-  # IMPORTANT: Customize the following values to match your preferences
-  hydenix = {
-    enable = true; # Enable the Hydenix module
-
-    hostname = "nixos";
-    timezone = "Asia/Yekaterinburg";
-    locale = "ru_RU.UTF-8";
-
-    boot.kernelPackages = pkgs.linuxPackages_latest; # non-zen kernel
-
-    /*
-      Optionally edit the below values, or leave to use hydenix defaults
-      visit ./modules/hm/default.nix for more options
-
-      audio.enable = true; # enable audio module
-      boot = {
-        enable = true; # enable boot module
-        useSystemdBoot = true; # disable for GRUB
-        grubTheme = pkgs.hydenix.grub-retroboot; # or pkgs.hydenix.grub-pochita
-        grubExtraConfig = ""; # additional GRUB configuration
-        kernelPackages = pkgs.linuxPackages_zen; # default zen kernel
-      };
-      gaming.enable = true; # enable gaming module
-      hardware.enable = true; # enable hardware module
-      network.enable = true; # enable network module
-      nix.enable = true; # enable nix module
-      sddm = {
-        enable = true; # enable sddm module
-        theme = pkgs.hydenix.sddm-candy; # or pkgs.hydenix.sddm-corners
-      };
-      system.enable = true; # enable system module
-    */
-  };
-
-  #! EDIT THESE VALUES (must match users defined above)
+  # User Account Setup - REQUIRED: Change "hydenix" to your desired username (must match above)
   users.users.turb = {
     isNormalUser = true;
-    initialPassword = "1"; # Default password (CHANGE THIS after first login with passwd)
+    initialPassword = "1"; # SECURITY: Change this password after first login with `passwd`
     extraGroups = [
-      "wheel" # For sudo access
-      "networkmanager" # For network management
-      "video" # For display/graphics access
-      "docker"
-      # Add other groups as needed
-    ];
-    shell = pkgs.zsh; # Change if you prefer a different shell
+      "wheel"
+      "networkmanager"
+      "video"
+    ]; # User groups (determines permissions)
+    shell = pkgs.zsh; # Default shell (options: pkgs.bash, pkgs.zsh, pkgs.fish)
   };
 
+  # Hydenix Configuration - Main configuration for the Hydenix desktop environment
+  hydenix = {
+    enable = true; # Enable Hydenix modules
+    # Basic System Settings (REQUIRED):
+    hostname = "nixos"; # REQUIRED: Set your computer's network name (change to something unique)
+    timezone = "Asia/Yekaterinburg"; # REQUIRED: Set timezone (examples: "America/New_York", "Europe/London", "Asia/Tokyo")
+    locale = "ru_RU.UTF-8"; # REQUIRED: Set locale/language (examples: "en_US.UTF-8", "en_GB.UTF-8", "de_DE.UTF-8")
+    # For more configuration options, see: ./docs/options.md
+  };
+
+  # System Version - Don't change unless you know what you're doing (helps with system upgrades and compatibility)
   system.stateVersion = "25.05";
 }
