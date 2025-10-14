@@ -33,7 +33,6 @@
   outputs =
     { ... }@inputs:
     let
-      HOSTNAME = "nixos";
       system = "x86_64-linux";
       hydenixConfig = inputs.nixpkgs.lib.nixosSystem {
         inherit system;
