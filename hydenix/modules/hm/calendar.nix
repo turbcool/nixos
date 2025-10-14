@@ -20,10 +20,10 @@ in
     statusPath = "${config.home.homeDirectory}/.cache/vdirsyncer/status/";
   };
 
-  services.vdirsyncer = {
-    enable = true;
-    frequency = "*:0/10";
-  };
+  #services.vdirsyncer = {
+  #  enable = true;
+  #  frequency = "*:0/10";
+  #}; TODO: update
 
   accounts.calendar.accounts.personal = {
     primary = true;

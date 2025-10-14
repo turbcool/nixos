@@ -7,7 +7,7 @@
 
 {
   imports = [
-    ./calendar.nix
+    #./calendar.nix
     ./hyprland.nix
     ./neovim.nix
     ./vscode.nix
