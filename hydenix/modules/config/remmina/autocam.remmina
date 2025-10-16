@@ -1,7 +1,0 @@
-[remmina]
-name=AutoCam
-server=89.169.4.204:57624
-protocol=RDP
-username=Administrator
-window_maximize=1
-drive=/home/turb/autocam
