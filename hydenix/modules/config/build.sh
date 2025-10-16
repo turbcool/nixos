@@ -1,1 +1,1 @@
-cd /etc/nixos/hydenix && sudo nixos-rebuild switch --flake .#nixos
+cd /etc/nixos/hydenix && sudo nixos-rebuild switch --flake .#hydenix

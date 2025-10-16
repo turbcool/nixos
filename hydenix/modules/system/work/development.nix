@@ -10,7 +10,7 @@
     pkgs.gdu
     pkgs.gcc
     pkgs.aider-chat
-    pkgs.userPkgs.yazi
+    pkgs.yazi
     pkgs.unrar
     pkgs.cudatoolkit
     pkgs.postgresql_17
