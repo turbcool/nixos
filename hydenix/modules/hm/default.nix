@@ -12,6 +12,7 @@
     ./neovim.nix
     ./vscode.nix
     ./wolf.nix
+    ./qutebrowser.nix
   ];
 
   # home-manager options go here
