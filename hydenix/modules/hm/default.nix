@@ -13,6 +13,7 @@
     ./vscode.nix
     ./wolf.nix
     ./qutebrowser.nix
+    ./tmux.nix
   ];
 
   # home-manager options go here
@@ -63,7 +64,7 @@
     };
 
     theme = {
-      active = "Catppuccin Mocha";
+      active = "Ever Blushing";
       themes = [
         #"Another World"
         #"Cat Latte"
@@ -71,14 +72,14 @@
         #"Greenify"
         #"Monokai"
         "Abyssal-Wave"
-        "BlueSky"
+        #"BlueSky"
         "Ever Blushing"
-        "Mac OS"
+        #"Mac OS"
         "Monterey Frost"
         "Tundra"
-        "Cat Latte"
+        #"Cat Latte"
         "Catppuccin Mocha"
-        "Catppuccin Latte"
+        #"Catppuccin Latte"
       ]; # default enabled themes, full list in https://github.com/richen604/hydenix/tree/main/hydenix/sources/themes
     };
     editors.vscode.enable = false;
