@@ -28,6 +28,10 @@
     nix-ai-tools.url = "github:numtide/nix-ai-tools";
     # Hardware Configuration's, used in ./configuration.nix. Feel free to remove if unused
     nixos-hardware.url = "github:nixos/nixos-hardware/master";
+    
+    # Agenix for secrets management
+    agenix.url = "github:ryantm/agenix";
+    agenix.inputs.nixpkgs.follows = "nixpkgs";
   };
 
   outputs =
@@ -41,6 +45,7 @@
         };
         modules = [
           ./configuration.nix
+          inputs.agenix.nixosModules.age
         ];
       };
 
