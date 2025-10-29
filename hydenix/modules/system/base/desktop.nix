@@ -16,6 +16,7 @@
     };
   };
   services.xserver.videoDrivers = ["nvidia"];
+  environment.systemPackages = with pkgs; [ pkgs.nvidia-container-toolkit ];
 
   services.xserver.xkb = {
     layout = "us,ru";

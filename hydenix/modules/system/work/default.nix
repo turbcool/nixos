@@ -5,10 +5,10 @@
     ./development.nix
     ./dotnet.nix
     ./l2tp.nix
+    ./llm-cli.nix
     ./syncthing.nix
     ./virt.nix
     ./work.nix
-    ./llm-cli.nix
   ];
 
   environment.sessionVariables = {

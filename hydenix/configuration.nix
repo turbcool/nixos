@@ -80,6 +80,7 @@ in
       "wheel"
       "networkmanager"
       "video"
+      "docker"
     ]; # User groups (determines permissions)
     shell = pkgs.zsh; # Default shell (options: pkgs.bash, pkgs.zsh, pkgs.fish)
   };
