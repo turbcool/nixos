@@ -12,7 +12,7 @@
     pkgs.aider-chat
     pkgs.yazi
     pkgs.unrar
-    pkgs.cudatoolkit
+    #pkgs.cudatoolkit
     pkgs.postgresql_17
     pkgs.zotero
     pkgs.nmap

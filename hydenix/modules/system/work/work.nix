@@ -4,7 +4,7 @@
   environment.systemPackages = with pkgs; [
     pkgs.zoom-us
     pkgs.remmina
-    pkgs.onlyoffice-bin
+    pkgs.onlyoffice-desktopeditors
     pkgs.sqlitebrowser
   ];
 }
