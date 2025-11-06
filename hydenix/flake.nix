@@ -16,22 +16,13 @@
       # uncomment the below if you know what you're doing, hydenix updates nixos-unstable every week or so
       # inputs.nixpkgs.follows = "nixpkgs";
     };
-
-    # Home Manager
-    home-manager = {
-      url = "github:nix-community/home-manager";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
-    anime.url = "github:ezKEa/aagl-gtk-on-nix";
-    anime.inputs.nixpkgs.follows = "nixpkgs";
-    nix-ai-tools.url = "github:numtide/nix-ai-tools";
     # Hardware Configuration's, used in ./configuration.nix. Feel free to remove if unused
     nixos-hardware.url = "github:nixos/nixos-hardware/master";
-    
-    # Agenix for secrets management
-    agenix.url = "github:ryantm/agenix";
-    agenix.inputs.nixpkgs.follows = "nixpkgs";
+
+    # Custom:
+    #nix-ai-tools.url = "github:numtide/nix-ai-tools";
+    #agenix.url = "github:ryantm/agenix";
+    #agenix.inputs.nixpkgs.follows = "nixpkgs";
   };
 
   outputs =
@@ -45,7 +36,7 @@
         };
         modules = [
           ./configuration.nix
-          inputs.agenix.nixosModules.age
+          #inputs.agenix.nixosModules.age
         ];
       };
 
