@@ -21,14 +21,15 @@
 
     # Custom:
     #nix-ai-tools.url = "github:numtide/nix-ai-tools";
-    #agenix.url = "github:ryantm/agenix";
-    #agenix.inputs.nixpkgs.follows = "nixpkgs";
+    agenix.url = "github:ryantm/agenix";
+    agenix.inputs.nixpkgs.follows = "nixpkgs";
   };
 
   outputs =
-    { ... }@inputs:
+    { home-manager, ... }@inputs:
     let
       system = "x86_64-linux";
+      pkgs = inputs.nixpkgs.legacyPackages.${system};
       hydenixConfig = inputs.nixpkgs.lib.nixosSystem {
         inherit system;
         specialArgs = {
@@ -36,7 +37,7 @@
         };
         modules = [
           ./configuration.nix
-          #inputs.agenix.nixosModules.age
+          inputs.agenix.nixosModules.age
         ];
       };
 
@@ -44,5 +45,9 @@
     {
       nixosConfigurations.hydenix = hydenixConfig;
       nixosConfigurations.default = hydenixConfig;
+
+      devShells.${system}.default = pkgs.mkShell {
+        packages = [ inputs.agenix.packages.${system}.default ];
+      };
     };
 }

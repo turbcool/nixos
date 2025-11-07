@@ -24,14 +24,15 @@
 
   programs.mpv.enable = true;
 
+  age.secrets.work-pc = {
+    file = ../../secrets/work-pc.age;
+  };
+
   home.file = {
     ".ssh/config" = lib.mkForce {
       source = ../config/ssh-config.txt;
     };
-    ".local/share/remmina/work-pc.remmina" = lib.mkForce {
-      source = ../config/remmina/work-pc.remmina;
-      force = true;
-    };
+
     ".local/share/remmina/autocam.remmina" = lib.mkForce {
       source = ../config/remmina/autocam.remmina;
       force = true;
@@ -49,6 +50,24 @@
       };
     };
   };
+
+    home.activation.writeRemminaSecret = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+    mkdir -p "$HOME/.local/share/remmina"
+    cat > "$HOME/.local/share/remmina/work-pc.remmina" <<EOF
+[remmina]
+name=Work PC
+server=10.150.7.42
+protocol=RDP
+domain=NEOPLATFORM.RU
+username=inaidanov
+password=$(cat ${config.age.secrets.work-pc.path})
+sound=local
+quality=9
+window_maximize=1
+scale=2
+viewmode=4
+EOF
+  '';
 
   # hydenix home-manager options go here
   hydenix.hm = {

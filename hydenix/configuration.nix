@@ -67,6 +67,7 @@ in
       {
         imports = [
           inputs.hydenix.homeModules.default
+          inputs.agenix.homeManagerModules.default
           ./modules/hm # Your custom home-manager modules (configure hydenix.hm here!)
         ];
       };
@@ -93,6 +94,9 @@ in
     timezone = "Asia/Yekaterinburg"; # REQUIRED: Set timezone (examples: "America/New_York", "Europe/London", "Asia/Tokyo")
     locale = "ru_RU.UTF-8"; # REQUIRED: Set locale/language (examples: "en_US.UTF-8", "en_GB.UTF-8", "de_DE.UTF-8")
     # For more configuration options, see: ./docs/options.md
+    boot = {
+      kernelPackages = pkgs.linuxPackages;
+    };
   };
 
   # System Version - Don't change unless you know what you're doing (helps with system upgrades and compatibility)
