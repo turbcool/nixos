@@ -7,12 +7,12 @@
 
 : {
   age.secrets.work-pc = {
-    file = ../../secrets/work-pc.age;
+    file = ../../../secrets/work-pc.age;
   };
 
   home.file = {
     ".ssh/config" = lib.mkForce {
-      source = ssh-config.txt;
+      source = ./ssh-config.txt;
     };
 
     ".local/share/remmina/autocam.remmina" = lib.mkForce {
