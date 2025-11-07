@@ -51,22 +51,15 @@
     };
   };
 
-    home.activation.writeRemminaSecret = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+  home.activation.work-pc = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
     mkdir -p "$HOME/.local/share/remmina"
-    cat > "$HOME/.local/share/remmina/work-pc.remmina" <<EOF
-[remmina]
-name=Work PC
-server=10.150.7.42
-protocol=RDP
-domain=NEOPLATFORM.RU
-username=inaidanov
-password=$(cat ${config.age.secrets.work-pc.path})
-sound=local
-quality=9
-window_maximize=1
-scale=2
-viewmode=4
-EOF
+
+    # Copy your base config
+    cp ${../config/remmina/work-pc.remmina} "$HOME/.local/share/remmina/work-pc.remmina"
+
+    # Substitute empty password line
+    sed -i "s/^password=.*$/password=$(cat ${config.age.secrets.work-pc.path})/" \
+      "$HOME/.local/share/remmina/work-pc.remmina"
   '';
 
   # hydenix home-manager options go here
