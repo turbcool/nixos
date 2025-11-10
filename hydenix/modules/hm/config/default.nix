@@ -31,7 +31,7 @@
         hash = "sha256-kYb3zgsWY7xQ3u1UsbpwCd9XW34Q23iRAThUBjVtyaA=";
       };
     };
-    ".config/mihomo/config.yaml" = lib.mkForce {
+    "/etc/mihomo/config.yaml" = lib.mkForce {
       source = ./mihomo/config.yaml;
       force = true;
     };

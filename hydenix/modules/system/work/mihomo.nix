@@ -6,7 +6,7 @@
     webui = pkgs.metacubexd;
     package = pkgs.mihomo;
     tunMode = true;
-    configFile = ".config/mihomo/config.yaml";
+    configFile = "/home/turb/mihomo/config.yaml";
   };
   environment.systemPackages = [ pkgs.mihomo ];
 }
