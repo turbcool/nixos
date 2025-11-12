@@ -9,6 +9,9 @@ in
 {
   programs.khal = {
     enable = true;
+    locale = {
+      timeformat = "%H:%M";
+    };
   };
 
   programs.khard = {
@@ -20,10 +23,10 @@ in
     statusPath = "${config.home.homeDirectory}/.cache/vdirsyncer/status/";
   };
 
-  #services.vdirsyncer = {
-  #  enable = true;
-  #  frequency = "*:0/10";
-  #}; TODO: update
+  services.vdirsyncer = {
+    enable = true;
+    frequency = "*:0/10";
+  };
 
   accounts.calendar.accounts.personal = {
     primary = true;

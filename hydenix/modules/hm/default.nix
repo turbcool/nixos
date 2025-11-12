@@ -7,7 +7,7 @@
 
 {
   imports = [
-    #./calendar.nix
+    ./calendar.nix
     ./config/default.nix
     ./hyprland.nix
     ./neovim.nix
