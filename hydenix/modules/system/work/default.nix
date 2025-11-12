@@ -9,7 +9,6 @@
     ./syncthing.nix
     ./virt.nix
     ./work.nix
-    ./mihomo.nix
   ];
 
   environment.sessionVariables = {
