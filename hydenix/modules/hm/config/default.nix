@@ -3,9 +3,11 @@
   pkgs,
   config,
   ...
-}
+} :
 
-: {
+let
+  git = "${pkgs.git}/bin/git";
+in {
   age.secrets.work-pc = {
     file = ../../../secrets/work-pc.age;
   };
@@ -24,14 +26,19 @@
       force = true;
     };
     ".config/nvim" = {
-      source = pkgs.fetchFromGitHub {
-        owner = "turbcool";
-        repo = "nvim";
-        rev = "64164a15cd6bcdaa83a17f0ea6169c6daa1686ea";
-        hash = "sha256-kYb3zgsWY7xQ3u1UsbpwCd9XW34Q23iRAThUBjVtyaA=";
-      };
+      source = config.lib.file.mkOutOfStoreSymlink "/home/turb/nvim";
     };
   };
+
+  home.activation.nvim = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+    if [ -d "/home/turb/nvim/.git" ]; then
+      cd /home/turb/nvim && ${git} remote set-url origin https://github.com/turbcool/nvim.git
+      cd /home/turb/nvim && ${git} pull --ff-only
+    else
+      ${git} clone https://github.com/turbcool/nvim.git /home/turb/nvim
+    fi
+    cd /home/turb/nvim && ${git} remote set-url origin git@github.com:turbcool/nvim.git
+  '';
 
   home.activation.work-pc = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
     mkdir -p "$HOME/.local/share/remmina"
