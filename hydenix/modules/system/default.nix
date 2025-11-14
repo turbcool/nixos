@@ -14,6 +14,7 @@
     pkgs.kdePackages.ark
     pkgs.easyeffects
     pkgs.qbittorrent-enhanced
+    pkgs.lowfi
   ];
 
   environment.sessionVariables = {

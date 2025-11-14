@@ -29,5 +29,4 @@
     enable = true;
     cliPackage = pkgs.xray;
   };
-  # TODO: HM copy nvim config from git to ~/.config/nvim
 }
