@@ -20,7 +20,7 @@
     nixos-hardware.url = "github:nixos/nixos-hardware/master";
 
     # Custom:
-    #nix-ai-tools.url = "github:numtide/nix-ai-tools";
+    nix-ai-tools.url = "github:numtide/nix-ai-tools";
     agenix.url = "github:ryantm/agenix";
     agenix.inputs.nixpkgs.follows = "nixpkgs";
   };
