@@ -21,6 +21,10 @@ in {
       source = ./remmina/autocam.remmina;
       force = true;
     };
+    ".local/share/toggle-sidepad.sh" = {
+      source = ./hyprland/toggle-sidepad.sh;
+      force = true;
+    };
     "/build.sh" = lib.mkForce {
       source = ./build.sh;
       force = true;
