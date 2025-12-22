@@ -15,4 +15,11 @@
     NIXOS_OZONE_WL = "1";
     WEATHER_LOCATION = "Perm";
   };
+
+  services.journald = {
+    extraConfig = ''
+      SystemMaxUse=1G
+      SystemKeepFree=1G
+    '';
+  };
 }

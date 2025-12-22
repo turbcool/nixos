@@ -6,6 +6,7 @@
     pkgs.remmina
     pkgs.onlyoffice-desktopeditors
     pkgs.sqlitebrowser
+    pkgs.anydesk
   ];
 
   security.pki.certificateFiles = [

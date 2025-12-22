@@ -15,6 +15,9 @@
     pkgs.easyeffects
     pkgs.qbittorrent-enhanced
     pkgs.lowfi
+    (python3.withPackages (python-pkgs: with python-pkgs; [
+      uv
+    ]))
   ];
 
   environment.sessionVariables = {
