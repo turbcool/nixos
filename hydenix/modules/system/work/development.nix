@@ -8,7 +8,6 @@
     pkgs.ripgrep
     pkgs.gdu
     pkgs.gcc
-    pkgs.aider-chat
     pkgs.yazi
     pkgs.unrar
     #pkgs.cudatoolkit
