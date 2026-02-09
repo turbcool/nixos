@@ -2,7 +2,6 @@
 
 {
   environment.systemPackages = with pkgs; [
-    pkgs.neovim
     pkgs.nodejs
     pkgs.lazygit
     pkgs.lazydocker
@@ -17,7 +16,6 @@
     pkgs.zotero
     pkgs.nmap
     pkgs.dnsutils
-    pkgs.opencode
     #pkgs.platformio
   ];
 

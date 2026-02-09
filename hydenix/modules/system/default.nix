@@ -9,8 +9,6 @@
   ];
 
   environment.systemPackages = with pkgs; [
-    pkgs.telegram-desktop
-    pkgs.yt-dlp
     pkgs.kdePackages.ark
     pkgs.easyeffects
     pkgs.qbittorrent-enhanced

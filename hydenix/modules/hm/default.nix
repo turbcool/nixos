@@ -18,9 +18,11 @@
   ];
 
   # home-manager options go here
-  home.packages = [
-    # pkgs.vscode - hydenix's vscode version
-    # pkgs.userPkgs.vscode - your personal nixpkgs version
+  home.packages = with pkgs; [
+    telegram-desktop
+    yt-dlp
+    neovim
+    opencode
   ];
 
   programs.mpv.enable = true;
@@ -32,11 +34,6 @@
     spotify.enable = true;
     social.enable = false;
     shell.pokego.enable = false;
-
-    git = {
-      name = "Ilya Naidanov";
-      email = "turbcool@gmail.com";
-    };
 
     theme = {
       active = "Ever Blushing";
