@@ -17,7 +17,7 @@
     pkgs.zotero
     pkgs.nmap
     pkgs.dnsutils
-    #pkgs.jan
+    pkgs.opencode
     #pkgs.platformio
   ];
 
