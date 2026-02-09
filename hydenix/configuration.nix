@@ -1,24 +1,9 @@
 {
   inputs,
+  pkgs,
   ...
 }:
-let
-  # FOLLOW THE BELOW INSTRUCTIONS LINE BY LINE TO SET UP YOUR SYSTEM
-
-  # Package configuration - sets up package system with proper overlays
-  # Most users won't need to modify this section
-  system = "x86_64-linux";
-  pkgs = import inputs.nixpkgs {
-    inherit system;
-    config.allowUnfree = true;
-    overlays = [
-      inputs.hydenix.overlays.default
-    ];
-  };
-in
 {
-  nixpkgs.pkgs = pkgs; # Set pkgs for hydenix globally
-
   imports = [
     # hydenix inputs - Required modules, don't modify unless you know what you're doing
     inputs.hydenix.inputs.home-manager.nixosModules.home-manager

@@ -3,7 +3,10 @@
 
   inputs = {
     # Your nixpkgs
-    nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
+    nixpkgs = {
+      # url = "github:nixos/nixpkgs/nixos-unstable"; # uncomment this if you know what you're doing
+      follows = "hydenix/nixpkgs"; # then comment this
+    };
 
     # Hydenix
     hydenix = {
@@ -20,7 +23,6 @@
     nixos-hardware.url = "github:nixos/nixos-hardware/master";
 
     # Custom:
-    nix-ai-tools.url = "github:numtide/nix-ai-tools";
     agenix.url = "github:ryantm/agenix";
     agenix.inputs.nixpkgs.follows = "nixpkgs";
   };
