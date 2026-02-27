@@ -2,9 +2,8 @@
 
 {
   imports = [
-    <nixos-wsl/modules>
-    ./common/pkgs/default.nix
-    ./common/modules/git.nix
+    ../common/pkgs/default.nix
+    ../common/modules/git.nix
   ];
 
   wsl.enable = true;
