@@ -9,6 +9,10 @@
     inputs.hydenix.inputs.home-manager.nixosModules.home-manager
     inputs.hydenix.nixosModules.default
     inputs.agenix.nixosModules.default
+
+    # Common modules
+    ../common/pkgs/default.nix
+    ../common/modules/git.nix
     ./modules/system # Your custom system modules
     ./hardware-configuration.nix # Auto-generated hardware config
 

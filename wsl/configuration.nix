@@ -1,35 +1,40 @@
-# Edit this configuration file to define what should be installed on
-# your system. Help is available in the configuration.nix(5) man page, on
-# https://search.nixos.org/options and in the NixOS manual (`nixos-help`).
-
-# NixOS-WSL specific options are documented on the NixOS-WSL repository:
-# https://github.com/nix-community/NixOS-WSL
-
 { config, lib, pkgs, ... }:
 
 {
   imports = [
-    # include NixOS-WSL modules
     <nixos-wsl/modules>
+    ./common/pkgs/default.nix
+    ./common/modules/git.nix
   ];
 
   wsl.enable = true;
-  wsl.defaultUser = "nixos";
+  wsl.defaultUser = "turb";
 
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
+
   environment.systemPackages = with pkgs; [
-    # Flakes clones its dependencies through the git command,
-    # so git must be installed first
     git
     vim
     wget
   ];
 
-  # This value determines the NixOS release from which the default
-  # settings for stateful data, like file locations and database versions
-  # on your system were taken. It's perfectly fine and recommended to leave
-  # this value at the release version of the first install of this system.
-  # Before changing this value read the documentation for this option
-  # (e.g. man configuration.nix or on https://nixos.org/nixos/options.html).
-  system.stateVersion = "25.05"; # Did you read the comment?
+  users.users.turb = {
+    isNormalUser = true;
+    initialPassword = "1";
+    extraGroups = [ "wheel" "docker" ];
+    shell = pkgs.zsh;
+  };
+
+  home-manager = {
+    useGlobalPkgs = true;
+    useUserPackages = true;
+    users.turb = { ... }: {
+      home.packages = with pkgs; [
+        neovim
+        opencode
+      ];
+    };
+  };
+
+  system.stateVersion = "25.05";
 }
