@@ -13,6 +13,7 @@
     zotero
     nmap
     dnsutils
+    starship
   ];
 
   programs.npm.enable = true;
