@@ -7,6 +7,7 @@
   ];
 
   wsl.enable = true;
+  programs.zsh.enable = true;
   wsl.defaultUser = "turb";
 
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
@@ -28,6 +29,7 @@
     useGlobalPkgs = true;
     useUserPackages = true;
     users.turb = { ... }: {
+      home.stateVersion = "25.05";
       home.packages = with pkgs; [
         neovim
         opencode

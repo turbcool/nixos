@@ -9,7 +9,6 @@
     gdu
     gcc
     yazi
-    unrar
     postgresql_17
     zotero
     nmap
