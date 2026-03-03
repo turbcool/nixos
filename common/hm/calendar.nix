@@ -4,7 +4,6 @@ let
   radicaleUrl = "https://cal.naidanov.ru";
   username = "turbcool";
   passwordCommand = ["cat" "/home/turb/.radicale-pass"];
-  # ["pass" "show" "radicale/password"];
 in
 {
   programs.khal = {
@@ -43,7 +42,7 @@ in
     };
     vdirsyncer = {
       enable = true;
-      collections = ["from a" "from b"]; # sync both sides (local + remote)
+      collections = ["from a" "from b"];
       metadata = ["color"];
     };
     khal = {

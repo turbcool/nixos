@@ -31,6 +31,7 @@
     users.turb = { ... }: {
       imports = [
         ../common/hm/neovim.nix
+        ../common/hm/calendar.nix
       ];
       home.stateVersion = "25.05";
       home.packages = with pkgs; [

@@ -8,7 +8,7 @@
 {
   imports = [
     ../../../common/hm/neovim.nix
-    ./calendar.nix
+    ../../../common/hm/calendar.nix
     ./config/default.nix
     ./hyprland.nix
     ./vscode.nix
