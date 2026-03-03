@@ -7,6 +7,7 @@
   ];
 
   wsl.enable = true;
+  time.timeZone = "Asia/Yekaterinburg";
   programs.zsh.enable = true;
   wsl.defaultUser = "turb";
 
