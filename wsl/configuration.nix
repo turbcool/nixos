@@ -29,9 +29,11 @@
     useGlobalPkgs = true;
     useUserPackages = true;
     users.turb = { ... }: {
+      imports = [
+        ../common/hm/neovim.nix
+      ];
       home.stateVersion = "25.05";
       home.packages = with pkgs; [
-        neovim
         opencode
       ];
     };

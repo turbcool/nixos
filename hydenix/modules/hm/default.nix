@@ -7,10 +7,10 @@
 
 {
   imports = [
+    ../../../common/hm/neovim.nix
     ./calendar.nix
     ./config/default.nix
     ./hyprland.nix
-    ./neovim.nix
     ./vscode.nix
     ./wolf.nix
     ./qutebrowser.nix
@@ -21,7 +21,6 @@
   home.packages = with pkgs; [
     telegram-desktop
     yt-dlp
-    neovim
     opencode
   ];
 
