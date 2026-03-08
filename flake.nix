@@ -29,9 +29,8 @@
       system = "x86_64-linux";
       specialArgs = { inherit inputs; };
       modules = [
-        hydenix.nixosModules.default
-        agenix.nixosModules.age
         ./hydenix/configuration.nix
+        agenix.nixosModules.age
       ];
     };
 
