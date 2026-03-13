@@ -13,6 +13,7 @@
     # Common modules
     ../common/pkgs/default.nix
     ../common/modules/git.nix
+    ../common/modules/cert.nix
     ./modules/system # Your custom system modules
     ./hardware-configuration.nix # Auto-generated hardware config
 

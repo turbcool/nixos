@@ -4,6 +4,7 @@
   imports = [
     ../common/pkgs/default.nix
     ../common/modules/git.nix
+    ../common/modules/cert.nix
   ];
 
   wsl.enable = true;
@@ -33,10 +34,12 @@
       imports = [
         ../common/hm/neovim.nix
         ../common/hm/calendar.nix
+        ../common/hm/zoxide.nix
       ];
       home.stateVersion = "25.05";
       home.packages = with pkgs; [
         opencode
+        zoxide
       ];
     };
   };

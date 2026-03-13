@@ -13,7 +13,7 @@ in
 {
   environment.systemPackages = with pkgs; [
     dotnet-sdk
-    pkgs.roslyn-ls
+    roslyn-ls
   ];
 
   environment.sessionVariables = {

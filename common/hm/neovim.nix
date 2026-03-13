@@ -10,12 +10,14 @@ in
       ripgrep
       fd
       csharp-ls
-      netcoredbg
-      omnisharp-roslyn
       wget
       unzip
     ];
   };
+
+  home.sessionPath = [
+    "$HOME/.dotnet/tools"
+  ];
 
   home.file.".config/nvim" = {
     source = config.lib.file.mkOutOfStoreSymlink "/home/turb/nvim";
