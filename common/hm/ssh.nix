@@ -6,7 +6,7 @@
 {
   home.file = {
     ".ssh/config" = lib.mkForce {
-      source = ./ssh-config.txt;
+      source = ./config/ssh-config.txt;
     };
   };
 }
