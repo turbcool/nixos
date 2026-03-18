@@ -22,3 +22,8 @@ Host autocam
   Hostname 194.147.78.94
   User root
   Port 22
+
+Host llm-np
+  Hostname 10.130.149.15
+  User devops
+  Port 22

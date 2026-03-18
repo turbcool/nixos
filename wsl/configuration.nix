@@ -7,10 +7,14 @@
     ../common/modules/cert.nix
   ];
 
-  wsl.enable = true;
+  wsl = {
+    enable = true;
+    defaultUser = "turb";
+    docker-desktop.enable = true;
+  };
+
   time.timeZone = "Asia/Yekaterinburg";
   programs.zsh.enable = true;
-  wsl.defaultUser = "turb";
 
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
 
@@ -35,6 +39,7 @@
         ../common/hm/neovim.nix
         ../common/hm/calendar.nix
         ../common/hm/zoxide.nix
+        ../common/hm/ssh.nix
       ];
       home.stateVersion = "25.05";
       home.packages = with pkgs; [

@@ -11,10 +11,6 @@
   };
 
   home.file = {
-    ".ssh/config" = lib.mkForce {
-      source = ./ssh-config.txt;
-    };
-
     ".local/share/remmina/autocam.remmina" = lib.mkForce {
       source = ./remmina/autocam.remmina;
       force = true;
