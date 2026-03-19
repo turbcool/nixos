@@ -27,3 +27,8 @@ Host llm-np
   Hostname 10.130.149.15
   User devops
   Port 22
+
+Host lego
+  Hostname 10.150.7.5
+  User devops
+  Port 22

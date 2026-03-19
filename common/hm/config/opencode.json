@@ -1,0 +1,49 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "permission": {
+    "webfetch": "allow",
+    "websearch": "allow",
+    "lsp": "allow",
+  },
+  "compaction": {
+    "auto": true,
+    "prune": true,
+    "reserved": 16000
+  },
+  "disabled_providers": [],
+  "provider": {
+    "flexberry": {
+      "name": "flexberry",
+      "npm": "@ai-sdk/openai-compatible",
+      "models": {
+        "qwen3-coder-128k:30b": {
+          "name": "Qwen3-Coder-Next",
+          "family": "qwen",
+          "tool_call": true,
+          "reasoning": false,
+          "modalities": {
+            "input": [
+              "text"
+            ],
+            "output": [
+              "text"
+            ]
+          },
+          "temperature": true,
+          "release_date": "2026-02-03",
+          "limit": {
+            "context": 128000,
+            "output": 32000
+          }
+        }
+      },
+      "options": {
+        "baseURL": "{env:OPENAI_BASE_URL}",
+        "apiKey": "{env:OPENAI_TOKEN}"
+      }
+    }
+  },
+  "model": "{env:OPENAI_MODEL}",
+  "small_model": "{env:OPENAI_MODEL}",
+}
+

@@ -40,12 +40,9 @@
         ../common/hm/calendar.nix
         ../common/hm/zoxide.nix
         ../common/hm/ssh.nix
+        ../common/hm/opencode.nix
       ];
       home.stateVersion = "25.05";
-      home.packages = with pkgs; [
-        opencode
-        zoxide
-      ];
     };
   };
 
