@@ -10,6 +10,7 @@
     ../../../common/hm/neovim.nix
     ../../../common/hm/calendar.nix
     ../../../common/hm/ssh.nix
+    ../../../common/hm/opencode.nix
     ./config/default.nix
     ./hyprland.nix
     ./vscode.nix
@@ -22,7 +23,6 @@
   home.packages = with pkgs; [
     telegram-desktop
     yt-dlp
-    opencode
   ];
 
   programs.mpv.enable = true;
