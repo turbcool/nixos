@@ -3,7 +3,7 @@
   "permission": {
     "webfetch": "allow",
     "websearch": "allow",
-    "lsp": "allow",
+    "lsp": "allow"
   },
   "compaction": {
     "auto": true,
@@ -22,12 +22,8 @@
           "tool_call": true,
           "reasoning": false,
           "modalities": {
-            "input": [
-              "text"
-            ],
-            "output": [
-              "text"
-            ]
+            "input": ["text"],
+            "output": ["text"]
           },
           "temperature": true,
           "release_date": "2026-02-03",
@@ -45,5 +41,5 @@
   },
   "model": "{env:OPENAI_MODEL}",
   "small_model": "{env:OPENAI_MODEL}",
+  "plugin": ["oh-my-opencode"]
 }
-

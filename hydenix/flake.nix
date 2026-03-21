@@ -4,8 +4,8 @@
   inputs = {
     # Your nixpkgs
     nixpkgs = {
-      # url = "github:nixos/nixpkgs/nixos-unstable"; # uncomment this if you know what you're doing
-      follows = "hydenix/nixpkgs"; # then comment this
+      url = "github:nixos/nixpkgs/nixos-unstable"; # uncomment this if you know what you're doing
+      #follows = "hydenix/nixpkgs"; # then comment this
     };
 
     # Hydenix
@@ -17,7 +17,7 @@
       url = "github:richen604/hydenix";
 
       # uncomment the below if you know what you're doing, hydenix updates nixos-unstable every week or so
-      # inputs.nixpkgs.follows = "nixpkgs";
+      inputs.nixpkgs.follows = "nixpkgs";
     };
     # Hardware Configuration's, used in ./configuration.nix. Feel free to remove if unused
     nixos-hardware.url = "github:nixos/nixos-hardware/master";
