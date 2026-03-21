@@ -1,0 +1,61 @@
+{
+  "$schema": "https://raw.githubusercontent.com/code-yeongyu/oh-my-opencode/dev/assets/oh-my-opencode.schema.json",
+  "agents": {
+    "sisyphus": {
+      "model": "{env:OPENAI_MODEL}"
+    },
+    "atlas": {
+      "model": "{env:OPENAI_MODEL}"
+    },
+    "prometheus": {
+      "model": "{env:OPENAI_MODEL}"
+    },
+    "hephaestus": {
+      "model": "{env:OPENAI_MODEL}"
+    },
+    "oracle": {
+      "model": "{env:OPENAI_MODEL}"
+    },
+    "librarian": {
+      "model": "{env:OPENAI_MODEL}"
+    },
+    "explore": {
+      "model": "{env:OPENAI_MODEL}"
+    },
+    "metis": {
+      "model": "{env:OPENAI_MODEL}"
+    },
+    "momus": {
+      "model": "{env:OPENAI_MODEL}"
+    },
+    "multimodal-looker": {
+      "model": "{env:OPENAI_MODEL}"
+    }
+  },
+  "categories": {
+    "visual-engineering": {
+      "model": "{env:OPENAI_MODEL}"
+    },
+    "ultrabrain": {
+      "model": "{env:OPENAI_MODEL}"
+    },
+    "deep": {
+      "model": "{env:OPENAI_MODEL}"
+    },
+    "artistry": {
+      "model": "{env:OPENAI_MODEL}"
+    },
+    "quick": {
+      "model": "{env:OPENAI_MODEL}"
+    },
+    "unspecified-low": {
+      "model": "{env:OPENAI_MODEL}"
+    },
+    "unspecified-high": {
+      "model": "{env:OPENAI_MODEL}"
+    },
+    "writing": {
+      "model": "{env:OPENAI_MODEL}"
+    }
+  }
+}
