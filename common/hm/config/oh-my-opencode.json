@@ -2,60 +2,60 @@
   "$schema": "https://raw.githubusercontent.com/code-yeongyu/oh-my-opencode/dev/assets/oh-my-opencode.schema.json",
   "agents": {
     "sisyphus": {
-      "model": "{env:OPENAI_MODEL}"
+      "model": "flexberry/qwen3-coder-128k:30b"
     },
     "atlas": {
-      "model": "{env:OPENAI_MODEL}"
+      "model": "flexberry/qwen3-coder-128k:30b"
     },
     "prometheus": {
-      "model": "{env:OPENAI_MODEL}"
+      "model": "flexberry/qwen3-coder-128k:30b"
     },
     "hephaestus": {
-      "model": "{env:OPENAI_MODEL}"
+      "model": "flexberry/qwen3-coder-128k:30b"
     },
     "oracle": {
-      "model": "{env:OPENAI_MODEL}"
+      "model": "flexberry/qwen3-coder-128k:30b"
     },
     "librarian": {
-      "model": "{env:OPENAI_MODEL}"
+      "model": "flexberry/qwen3-coder-128k:30b"
     },
     "explore": {
-      "model": "{env:OPENAI_MODEL}"
+      "model": "flexberry/qwen3-coder-128k:30b"
     },
     "metis": {
-      "model": "{env:OPENAI_MODEL}"
+      "model": "flexberry/qwen3-coder-128k:30b"
     },
     "momus": {
-      "model": "{env:OPENAI_MODEL}"
+      "model": "flexberry/qwen3-coder-128k:30b"
     },
     "multimodal-looker": {
-      "model": "{env:OPENAI_MODEL}"
+      "model": "flexberry/qwen3-coder-128k:30b"
     }
   },
   "categories": {
     "visual-engineering": {
-      "model": "{env:OPENAI_MODEL}"
+      "model": "flexberry/qwen3-coder-128k:30b"
     },
     "ultrabrain": {
-      "model": "{env:OPENAI_MODEL}"
+      "model": "flexberry/qwen3-coder-128k:30b"
     },
     "deep": {
-      "model": "{env:OPENAI_MODEL}"
+      "model": "flexberry/qwen3-coder-128k:30b"
     },
     "artistry": {
-      "model": "{env:OPENAI_MODEL}"
+      "model": "flexberry/qwen3-coder-128k:30b"
     },
     "quick": {
-      "model": "{env:OPENAI_MODEL}"
+      "model": "flexberry/qwen3-coder-128k:30b"
     },
     "unspecified-low": {
-      "model": "{env:OPENAI_MODEL}"
+      "model": "flexberry/qwen3-coder-128k:30b"
     },
     "unspecified-high": {
-      "model": "{env:OPENAI_MODEL}"
+      "model": "flexberry/qwen3-coder-128k:30b"
     },
     "writing": {
-      "model": "{env:OPENAI_MODEL}"
+      "model": "flexberry/qwen3-coder-128k:30b"
     }
   }
 }
