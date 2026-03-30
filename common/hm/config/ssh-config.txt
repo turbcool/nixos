@@ -23,8 +23,18 @@ Host autocam
   User root
   Port 22
 
-Host llm-np
+Host np-ai
   Hostname 10.130.149.15
+  User devops
+  Port 22
+
+Host sk-ai
+  Hostname 10.130.141.11
+  User devops
+  Port 22
+
+Host pro-ai
+  Hostname 10.130.143.10
   User devops
   Port 22
 

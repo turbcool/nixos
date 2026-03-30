@@ -40,6 +40,6 @@
     }
   },
   "model": "qwen3-coder-128k:30b",
-  "small_model": "qwen3-coder-128k:30b",
-  "plugin": ["oh-my-opencode"]
+  "small_model": "qwen3-coder-128k:30b"
+  //,"plugin": ["oh-my-opencode"]
 }
