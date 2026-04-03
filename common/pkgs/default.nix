@@ -5,5 +5,6 @@
     ./dev.nix
     ./dotnet.nix
     ./docker.nix
+    ./python.nix
   ];
 }

@@ -1,8 +1,14 @@
-This is a NixOS configuration. Flake and Home Manager are activated.
+This is a NixOS flake-based configuration with Home Manager enabled.
 
-- `/hydenix/modules/system` - system modules
-- `/hydenix/modules/hm` - home manager modules
-- `/hydenix/config` - folder for custom configuration files
-- `/hydenix/docs` - documentation about Hydenix (which this configuration is based on)
+- `/flake.nix` - entry point for `hydenix` and `wsl` hosts
+- `/common/pkgs` - shared system package modules used across hosts
+- `/common/modules` - shared system modules (git, cert, llm, tmux)
+- `/common/hm` - shared Home Manager modules
+- `/hydenix/configuration.nix` - desktop host configuration
+- `/hydenix/modules/system` - desktop system modules
+- `/hydenix/modules/hm` - desktop Home Manager modules
+- `/hydenix/config` - custom Hydenix config files
+- `/hydenix/docs` - Hydenix documentation
+- `/wsl/configuration.nix` - WSL host configuration
 
-`default.nix` imports scripts from subsequent folders.
+`default.nix` files in module directories import child modules.
