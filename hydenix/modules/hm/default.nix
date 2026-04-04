@@ -7,10 +7,7 @@
 
 {
   imports = [
-    ../../../common/hm/neovim.nix
-    ../../../common/hm/calendar.nix
-    ../../../common/hm/ssh.nix
-    ../../../common/hm/opencode.nix
+    ../../../common/hm/default.nix
     ./config/default.nix
     ./hyprland.nix
     ./vscode.nix

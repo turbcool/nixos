@@ -38,12 +38,7 @@
     useUserPackages = true;
     users.turb = { ... }: {
       imports = [
-        ../common/hm/neovim.nix
-        ../common/hm/cli.nix
-        ../common/hm/calendar.nix
-        ../common/hm/zoxide.nix
-        ../common/hm/ssh.nix
-        ../common/hm/opencode.nix
+        ../common/hm/default.nix
       ];
       home.stateVersion = "25.05";
     };
