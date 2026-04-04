@@ -11,5 +11,4 @@
     ./ssh.nix
     ./zoxide.nix
   ];
-
 }
