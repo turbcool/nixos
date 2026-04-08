@@ -8,6 +8,7 @@
 
   wsl = {
     enable = true;
+    useWindowsDriver = true;
     defaultUser = "turb";
     docker-desktop.enable = true;
   };
