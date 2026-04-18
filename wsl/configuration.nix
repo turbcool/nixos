@@ -3,10 +3,7 @@
 {
   imports = [
     ../common/pkgs/default.nix
-    ../common/modules/git.nix
-    ../common/modules/cert.nix
-    ../common/modules/llm.nix
-    ../common/modules/tmux.nix
+    ../common/modules/default.nix
   ];
 
   wsl = {

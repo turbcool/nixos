@@ -4,8 +4,8 @@
   imports = [
     ./cert.nix
     ./git.nix
-    ./llm.nix
     ./tmux.nix
+    ./llm.nix
   ];
 }
 
