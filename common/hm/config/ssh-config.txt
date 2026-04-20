@@ -23,19 +23,24 @@ Host autocam
   User root
   Port 22
 
-Host np-ai
+Host ai-neoplatform
   Hostname 10.130.149.15
   User devops
   Port 22
 
-Host sk-ai
+Host ai-skyori
   Hostname 10.130.141.11
   User devops
   Port 22
 
-Host pro-ai
+Host ai-proinfoservice
   Hostname 10.130.143.10
   User devops
+  Port 22
+
+Host ai-timepath
+  Hostname 10.130.160.116
+  User tpadmin
   Port 22
 
 Host lego
