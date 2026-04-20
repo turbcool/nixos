@@ -20,12 +20,22 @@ in
   ];
 
   home.activation.nvim = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
-    if [ -d "/home/turb/.config/nvim/.git" ]; then
-      cd /home/turb/.config/nvim && ${git} remote set-url origin https://github.com/turbcool/nvim.git
-      cd /home/turb/.config/nvim && ${git} pull --ff-only
+    nvim_dir="${config.home.homeDirectory}/.config/nvim"
+
+    if [ -d "$nvim_dir/.git" ]; then
+      cd "$nvim_dir"
+      ${git} remote set-url origin https://github.com/turbcool/nvim.git
+      if ! ${git} pull --ff-only; then
+        cd /
+        rm -rf "$nvim_dir"
+        ${git} clone https://github.com/turbcool/nvim.git "$nvim_dir"
+      fi
     else
-      ${git} clone https://github.com/turbcool/nvim.git /home/turb/.config/nvim
+      rm -rf "$nvim_dir"
+      ${git} clone https://github.com/turbcool/nvim.git "$nvim_dir"
     fi
-    cd /home/turb/.config/nvim && ${git} remote set-url origin git@github.com:turbcool/nvim.git
+
+    cd "$nvim_dir"
+    ${git} remote set-url origin git@github.com:turbcool/nvim.git
   '';
 }
