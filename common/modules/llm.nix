@@ -4,6 +4,7 @@
   environment.systemPackages = with inputs.llm-agents.packages.${pkgs.stdenv.hostPlatform.system}; [
     agent-deck
     opencode
+    codex
   ];
   environment.sessionVariables = {
     OPENAI_BASE_URL = "https://ai.flexberry.org/v1";

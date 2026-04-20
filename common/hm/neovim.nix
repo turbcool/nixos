@@ -19,17 +19,13 @@ in
     "$HOME/.dotnet/tools"
   ];
 
-  home.file.".config/nvim" = {
-    source = config.lib.file.mkOutOfStoreSymlink "/home/turb/nvim";
-  };
-
   home.activation.nvim = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
-    if [ -d "/home/turb/nvim/.git" ]; then
-      cd /home/turb/nvim && ${git} remote set-url origin https://github.com/turbcool/nvim.git
-      cd /home/turb/nvim && ${git} pull --ff-only
+    if [ -d "/home/turb/.config/nvim/.git" ]; then
+      cd /home/turb/.config/nvim && ${git} remote set-url origin https://github.com/turbcool/nvim.git
+      cd /home/turb/.config/nvim && ${git} pull --ff-only
     else
-      ${git} clone https://github.com/turbcool/nvim.git /home/turb/nvim
+      ${git} clone https://github.com/turbcool/nvim.git /home/turb/.config/nvim
     fi
-    cd /home/turb/nvim && ${git} remote set-url origin git@github.com:turbcool/nvim.git
+    cd /home/turb/.config/nvim && ${git} remote set-url origin git@github.com:turbcool/nvim.git
   '';
 }
