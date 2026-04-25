@@ -12,7 +12,7 @@ If you just templated this flake, you can follow these steps to get started:
 2. run `sudo nixos-generate-config --show-hardware-config > hardware-configuration.nix`
 3. `git init && git add .` (flakes have to be managed via git)
 4. run any of the packages in your new `flake.nix`
-    - for rebuild, use `sudo nixos-rebuild switch --flake .`
+    - for rebuild, use `sudo nixos-rebuild switch --flake /etc/nixos#hydenix`
 5. DON'T FORGET: change your password for all users with `passwd` from initialPassword set in `configuration.nix`
 
 NOTE: After launching hydenix, you can run `hyde-shell reload` to generate cache for remaining themes if you want.

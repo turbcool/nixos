@@ -26,6 +26,5 @@ sudo git clone https://github.com/turbcool/nixos /etc/nixos || die "Failed to cl
 sudo rm -f /etc/nixos/hydenix/hardware-configuration.nix || die "Failed to remove hardware config"
 sudo nixos-generate-config --show-hardware-config > /etc/nixos/hydenix/hardware-configuration.nix || die "Failed to generate hardware config"
 
-# Build HYDENIX flake
-cd /etc/nixos/hydenix || die "Cannot cd to /etc/nixos/hydenix"
-sudo nixos-rebuild switch --flake ".#nixos" || die "Failed to rebuild flake"
+# Build HYDENIX host from root flake
+sudo nixos-rebuild switch --flake /etc/nixos#hydenix || die "Failed to rebuild hydenix host"

@@ -36,7 +36,7 @@ we do this because flakes must be managed via git. and its good practice to vers
 ## 5. build and switch to the new configuration
 
 ```bash
-sudo nixos-rebuild switch --flake .#hydenix
+sudo nixos-rebuild switch --flake /etc/nixos#hydenix
 ```
 
 > [!NOTE]

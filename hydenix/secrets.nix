@@ -6,4 +6,5 @@ let
   nixos = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIKTqEJJ50htCOsmbULT7xdANQ/9ZRwrEdyTJyOAVHKOl";
 in {
   "work-pc.age".publicKeys = [nixos];
+  "openai-token.age".publicKeys = [nixos];
 }
