@@ -3,6 +3,7 @@
 {
   environment.systemPackages = with pkgs; [
     nodejs
+    mcp-nixos
     lazygit
     lazydocker
     ripgrep

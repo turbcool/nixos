@@ -40,6 +40,13 @@
     }
   },
   "model": "qwen3-coder-128k:30b",
-  "small_model": "qwen3-coder-128k:30b"
+  "small_model": "qwen3-coder-128k:30b",
+  "mcp": {
+    "nixos": {
+      "type": "local",
+      "command": ["mcp-nixos"],
+      "enabled": true
+    }
+  }
   //,"plugin": ["oh-my-opencode"]
 }
