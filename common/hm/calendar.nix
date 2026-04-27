@@ -1,9 +1,9 @@
-{ config, pkgs, ... }:
+{ config, osConfig, ... }:
 
 let
   radicaleUrl = "https://cal.naidanov.ru";
   username = "turbcool";
-  passwordCommand = ["cat" "/home/turb/.radicale-pass"];
+  passwordCommand = [ "cat" "/home/${osConfig.local.profile.username}/.radicale-pass" ];
 in
 {
   programs.khal = {

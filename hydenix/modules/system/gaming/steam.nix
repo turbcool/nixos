@@ -1,10 +1,16 @@
-{ config, pkgs, inputs, ... }:
+{ config, lib, ... }:
+
+let
+  cfg = config.local.features.gaming;
+in
 
 {
-  programs.steam = {
-    enable = true;
-    remotePlay.openFirewall = true;
-    localNetworkGameTransfers.openFirewall = true;
-    extest.enable = true; # Steam Input on Wayland
+  config = lib.mkIf cfg.enable {
+    programs.steam = {
+      enable = true;
+      remotePlay.openFirewall = true;
+      localNetworkGameTransfers.openFirewall = true;
+      extest.enable = true; # Steam Input on Wayland
+    };
   };
 }

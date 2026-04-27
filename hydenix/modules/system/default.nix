@@ -2,6 +2,7 @@
 
 {
   imports = [
+    ./features.nix
     ./base/default.nix
     ./browsers/default.nix
     ./gaming/default.nix

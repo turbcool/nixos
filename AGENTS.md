@@ -6,8 +6,11 @@ This is a NixOS flake-based configuration with Home Manager enabled.
 - `/common/hm` - shared Home Manager modules
 - `/hydenix/configuration.nix` - desktop host configuration
 - `/hydenix/modules/system` - desktop system modules
+- `/hydenix/modules/system/work/vpn` - NetworkManager L2TP profile files
 - `/hydenix/modules/hm` - desktop Home Manager modules
-- `/hydenix/config` - custom Hydenix config files
+- `/hydenix/modules/hm/hyprland` - Hyprland Home Manager config files
+- `/hydenix/modules/hm/remmina` - Remmina Home Manager config files
+- `/hydenix/modules/hm/wolf` - Wolf Home Manager config files
 - `/hydenix/docs` - Hydenix documentation
 - `/wsl/configuration.nix` - WSL host configuration
 

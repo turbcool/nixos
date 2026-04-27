@@ -1,13 +1,16 @@
+{ config, lib, ... }:
 
-
-{ config, pkgs, inputs, ... }:
+let
+  cfg = config.local.features.browsers;
+in
 
 {
-  networking.hosts = {
-    "213.180.193.56" = [
-      "ya.ru"
-      "yandex.ru"
-    ];
+  config = lib.mkIf cfg.enable {
+    networking.hosts = {
+      "213.180.193.56" = [
+        "ya.ru"
+        "yandex.ru"
+      ];
+    };
   };
 }
-

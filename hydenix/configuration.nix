@@ -1,8 +1,15 @@
 {
+  config,
   inputs,
   pkgs,
   ...
 }:
+
+let
+  profile = config.local.profile;
+  username = profile.username;
+in
+
 {
   imports = [
     # Common modules
@@ -28,6 +35,22 @@
     inputs.nixos-hardware.nixosModules.common-pc-ssd # SSD storage
   ];
 
+  local.profile = {
+    username = "turb";
+    fullName = "Ilya Naidanov";
+    email = "turbcool@gmail.com";
+    timezone = "Asia/Yekaterinburg";
+    locale = "ru_RU.UTF-8";
+  };
+
+  local.features = {
+    browsers.enable = true;
+    gaming.enable = true;
+    gaming.vr.enable = false;
+    work.enable = true;
+    work.syncthing.enable = false;
+  };
+
   # If enabling NVIDIA, you will be prompted to configure hardware.nvidia
   # hardware.nvidia = {
   #   open = true; # For newer cards, you may want open drivers
@@ -44,9 +67,7 @@
     useGlobalPkgs = true;
     useUserPackages = true;
     extraSpecialArgs = { inherit inputs; };
-    # User Configuration - REQUIRED: Change "hydenix" to your actual username
-    # This must match the username you define in users.users below
-    users."turb" =
+    users.${username} =
       { ... }:
       {
         imports = [
@@ -57,8 +78,7 @@
       };
   };
 
-  # User Account Setup - REQUIRED: Change "hydenix" to your desired username (must match above)
-  users.users.turb = {
+  users.users.${username} = {
     isNormalUser = true;
     initialPassword = "1"; # SECURITY: Change this password after first login with `passwd`
     extraGroups = [
@@ -75,8 +95,8 @@
     enable = true; # Enable Hydenix modules
     # Basic System Settings (REQUIRED):
     hostname = "hydenix"; # REQUIRED: Set your computer's network name (change to something unique)
-    timezone = "Asia/Yekaterinburg"; # REQUIRED: Set timezone (examples: "America/New_York", "Europe/London", "Asia/Tokyo")
-    locale = "ru_RU.UTF-8"; # REQUIRED: Set locale/language (examples: "en_US.UTF-8", "en_GB.UTF-8", "de_DE.UTF-8")
+    timezone = profile.timezone; # REQUIRED: Set timezone (examples: "America/New_York", "Europe/London", "Asia/Tokyo")
+    locale = profile.locale; # REQUIRED: Set locale/language (examples: "en_US.UTF-8", "en_GB.UTF-8", "de_DE.UTF-8")
     # For more configuration options, see: ./docs/options.md
     boot = {
       kernelPackages = pkgs.linuxPackages;

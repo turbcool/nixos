@@ -1,5 +1,5 @@
-{ config, pkgs, ... }:
+{ config, ... }:
 
 {
-  services.getty.autologinUser = "turb";
+  services.getty.autologinUser = config.local.profile.username;
 }

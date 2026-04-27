@@ -1,19 +1,32 @@
 { config, lib, pkgs, ... }:
 
+let
+  profile = config.local.profile;
+  username = profile.username;
+in
+
 {
   imports = [
     ../common/pkgs/default.nix
     ../common/modules/default.nix
   ];
 
+  local.profile = {
+    username = "turb";
+    fullName = "Ilya Naidanov";
+    email = "turbcool@gmail.com";
+    timezone = "Asia/Yekaterinburg";
+    locale = "ru_RU.UTF-8";
+  };
+
   wsl = {
     enable = true;
     useWindowsDriver = true;
-    defaultUser = "turb";
+    defaultUser = username;
     docker-desktop.enable = true;
   };
 
-  time.timeZone = "Asia/Yekaterinburg";
+  time.timeZone = profile.timezone;
   programs.zsh.enable = true;
 
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
@@ -24,7 +37,7 @@
     wget
   ];
 
-  users.users.turb = {
+  users.users.${username} = {
     isNormalUser = true;
     initialPassword = "1";
     extraGroups = [ "wheel" "docker" ];
@@ -34,7 +47,7 @@
   home-manager = {
     useGlobalPkgs = true;
     useUserPackages = true;
-    users.turb = { ... }: {
+    users.${username} = { ... }: {
       imports = [
         ../common/hm/default.nix
       ];

@@ -1,11 +1,16 @@
 # Virtualisation: VM, docker, waydroid
-{ config, pkgs, ... }:
+{ config, lib, ... }:
+
+let
+  cfg = config.local.features.work;
+in
 
 {
-  virtualisation = {
-    waydroid.enable = false;  
-    docker.enable = true;
-  };
-  hardware.nvidia-container-toolkit.enable = true;
-}
+  config = lib.mkIf cfg.enable {
+    virtualisation = {
+      waydroid.enable = false;
+    };
 
+    hardware.nvidia-container-toolkit.enable = true;
+  };
+}

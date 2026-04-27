@@ -1,17 +1,24 @@
 { 
+  config,
   lib,
   pkgs,
-  config,
   ...
 }:
+
+let
+  cfg = config.local.features.gaming;
+in
 
 {
   imports = [
     ./steam.nix
+    ./vr.nix
   ];
 
-  environment.systemPackages = with pkgs; [
-    pkgs.lutris
-    pkgs.prismlauncher
-  ];
+  config = lib.mkIf cfg.enable {
+    environment.systemPackages = with pkgs; [
+      pkgs.lutris
+      pkgs.prismlauncher
+    ];
+  };
 }

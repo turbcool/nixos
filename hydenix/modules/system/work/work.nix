@@ -1,11 +1,17 @@
-{ config, pkgs, ... }:
+{ config, lib, pkgs, ... }:
+
+let
+  cfg = config.local.features.work;
+in
 
 {
-  environment.systemPackages = with pkgs; [
-    pkgs.zoom-us
-    pkgs.remmina
-    pkgs.onlyoffice-desktopeditors
-    pkgs.sqlitebrowser
-    pkgs.anydesk
-  ];
+  config = lib.mkIf cfg.enable {
+    environment.systemPackages = with pkgs; [
+      pkgs.zoom-us
+      pkgs.remmina
+      pkgs.onlyoffice-desktopeditors
+      pkgs.sqlitebrowser
+      pkgs.anydesk
+    ];
+  };
 }

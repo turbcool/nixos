@@ -1,23 +1,23 @@
-{ 
-  lib,
-  pkgs,
-  config,
-  ...
-}:
+{ lib, ... }:
 
 {
   home.file = {
     ".config/hypr/userprefs.conf" = lib.mkForce {
-      source = ./config/hyprland/userprefs.conf;
+      source = ./hyprland/userprefs.conf;
     };
     ".config/hypr/hypridle.conf" = lib.mkForce {
-      source = ./config/hyprland/hypridle.conf;
+      source = ./hyprland/hypridle.conf;
     };
     ".config/hypr/hyde.conf" = lib.mkForce {
-      source = ./config/hyprland/hyde.conf;
+      source = ./hyprland/hyde.conf;
     };
     ".config/kitty/kitty.conf" = lib.mkForce {
-      source = ./config/hyprland/kitty.conf;
+      source = ./hyprland/kitty.conf;
+      force = true;
+    };
+    ".local/share/toggle-sidepad.sh" = {
+      source = ./hyprland/toggle-sidepad.sh;
+      executable = true;
       force = true;
     };
   };

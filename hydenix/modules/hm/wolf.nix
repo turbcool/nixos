@@ -1,9 +1,9 @@
-{ lib, pkgs, ... }:
+{ lib, ... }:
 
 {
   home.file = {
     "repos/wolf/compose.yml" = lib.mkForce {
-      source = ./config/wolf/compose.yml;
+      source = ./wolf/compose.yml;
     };
   };
 }
