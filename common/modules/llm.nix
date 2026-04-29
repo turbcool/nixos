@@ -7,8 +7,9 @@
 }:
 
 let
-  openaiTokenFile = ../../hydenix/secrets/openai-token.age;
+  openaiTokenFile = ../secrets/openai-token.age;
   hasOpenAIToken = builtins.pathExists openaiTokenFile;
+  username = config.local.profile.username;
 in
 
 {
@@ -35,8 +36,7 @@ in
   age.secrets = lib.mkIf hasOpenAIToken {
     openai-token = {
       file = openaiTokenFile;
-      owner = "root";
-      group = "root";
+      owner = username;
       mode = "0400";
     };
   };
