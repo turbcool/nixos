@@ -41,13 +41,12 @@ in
     };
   };
 
-  environment.etc = lib.mkIf hasOpenAIToken {
-    "profile.d/openai-token.sh".text = ''
-      if [ -r "${config.age.secrets.openai-token.path}" ]; then
-        export OPENAI_TOKEN="$(cat ${config.age.secrets.openai-token.path})"
-      fi
-    '';
-  };
+  environment.shellInit = lib.mkIf hasOpenAIToken ''
+    if [ -r "$OPENAI_TOKEN_FILE" ]; then
+      export OPENAI_TOKEN="$(cat "$OPENAI_TOKEN_FILE")"
+      export OPENAI_API_KEY="$OPENAI_TOKEN"
+    fi
+  '';
 
   warnings = lib.optional (!hasOpenAIToken) ''
     Missing ${toString openaiTokenFile}; OPENAI_TOKEN will not be exported.

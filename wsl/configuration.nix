@@ -31,6 +31,8 @@ in
 
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
 
+  age.identityPaths = [ "/home/${username}/.ssh/id_ed25519" ];
+
   environment.systemPackages = with pkgs; [
     git
     vim
