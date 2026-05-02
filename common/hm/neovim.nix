@@ -15,10 +15,6 @@ in
     ];
   };
 
-  home.sessionPath = [
-    "$HOME/.dotnet/tools"
-  ];
-
   home.activation.nvim = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
     nvim_dir="${config.home.homeDirectory}/.config/nvim"
 

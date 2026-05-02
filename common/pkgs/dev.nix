@@ -13,7 +13,6 @@
     postgresql_17
     nmap
     dnsutils
-    starship
     gitlab-ci-local
   ];
 
