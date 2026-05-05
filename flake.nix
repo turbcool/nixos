@@ -26,6 +26,8 @@
 
   outputs = { nixpkgs, ... }@inputs:
     let
+      system = "x86_64-linux";
+      pkgs = nixpkgs.legacyPackages.${system};
       mkHost = import ./lib/mk-host.nix { inherit inputs nixpkgs; };
 
       commonModules = [
@@ -52,5 +54,14 @@
     in
     {
       nixosConfigurations = nixpkgs.lib.mapAttrs (_: cfg: mkHost cfg) hosts;
+
+      devShells.${system}.default = pkgs.mkShellNoCC {
+        packages = [
+          inputs.agenix.packages.${system}.default
+          pkgs.nixfmt-rfc-style
+          pkgs.nixd
+          pkgs.statix
+        ];
+      };
     };
 }
