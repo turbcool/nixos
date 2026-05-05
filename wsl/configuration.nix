@@ -1,4 +1,9 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 let
   profile = config.local.profile;
@@ -97,6 +102,8 @@ in
     locale = "ru_RU.UTF-8";
   };
 
+  networking.hostName = "wsl";
+
   wsl = {
     enable = true;
     useWindowsDriver = true;
@@ -139,31 +146,40 @@ in
   users.users.${username} = {
     isNormalUser = true;
     initialPassword = "1";
-    extraGroups = [ "wheel" "docker" ];
+    extraGroups = [
+      "wheel"
+      "docker"
+    ];
     shell = pkgs.zsh;
   };
 
   home-manager = {
     useGlobalPkgs = true;
     useUserPackages = true;
-    users.${username} = { ... }: {
-      imports = [
-        ../common/hm/default.nix
-      ];
-      local.opencode.extraMcp = {
-        svelte = {
-          type = "remote";
-          url = "https://mcp.svelte.dev/mcp";
-          enabled = true;
+    users.${username} =
+      { ... }:
+      {
+        imports = [
+          ../common/hm/default.nix
+        ];
+        local.opencode.extraMcp = {
+          svelte = {
+            type = "remote";
+            url = "https://mcp.svelte.dev/mcp";
+            enabled = true;
+          };
+          lucide-icons = {
+            type = "local";
+            command = [
+              "npx"
+              "lucide-icons-mcp"
+              "--stdio"
+            ];
+            enabled = true;
+          };
         };
-        lucide-icons = {
-          type = "local";
-          command = [ "npx" "lucide-icons-mcp" "--stdio" ];
-          enabled = true;
-        };
+        home.stateVersion = "25.05";
       };
-      home.stateVersion = "25.05";
-    };
   };
 
   system.stateVersion = "25.05";

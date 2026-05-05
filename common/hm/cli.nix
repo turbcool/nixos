@@ -12,6 +12,9 @@
       size = 1000;
       save = 1000;
     };
+    shellAliases = {
+      build = "sudo nixos-rebuild switch --flake /etc/nixos#$(hostname)";
+    };
   };
 
   programs.starship = {
