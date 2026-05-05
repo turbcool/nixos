@@ -6,7 +6,6 @@ SCRIPT_DIR=$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)
 cd "$SCRIPT_DIR"
 
 SKIP_EXISTING=0
-SECRET_PATH="openai-token.age"
 
 for arg in "$@"; do
     case "$arg" in
@@ -31,7 +30,8 @@ agenix_cmd() {
 }
 
 write_secret() {
-    secret_value=$1
+    secret_path=$1
+    secret_value=$2
 
     umask 077
 
@@ -46,40 +46,48 @@ cp "$SECRET_SOURCE" "$1"
 EOF
     chmod 700 "$editor_tmp"
 
-    SECRET_SOURCE="$secret_tmp" EDITOR="$editor_tmp" agenix_cmd -e "$SECRET_PATH"
+    SECRET_SOURCE="$secret_tmp" EDITOR="$editor_tmp" agenix_cmd -e "$secret_path"
 
     rm -f "$secret_tmp" "$editor_tmp"
     trap - EXIT HUP INT TERM
 }
 
-if [ -f "$SECRET_PATH" ]; then
-    if [ "$SKIP_EXISTING" -eq 1 ]; then
-        echo "Skipping existing $SCRIPT_DIR/$SECRET_PATH"
-        exit 0
+ask_secret() {
+    secret_path=$1
+    prompt=$2
+
+    if [ -f "$secret_path" ]; then
+        if [ "$SKIP_EXISTING" -eq 1 ]; then
+            echo "Skipping existing $SCRIPT_DIR/$secret_path"
+            return
+        fi
+
+        printf '%s already exists. Overwrite it? [y/N]: ' "$SCRIPT_DIR/$secret_path"
+        read -r answer
+        case "$answer" in
+            [Yy]|[Yy][Ee][Ss])
+                ;;
+            *)
+                echo "Skipping $SCRIPT_DIR/$secret_path"
+                return
+                ;;
+        esac
     fi
 
-    printf '%s already exists. Overwrite it? [y/N]: ' "$SCRIPT_DIR/$SECRET_PATH"
-    read -r answer
-    case "$answer" in
-        [Yy]|[Yy][Ee][Ss])
-            ;;
-        *)
-            echo "Skipping $SCRIPT_DIR/$SECRET_PATH"
-            exit 0
-            ;;
-    esac
-fi
+    printf '%s' "$prompt"
+    IFS= read -r -s secret_value
+    printf '\n'
 
-printf 'OpenAI-compatible API key for opencode: '
-IFS= read -r -s secret_value
-printf '\n'
+    if [ -z "$secret_value" ]; then
+        echo "No value entered, nothing changed."
+        return
+    fi
 
-if [ -z "$secret_value" ]; then
-    echo "No value entered, nothing changed."
-    exit 0
-fi
+    write_secret "$secret_path" "$secret_value"
+    echo "Saved $SCRIPT_DIR/$secret_path"
+}
 
-write_secret "$secret_value"
+ask_secret "flexberry-token.age" "Flexberry API key for opencode: "
+ask_secret "custom-token.age" "Custom provider API key: "
 
-echo "Saved $SCRIPT_DIR/$SECRET_PATH"
-echo "Rebuild the system to apply it: sudo nixos-rebuild switch --flake /etc/nixos#<host>"
+echo "Rebuild the system to apply: sudo nixos-rebuild switch --flake /etc/nixos#<host>"

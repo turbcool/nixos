@@ -1,6 +1,8 @@
-{ config, lib, ... }:
+{ config, lib, osConfig, ... }:
 
 let
+  llm = osConfig.local.llm;
+
   opencodeConfig = {
     "$schema" = "https://opencode.ai/config.json";
     permission = {
@@ -14,32 +16,11 @@ let
       reserved = 16000;
     };
     disabled_providers = [ ];
-    provider.flexberry = {
-      name = "flexberry";
-      npm = "@ai-sdk/openai-compatible";
-      models."qwen3-coder-128k:30b" = {
-        name = "Qwen3-Coder-Next";
-        family = "qwen";
-        tool_call = true;
-        reasoning = false;
-        modalities = {
-          input = [ "text" ];
-          output = [ "text" ];
-        };
-        temperature = true;
-        release_date = "2026-02-03";
-        limit = {
-          context = 128000;
-          output = 32000;
-        };
-      };
-      options = {
-        baseURL = "{env:OPENAI_BASE_URL}";
-        apiKey = "{env:OPENAI_TOKEN}";
-      };
-    };
-    model = "qwen3-coder-128k:30b";
-    small_model = "qwen3-coder-128k:30b";
+    provider = llm.opencodeProviders;
+  } // lib.optionalAttrs (llm.defaultModel != null) {
+    model = llm.defaultModel;
+    small_model = llm.smallModel;
+  } // {
     mcp = {
       nixos = {
         type = "local";
@@ -61,12 +42,7 @@ in
     description = "Additional OpenCode MCP server definitions to merge into the managed opencode config.";
   };
 
-  config.home.file = {
-    ".config/opencode/opencode.json" = lib.mkForce {
-      text = builtins.toJSON opencodeConfig;
-    };
-    ".config/opencode/oh-my-opencode.json" = lib.mkForce {
-      source = ./config/oh-my-opencode.json;
-    };
+  config.home.file.".config/opencode/opencode.json" = lib.mkForce {
+    text = builtins.toJSON opencodeConfig;
   };
 }

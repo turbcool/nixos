@@ -7,40 +7,56 @@
 }:
 
 let
-  openaiTokenFile = ../secrets/openai-token.age;
-  hasOpenAIToken = builtins.pathExists openaiTokenFile;
+  cfg = config.local.llm;
   username = config.local.profile.username;
+  llmLib = import ../../lib/llm.nix lib;
+
+  tokenPresent = llmLib.filterPresent cfg.providers;
 in
 
 {
-  environment.systemPackages = with inputs.llm-agents.packages.${pkgs.stdenv.hostPlatform.system}; [
-    agent-deck
-    opencode
-  ];
+  options.local.llm = {
+    providers = lib.mkOption {
+      type = lib.types.attrsOf llmLib.providerType;
+      default = { };
+    };
 
-  environment.sessionVariables = {
-    OPENAI_BASE_URL = "https://ai.flexberry.org/v1";
-    OPENAI_MODEL = "flexberry/qwen3-coder-128k:30b";
-  } // lib.optionalAttrs hasOpenAIToken {
-    OPENAI_TOKEN_FILE = config.age.secrets.openai-token.path;
-  };
+    defaultProvider = lib.mkOption {
+      type = lib.types.nullOr lib.types.str;
+      default = null;
+    };
 
-  age.secrets = lib.mkIf hasOpenAIToken {
-    openai-token = {
-      file = openaiTokenFile;
-      owner = username;
-      mode = "0400";
+    defaultModel = lib.mkOption {
+      type = lib.types.nullOr lib.types.str;
+      default = null;
+    };
+
+    smallModel = lib.mkOption {
+      type = lib.types.nullOr lib.types.str;
+      default = cfg.defaultModel;
+    };
+
+    opencodeProviders = lib.mkOption {
+      type = lib.types.attrsOf lib.types.anything;
+      internal = true;
     };
   };
 
-  environment.shellInit = lib.mkIf hasOpenAIToken ''
-    if [ -r "$OPENAI_TOKEN_FILE" ]; then
-      export OPENAI_TOKEN="$(cat "$OPENAI_TOKEN_FILE")"
-      export OPENAI_API_KEY="$OPENAI_TOKEN"
-    fi
-  '';
+  config = {
+    environment.systemPackages = with inputs.llm-agents.packages.${pkgs.stdenv.hostPlatform.system}; [
+      agent-deck
+      opencode
+    ];
 
-  warnings = lib.optional (!hasOpenAIToken) ''
-    Missing ${toString openaiTokenFile}; OPENAI_TOKEN will not be exported.
-  '';
+    age.secrets = llmLib.mkAgeSecrets tokenPresent username;
+
+    local.llm = {
+      providers = import ../../lib/providers.nix { secretsDir = ../secrets; };
+      defaultProvider = "flexberry";
+      defaultModel = "qwen3-coder-128k:30b";
+      opencodeProviders = llmLib.mkOpencodeProviders cfg.providers tokenPresent config.age.secrets;
+    };
+
+    warnings = llmLib.mkWarnings (llmLib.filterMissing cfg.providers);
+  };
 }
