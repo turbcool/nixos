@@ -1,20 +1,22 @@
-{ pkgs, ... }:
+{ config, lib, pkgs, ... }:
 
+let
+  cfg = config.local.pkgs.dev;
+in
 {
-  environment.systemPackages = with pkgs; [
-    nodejs
-    mcp-nixos
-    lazygit
-    lazydocker
-    ripgrep
-    gdu
-    gcc
-    yazi
-    postgresql_17
-    nmap
-    dnsutils
-    gitlab-ci-local
-  ];
+  options.local.pkgs.dev.enable = (lib.mkEnableOption "development packages") // {
+    default = true;
+  };
 
-  programs.npm.enable = true;
+  config = lib.mkIf cfg.enable {
+    environment.systemPackages = with pkgs; [
+      nodejs
+      mcp-nixos
+      gcc
+      gitlab-ci-local
+      uv
+    ];
+
+    programs.npm.enable = true;
+  };
 }

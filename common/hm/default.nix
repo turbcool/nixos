@@ -1,6 +1,4 @@
-{
-  ...
-}:
+{ ... }:
 
 {
   imports = [
@@ -9,6 +7,7 @@
     ./neovim.nix
     ./opencode.nix
     ./ssh.nix
+    ./tmux.nix
     ./zoxide.nix
   ];
 }

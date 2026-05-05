@@ -7,12 +7,10 @@
     ./remmina.nix
     ./vscode.nix
     ./wolf.nix
-    ./tmux.nix
   ];
 
   home.packages = with pkgs; [
     telegram-desktop
-    yt-dlp
   ];
 
   programs.mpv.enable = true;

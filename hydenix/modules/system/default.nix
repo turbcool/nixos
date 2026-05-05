@@ -14,7 +14,6 @@
     pkgs.easyeffects
     pkgs.qbittorrent-enhanced
     pkgs.lowfi
-    pkgs.uv
   ];
 
   environment.sessionVariables = {

@@ -2,11 +2,12 @@
 
 {
   imports = [
-    ./profile.nix
     ./cert.nix
     ./docker.nix
     ./git.nix
-    ./tmux.nix
     ./llm.nix
+    ./nix.nix
+    ./profile.nix
+    ./shell.nix
   ];
 }

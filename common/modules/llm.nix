@@ -18,14 +18,6 @@ in
     opencode
   ];
 
-  nix.settings = {
-    "connect-timeout" = 10;
-    "stalled-download-timeout" = 30;
-    "download-attempts" = 5;
-    "extra-substituters" = lib.mkForce [ ];
-    "extra-trusted-public-keys" = lib.mkForce [ ];
-  };
-
   environment.sessionVariables = {
     OPENAI_BASE_URL = "https://ai.flexberry.org/v1";
     OPENAI_MODEL = "flexberry/qwen3-coder-128k:30b";

@@ -120,9 +120,6 @@ in
   };
 
   time.timeZone = profile.timezone;
-  programs.zsh.enable = true;
-
-  nix.settings.experimental-features = [ "nix-command" "flakes" ];
 
   environment.sessionVariables = {
     HTTP_PROXY = hostProxyUrl;
@@ -136,9 +133,6 @@ in
   age.identityPaths = [ "/home/${username}/.ssh/id_ed25519" ];
 
   environment.systemPackages = with pkgs; [
-    git
-    vim
-    wget
     wslRefreshWindowsSshProxy
   ];
 

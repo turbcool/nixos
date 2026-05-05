@@ -1,6 +1,7 @@
-{ pkgs, ... }:
+{ config, lib, pkgs, ... }:
 
 let
+  cfg = config.local.pkgs.dotnet;
   dotnet-sdk =
     (with pkgs.dotnetCorePackages;
     combinePackages [
@@ -11,12 +12,18 @@ let
   dotnetRoot = "${dotnet-sdk}/share/dotnet";
 in
 {
-  environment.systemPackages = with pkgs; [
-    dotnet-sdk
-    roslyn-ls
-  ];
+  options.local.pkgs.dotnet.enable = (lib.mkEnableOption ".NET packages") // {
+    default = true;
+  };
 
-  environment.sessionVariables = {
-    DOTNET_ROOT = dotnetRoot;
+  config = lib.mkIf cfg.enable {
+    environment.systemPackages = with pkgs; [
+      dotnet-sdk
+      roslyn-ls
+    ];
+
+    environment.sessionVariables = {
+      DOTNET_ROOT = dotnetRoot;
+    };
   };
 }
