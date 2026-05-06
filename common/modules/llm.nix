@@ -51,7 +51,7 @@ in
     age.secrets = llmLib.mkAgeSecrets tokenPresent username;
 
     local.llm = {
-      providers = import ../../lib/providers.nix { secretsDir = ../secrets; };
+      providers = import ../../config/providers.nix { secretsDir = ../secrets; };
       defaultProvider = "flexberry";
       defaultModel = "qwen3-coder-128k:30b";
       opencodeProviders = llmLib.mkOpencodeProviders cfg.providers tokenPresent config.age.secrets;

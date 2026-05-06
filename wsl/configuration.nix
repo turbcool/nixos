@@ -164,22 +164,6 @@ in
         imports = [
           ../common/hm/default.nix
         ];
-        local.opencode.extraMcp = {
-          svelte = {
-            type = "remote";
-            url = "https://mcp.svelte.dev/mcp";
-            enabled = true;
-          };
-          lucide-icons = {
-            type = "local";
-            command = [
-              "npx"
-              "lucide-icons-mcp"
-              "--stdio"
-            ];
-            enabled = true;
-          };
-        };
         home.stateVersion = "25.05";
       };
   };

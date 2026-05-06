@@ -37,3 +37,34 @@ nix flake check --no-build
 sudo nixos-rebuild switch --flake /etc/nixos#hydenix
 sudo nixos-rebuild switch --flake /etc/nixos#wsl
 ```
+
+## Agent skills (per-project)
+
+Skills are **not** installed globally. To activate in a project:
+
+1. `.envrc` in the project root:
+   ```
+   use flake /etc/nixos#skills
+   ```
+2. `direnv allow`
+3. Skills are installed to `./.opencode/skills/` (add to `.gitignore`).
+
+To add more skill sources, edit `config/skills.nix`.
+
+## MCP servers (per-project)
+
+MCP servers are **not** in the global opencode config. To activate in a project:
+
+1. `.envrc` in the project root:
+   ```
+   use flake /etc/nixos#mcp
+   ```
+2. `direnv allow`
+
+To add more MCP servers, edit `config/mcp.nix`.
+
+You can combine both in one `.envrc`:
+```
+use flake /etc/nixos#skills
+use flake /etc/nixos#mcp
+```

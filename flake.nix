@@ -63,17 +63,25 @@
           ];
         };
       };
+
+      skills = import ./lib/devShells/skills.nix { inherit pkgs inputs; };
+      mcp = import ./lib/devShells/mcp.nix { inherit pkgs; };
     in
     {
       nixosConfigurations = nixpkgs.lib.mapAttrs (_: cfg: mkHost cfg) hosts;
 
-      devShells.${system}.default = pkgs.mkShellNoCC {
-        packages = [
-          inputs.agenix.packages.${system}.default
-          pkgs.nixfmt-rfc-style
-          pkgs.nixd
-          pkgs.statix
-        ];
+      devShells.${system} = {
+        default = pkgs.mkShellNoCC {
+          packages = [
+            inputs.agenix.packages.${system}.default
+            pkgs.nixfmt-rfc-style
+            pkgs.nixd
+            pkgs.statix
+          ];
+        };
+
+        skills = skills.devShell;
+        mcp = mcp.devShell;
       };
     };
 }

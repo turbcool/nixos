@@ -9,23 +9,11 @@ in
   programs.agent-skills = {
     enable = true;
 
-    sources = {
-      obsidian-wiki = {
-        input = "obsidian-wiki";
-        subdir = ".skills";
-      };
-      kepano-obsidian = {
-        input = "kepano-obsidian-skills";
-        subdir = "skills";
-      };
-    };
+    sources = import ../../config/skills.nix;
 
     skills.enableAll = true;
 
-    targets = {
-      opencode.enable = true;
-      agents.enable = true;
-    };
+    targets = { };
   };
 
   home.file.".obsidian-wiki/config".text = ''
