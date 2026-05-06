@@ -1,6 +1,39 @@
 { lib, osConfig, ... }:
+
+let
+  llm = osConfig.local.llm;
+  cleanJson = lib.filterAttrsRecursive (_: v: v != null);
+in
 {
   config.home.file.".config/opencode/opencode.json" = lib.mkForce {
-    text = builtins.toJSON osConfig.local.llm.opencodeJson;
+    text = builtins.toJSON (
+      {
+        "$schema" = "https://opencode.ai/config.json";
+        permission = {
+          webfetch = "allow";
+          websearch = "allow";
+          lsp = "allow";
+        };
+        compaction = {
+          auto = true;
+          prune = true;
+          reserved = 16000;
+        };
+        disabled_providers = [ ];
+        provider = lib.mapAttrs (name: p: {
+          inherit name;
+          npm = p.npm or "@ai-sdk/openai-compatible";
+          models = cleanJson (p.models or { });
+          options = {
+            baseURL = p.url;
+            apiKey = if p ? tokenFile then "{file:${osConfig.age.secrets."${name}-token".path}}" else "";
+          };
+        }) llm.providers;
+      }
+      // lib.optionalAttrs (llm.defaultModel != null) {
+        model = llm.defaultModel;
+        small_model = llm.smallModel;
+      }
+    );
   };
 }
