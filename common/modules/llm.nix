@@ -8,36 +8,27 @@
 
 let
   cfg = config.local.llm;
+  providers = import ../../config/providers.nix;
   username = config.local.profile.username;
-  llmLib = import ../../lib/llm.nix lib;
 
-  tokenPresent = llmLib.filterPresent cfg.providers;
+  hasToken = lib.filterAttrs (_: p: p ? tokenFile);
+
+  cleanJson = lib.filterAttrsRecursive (_: v: v != null);
 in
-
 {
   options.local.llm = {
-    providers = lib.mkOption {
-      type = lib.types.attrsOf llmLib.providerType;
-      default = { };
-    };
-
-    defaultProvider = lib.mkOption {
-      type = lib.types.nullOr lib.types.str;
-      default = null;
-    };
-
     defaultModel = lib.mkOption {
       type = lib.types.nullOr lib.types.str;
       default = null;
     };
 
     smallModel = lib.mkOption {
-      type = lib.types.nullOr lib.types.str;
+      type = lib.types.str;
       default = cfg.defaultModel;
     };
 
-    opencodeProviders = lib.mkOption {
-      type = lib.types.attrsOf lib.types.anything;
+    opencodeJson = lib.mkOption {
+      type = lib.types.attrs;
       internal = true;
     };
   };
@@ -48,15 +39,44 @@ in
       opencode
     ];
 
-    age.secrets = llmLib.mkAgeSecrets tokenPresent username;
+    age.secrets = lib.mapAttrs' (name: p: {
+      name = "${name}-token";
+      value = {
+        file = p.tokenFile;
+        owner = username;
+        mode = "0400";
+      };
+    }) (hasToken providers);
 
     local.llm = {
-      providers = import ../../config/providers.nix { secretsDir = ../secrets; };
-      defaultProvider = "flexberry";
       defaultModel = "qwen3-coder-128k:30b";
-      opencodeProviders = llmLib.mkOpencodeProviders cfg.providers tokenPresent config.age.secrets;
+      opencodeJson = {
+        "$schema" = "https://opencode.ai/config.json";
+        permission = {
+          webfetch = "allow";
+          websearch = "allow";
+          lsp = "allow";
+        };
+        compaction = {
+          auto = true;
+          prune = true;
+          reserved = 16000;
+        };
+        disabled_providers = [ ];
+        provider = lib.mapAttrs (name: p: {
+          inherit name;
+          npm = p.npm or "@ai-sdk/openai-compatible";
+          models = cleanJson (p.models or { });
+          options = {
+            baseURL = p.url;
+            apiKey = if p ? tokenFile then "{file:${config.age.secrets."${name}-token".path}}" else "";
+          };
+        }) providers;
+      }
+      // lib.optionalAttrs (cfg.defaultModel != null) {
+        model = cfg.defaultModel;
+        small_model = cfg.smallModel;
+      };
     };
-
-    warnings = llmLib.mkWarnings (llmLib.filterMissing cfg.providers);
   };
 }

@@ -1,9 +1,7 @@
-{ secretsDir }:
-
 {
   flexberry = {
     url = "https://ai.flexberry.org/v1";
-    tokenFile = secretsDir + "/flexberry-token.age";
+    tokenFile = ../common/secrets/flexberry-token.age;
     models."qwen3-coder-128k:30b" = {
       name = "Qwen3-Coder-Next";
       family = "qwen";
@@ -17,7 +15,7 @@
 
   custom = {
     url = "https://llm.naidanov.ru/v1";
-    tokenFile = secretsDir + "/custom-token.age";
+    tokenFile = ../common/secrets/custom-token.age;
     models.coder = {
       name = "Coder";
       family = "coder";
