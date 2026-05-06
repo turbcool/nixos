@@ -22,6 +22,18 @@
     };
 
     nixos-hardware.url = "github:nixos/nixos-hardware/master";
+
+    agent-skills.url = "github:Kyure-A/agent-skills-nix";
+
+    obsidian-wiki = {
+      url = "github:Ar9av/obsidian-wiki";
+      flake = false;
+    };
+
+    kepano-obsidian-skills = {
+      url = "github:kepano/obsidian-skills";
+      flake = false;
+    };
   };
 
   outputs = { nixpkgs, ... }@inputs:

@@ -5,14 +5,17 @@ let
     options = {
       name = lib.mkOption { type = lib.types.str; };
       family = lib.mkOption { type = lib.types.str; };
+
       tool_call = lib.mkOption {
         type = lib.types.bool;
         default = true;
       };
+
       reasoning = lib.mkOption {
         type = lib.types.bool;
         default = false;
       };
+
       modalities = lib.mkOption {
         type = lib.types.attrsOf (lib.types.listOf lib.types.str);
         default = {
@@ -20,14 +23,17 @@ let
           output = [ "text" ];
         };
       };
+
       temperature = lib.mkOption {
         type = lib.types.bool;
         default = true;
       };
+
       release_date = lib.mkOption {
         type = lib.types.nullOr lib.types.str;
         default = null;
       };
+
       limit = lib.mkOption {
         type = lib.types.nullOr (lib.types.attrsOf lib.types.int);
         default = null;
@@ -38,14 +44,17 @@ let
   providerType = lib.types.submodule {
     options = {
       url = lib.mkOption { type = lib.types.str; };
+
       npm = lib.mkOption {
         type = lib.types.str;
         default = "@ai-sdk/openai-compatible";
       };
+
       tokenFile = lib.mkOption {
         type = lib.types.nullOr lib.types.path;
         default = null;
       };
+
       models = lib.mkOption {
         type = lib.types.attrsOf modelType;
         default = { };
@@ -56,6 +65,9 @@ let
   filterPresent = lib.filterAttrs (_: p: p.tokenFile != null && builtins.pathExists p.tokenFile);
 
   filterMissing = lib.filterAttrs (_: p: p.tokenFile != null && !builtins.pathExists p.tokenFile);
+
+  # Remove attrs whose value is null before producing JSON.
+  cleanJson = lib.filterAttrsRecursive (_: value: value != null);
 in
 
 {
@@ -82,10 +94,16 @@ in
     lib.mapAttrs (name: provider: {
       inherit name;
       npm = provider.npm;
-      models = provider.models;
+
+      # Important: strip null release_date / limit fields.
+      models = cleanJson provider.models;
+
       options = {
         baseURL = provider.url;
-        apiKey = if providersWithTokens ? ${name} then "{file:${ageSecrets."${name}-token".path}}" else "";
+        apiKey =
+          if providersWithTokens ? ${name}
+          then "{file:${ageSecrets."${name}-token".path}}"
+          else "";
       };
     }) providers;
 

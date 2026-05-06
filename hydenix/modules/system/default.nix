@@ -14,6 +14,7 @@
     pkgs.easyeffects
     pkgs.qbittorrent-enhanced
     pkgs.lowfi
+    pkgs.obsidian
   ];
 
   environment.sessionVariables = {

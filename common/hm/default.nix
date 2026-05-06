@@ -2,6 +2,7 @@
 
 {
   imports = [
+    ./agent-skills.nix
     ./calendar.nix
     ./cli.nix
     ./direnv.nix
