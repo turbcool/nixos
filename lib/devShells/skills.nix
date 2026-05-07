@@ -1,6 +1,3 @@
-# Собирает бандл навыков из общих источников
-# и отдаёт devShell, который через shellHook копирует их в .opencode/skills/.
-# Использование в .envrc проекта: use flake /etc/nixos#skills
 { pkgs, inputs }:
 
 let
@@ -9,32 +6,50 @@ let
     inherit inputs;
   };
 
-  sources = import ../../config/skills.nix;
+  rawConfig = import ../../config/skills.nix;
+  groups = rawConfig.groups or { };
+  sources = builtins.removeAttrs rawConfig [ "groups" ];
+  sourceNames = builtins.attrNames sources;
 
   catalog = agentLib.discoverCatalog sources;
 
-  bundle = agentLib.mkBundle {
-    inherit pkgs;
-    selection = agentLib.selectSkills {
-      inherit catalog sources;
-      allowlist = agentLib.allowlistFor {
-        inherit catalog sources;
-        enableAll = true;
-        enable = [ ];
+  mkSkillsShell =
+    sourceList:
+    let
+      bundle = agentLib.mkBundle {
+        inherit pkgs;
+        selection = agentLib.selectSkills {
+          inherit catalog sources;
+          allowlist = agentLib.allowlistFor {
+            inherit catalog sources;
+            enableAll = sourceList;
+          };
+          skills = { };
+        };
       };
-      skills = { };
+    in
+    pkgs.mkShellNoCC {
+      shellHook = agentLib.mkShellHook {
+        inherit pkgs bundle;
+        targets.opencode = {
+          dest = ".opencode/skills";
+          structure = "copy-tree";
+          enable = true;
+        };
+      };
     };
-  };
+
+  groupShells = builtins.mapAttrs (_: mkSkillsShell) groups;
+
+  individualShells = builtins.listToAttrs (
+    builtins.map (name: {
+      inherit name;
+      value = mkSkillsShell [ name ];
+    }) sourceNames
+  );
 in
 {
-  devShell = pkgs.mkShellNoCC {
-    shellHook = agentLib.mkShellHook {
-      inherit pkgs bundle;
-      targets.opencode = {
-        dest = ".opencode/skills";
-        structure = "copy-tree";
-        enable = true;
-      };
-    };
-  };
+  devShell = mkSkillsShell sourceNames;
+
+  shells = groupShells // individualShells;
 }

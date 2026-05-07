@@ -36,7 +36,8 @@
     };
   };
 
-  outputs = { nixpkgs, ... }@inputs:
+  outputs =
+    { nixpkgs, ... }@inputs:
     let
       system = "x86_64-linux";
       pkgs = nixpkgs.legacyPackages.${system};
@@ -66,6 +67,18 @@
 
       skills = import ./lib/devShells/skills.nix { inherit pkgs inputs; };
       mcp = import ./lib/devShells/mcp.nix { inherit pkgs; };
+      cli = import ./lib/scripts/cli.nix { inherit pkgs; };
+
+      prefixAttrs =
+        prefix: attrs:
+        builtins.listToAttrs (
+          builtins.attrValues (
+            builtins.mapAttrs (name: value: {
+              name = "${prefix}${name}";
+              inherit value;
+            }) attrs
+          )
+        );
     in
     {
       nixosConfigurations = nixpkgs.lib.mapAttrs (_: cfg: mkHost cfg) hosts;
@@ -77,11 +90,18 @@
             pkgs.nixfmt-rfc-style
             pkgs.nixd
             pkgs.statix
+            pkgs.jq
+            cli.skills
+            cli.mcp
           ];
         };
 
         skills = skills.devShell;
         mcp = mcp.devShell;
-      };
+      }
+      // (prefixAttrs "skills-" skills.shells)
+      // (prefixAttrs "mcp-" mcp.shells);
+
+      packages.${system} = prefixAttrs "mcp-config-" mcp.configs;
     };
 }

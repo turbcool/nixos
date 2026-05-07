@@ -42,29 +42,27 @@ sudo nixos-rebuild switch --flake /etc/nixos#wsl
 
 Skills are **not** installed globally. To activate in a project:
 
-1. `.envrc` in the project root:
-   ```
-   use flake /etc/nixos#skills
-   ```
-2. `direnv allow`
-3. Skills are installed to `./.opencode/skills/` (add to `.gitignore`).
+```bash
+skills              # list available groups and sources
+skills wiki         # install wiki skills to .opencode/skills/
+skills obsidian-wiki  # install just obsidian-wiki skills
+```
 
-To add more skill sources, edit `config/skills.nix`.
+Skills are installed to `./.opencode/skills/` (add to `.gitignore`).
+
+To add more skill sources or groups, edit `config/skills.nix`.
 
 ## MCP servers (per-project)
 
 MCP servers are **not** in the global opencode config. To activate in a project:
 
-1. `.envrc` in the project root:
-   ```
-   use flake /etc/nixos#mcp
-   ```
-2. `direnv allow`
-
-To add more MCP servers, edit `config/mcp.nix`.
-
-You can combine both in one `.envrc`:
+```bash
+mcp                 # list available groups and servers
+mcp svelte          # write svelte MCP config to opencode.json
+mcp ui              # write daisyui + lucide-icons MCP config
+mcp all             # write all MCP servers
 ```
-use flake /etc/nixos#skills
-use flake /etc/nixos#mcp
-```
+
+Multiple `mcp` calls **merge** into `opencode.json` (deep merge via jq).
+
+To add more MCP servers or groups, edit `config/mcp.nix`.

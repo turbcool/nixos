@@ -6,7 +6,13 @@
   };
   daisyui = {
     type = "local";
-    command = [ "docker" "run" "-i" "--rm" "daisyui-mcp" ];
+    command = [
+      "docker"
+      "run"
+      "-i"
+      "--rm"
+      "daisyui-mcp"
+    ];
     enabled = true;
   };
   svelte = {
@@ -22,5 +28,20 @@
       "--stdio"
     ];
     enabled = true;
+  };
+
+  groups = {
+    ui = [
+      "daisyui"
+      "lucide-icons"
+    ];
+    nixos = [ "nixos" ];
+    svelte = [ "svelte" ];
+    all = [
+      "nixos"
+      "daisyui"
+      "svelte"
+      "lucide-icons"
+    ];
   };
 }

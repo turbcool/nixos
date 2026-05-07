@@ -1,14 +1,51 @@
-# Отдаёт devShell, который через OPENCODE_CONFIG подключает MCP-серверы.
-# opencode мерджит этот конфиг с глобальным и проектным автоматически.
-# Использование в .envrc проекта: use flake /etc/nixos#mcp
 { pkgs }:
 
 let
-  mcps = import ../../config/mcp.nix;
-  configFile = pkgs.writeText "opencode-mcp.json" (builtins.toJSON { mcp = mcps; });
+  raw = import ../../config/mcp.nix;
+  groups = raw.groups or { };
+  servers = builtins.removeAttrs raw [ "groups" ];
+  serverNames = builtins.attrNames servers;
+
+  mkMcpConfig =
+    serverNames':
+    let
+      selected = builtins.listToAttrs (
+        builtins.map (name: {
+          inherit name;
+          value = servers.${name};
+        }) serverNames'
+      );
+    in
+    pkgs.writeText "opencode-mcp.json" (builtins.toJSON { mcp = selected; });
+
+  mkMcpShell =
+    serverNames':
+    pkgs.mkShellNoCC {
+      OPENCODE_CONFIG = toString (mkMcpConfig serverNames');
+    };
+
+  groupShells = builtins.mapAttrs (_: serverNames': mkMcpShell serverNames') groups;
+
+  individualShells = builtins.listToAttrs (
+    builtins.map (name: {
+      inherit name;
+      value = mkMcpShell [ name ];
+    }) serverNames
+  );
+
+  allConfigs =
+    groups
+    // (builtins.listToAttrs (
+      builtins.map (name: {
+        inherit name;
+        value = [ name ];
+      }) serverNames
+    ));
 in
 {
-  devShell = pkgs.mkShellNoCC {
-    OPENCODE_CONFIG = toString configFile;
-  };
+  devShell = mkMcpShell serverNames;
+
+  shells = groupShells // individualShells;
+
+  configs = builtins.mapAttrs (_: mkMcpConfig) allConfigs;
 }
