@@ -1,4 +1,4 @@
-{ config, lib, pkgs, ... }:
+{ config, inputs, lib, pkgs, ... }:
 
 let
   cfg = config.local.pkgs.cli;
@@ -9,16 +9,21 @@ in
   };
 
   config = lib.mkIf cfg.enable {
-    environment.systemPackages = with pkgs; [
-      ripgrep
-      fd
-      gdu
-      yazi
-      wget
-      unzip
-      vim
-      lazygit
-      lazydocker
-    ];
+    environment.systemPackages =
+      with pkgs;
+      [
+        ripgrep
+        fd
+        gdu
+        yazi
+        wget
+        unzip
+        vim
+        lazygit
+        lazydocker
+      ]
+      ++ [
+        inputs.qmd.packages.${pkgs.stdenv.hostPlatform.system}.default
+      ];
   };
 }

@@ -34,6 +34,8 @@
       url = "github:kepano/obsidian-skills";
       flake = false;
     };
+
+    qmd.url = "github:tobi/qmd";
   };
 
   outputs =

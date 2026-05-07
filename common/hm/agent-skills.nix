@@ -17,12 +17,12 @@ in
   };
 
   home.file.".obsidian-wiki/config".text = ''
-    OBSIDIAN_VAULT_PATH=/home/${username}/obsidian-vault
+    OBSIDIAN_VAULT_PATH=/home/${username}/repos/obsidian-wiki-vault
     OBSIDIAN_WIKI_REPO=${inputs.obsidian-wiki}
   '';
 
   home.activation.create-obsidian-vault =
     lib.hm.dag.entryAfter [ "writeBoundary" ] ''
-      mkdir -p "$HOME/obsidian-vault"
+      mkdir -p "$HOME/repos/obsidian-wiki-vault"
     '';
 }

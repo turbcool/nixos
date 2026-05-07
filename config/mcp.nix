@@ -30,18 +30,16 @@
     enabled = true;
   };
 
+  wiki = {
+    type = "local";
+    command = [ "qmd" "mcp" ];
+    enabled = true;
+  };
+
   groups = {
-    ui = [
-      "daisyui"
-      "lucide-icons"
-    ];
+    lucide = ["lucide-icons"];
     nixos = [ "nixos" ];
-    svelte = [ "svelte" ];
-    all = [
-      "nixos"
-      "daisyui"
-      "svelte"
-      "lucide-icons"
-    ];
+    svelte = [ "svelte" "daisyui" ];
+    wiki = [ "wiki" ];
   };
 }
