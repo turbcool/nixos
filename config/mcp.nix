@@ -37,9 +37,8 @@
   };
 
   groups = {
-    lucide = ["lucide-icons"];
     nixos = [ "nixos" ];
-    svelte = [ "svelte" "daisyui" ];
+    frontend = [ "svelte" "daisyui" "lucide-icons"];
     wiki = [ "wiki" ];
   };
 }
