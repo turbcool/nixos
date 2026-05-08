@@ -21,6 +21,7 @@ in
         vim
         lazygit
         lazydocker
+        repomix
       ]
       ++ [
         inputs.qmd.packages.${pkgs.stdenv.hostPlatform.system}.default

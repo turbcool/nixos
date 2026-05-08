@@ -59,3 +59,5 @@ direnv allow   # run once after entering /etc/nixos; provides nixfmt, nixd, stat
 - agenix `secrets.nix` must be in the directory where you run `agenix -e` (or paths won't resolve)
 - `hydenix/hardware-configuration.nix` is auto-generated, not committed to the template
 - The devshell uses `use flake` via `.envrc` — run `direnv allow` once; `.direnv/` is gitignored
+
+P.S. When user asks to install a NixOS package, use MCP Tool `nixos` to search and validate configuration options.
