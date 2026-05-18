@@ -20,6 +20,7 @@ in
           reserved = 16000;
         };
         disabled_providers = [ ];
+        agent.explore.model = "flexberry/qwen3-coder-128k:30b";
         provider = lib.mapAttrs (name: p: {
           inherit name;
           npm = p.npm or "@ai-sdk/openai-compatible";
