@@ -1,8 +1,9 @@
-{ pkgs, ... }:
+{ inputs, pkgs, ... }:
 
 {
-  home.packages = with pkgs; [
-    yt-dlp
+  home.packages = [
+    pkgs.yt-dlp
+    inputs.claude-code.packages.${pkgs.stdenv.hostPlatform.system}.default
   ];
 
   programs.zsh = {

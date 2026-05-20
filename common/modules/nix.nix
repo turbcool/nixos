@@ -6,7 +6,7 @@
     "connect-timeout" = 10;
     "stalled-download-timeout" = 30;
     "download-attempts" = 5;
-    "extra-substituters" = lib.mkForce [ ];
-    "extra-trusted-public-keys" = lib.mkForce [ ];
+    substituters = [ "https://claude-code.cachix.org" ];
+    trusted-public-keys = [ "claude-code.cachix.org-1:YeXf2aNu7UTX8Vwrze0za1WEDS+4DuI2kVeWEE4fsRk=" ];
   };
 }

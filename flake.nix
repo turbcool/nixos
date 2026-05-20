@@ -36,6 +36,8 @@
     };
 
     qmd.url = "github:tobi/qmd";
+
+    claude-code.url = "github:sadjow/claude-code-nix";
   };
 
   outputs =
