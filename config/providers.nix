@@ -15,13 +15,29 @@
   flexberry = {
     url = "https://ai.flexberry.org/v1";
     tokenFile = ../common/secrets/flexberry-token.age;
-    models."GLM-5.1" = {
-      name = "glm-5.1";
+    models."glm-5.1" = {
+      name = "GLM-5.1";
       family = "glm";
-      release_date = "2026-02-03";
+      attachment = false;
+      reasoning = true;
+      tool_call = true;
+      interleaved.field = "reasoning_content";
+      structured_output = true;
+      temperature = true;
+      release_date = "2026-03-27";
+      last_updated = "2026-03-27";
+      modalities = {
+        input = [ "text" ];
+        output = [ "text" ];
+      };
       limit = {
         context = 200000;
-        output = 128000;
+        output = 131072;
+      };
+      cost = {
+        input = 1.4;
+        output = 4.4;
+        cache_read = 0.26;
       };
     };
   };
