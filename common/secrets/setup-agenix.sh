@@ -88,6 +88,7 @@ ask_secret() {
 }
 
 ask_secret "flexberry-token.age" "Flexberry API key for opencode: "
+ask_secret "neoplatform-token.age" "Neoplatform API key for opencode: "
 ask_secret "custom-token.age" "Custom provider API key: "
 
 echo "Rebuild the system to apply: sudo nixos-rebuild switch --flake /etc/nixos#<host>"
