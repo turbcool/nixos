@@ -63,6 +63,9 @@ in
       bind -n M-3 select-window -t 3
       bind -n M-4 select-window -t 4
 
+      bind -n M-Left previous-window
+      bind -n M-Right next-window
+
       bind | split-window -h -c "#{pane_current_path}"
       bind - split-window -v -c "#{pane_current_path}"
       bind c new-window -c "#{pane_current_path}"
