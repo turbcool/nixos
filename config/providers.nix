@@ -15,7 +15,7 @@
   flexberry = {
     url = "https://ai.flexberry.org/v1";
     tokenFile = ../common/secrets/flexberry-token.age;
-    models."glm-5.1" = {
+    models."GLM-5.1" = {
       name = "GLM-5.1";
       family = "glm";
       attachment = false;
@@ -38,6 +38,15 @@
         input = 1.4;
         output = 4.4;
         cache_read = 0.26;
+      };
+    };
+    models."qwen3-coder-128k:30b" = {
+      name = "Qwen3-Coder-Next";
+      family = "qwen";
+      release_date = "2026-02-03";
+      limit = {
+        context = 128000;
+        output = 32000;
       };
     };
   };

@@ -91,4 +91,11 @@ ask_secret "flexberry-token.age" "Flexberry API key for opencode: "
 ask_secret "neoplatform-token.age" "Neoplatform API key for opencode: "
 ask_secret "custom-token.age" "Custom provider API key: "
 
+echo ""
+echo "--- VM SSH passwords ---"
+ask_secret "vm-ai-neoplatform.age" "Password for ai-neoplatform: "
+ask_secret "vm-ai-skyori.age" "Password for ai-skyori: "
+ask_secret "vm-ai-proinfoservice.age" "Password for ai-proinfoservice: "
+ask_secret "vm-ai-timepath.age" "Password for ai-timepath: "
+
 echo "Rebuild the system to apply: sudo nixos-rebuild switch --flake /etc/nixos#<host>"

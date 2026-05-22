@@ -1,4 +1,10 @@
-{ config, inputs, lib, pkgs, ... }:
+{
+  config,
+  inputs,
+  lib,
+  pkgs,
+  ...
+}:
 
 let
   cfg = config.local.pkgs.cli;
@@ -22,6 +28,7 @@ in
         lazygit
         lazydocker
         repomix
+        sshpass
       ]
       ++ [
         inputs.qmd.packages.${pkgs.stdenv.hostPlatform.system}.default

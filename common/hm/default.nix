@@ -4,6 +4,7 @@
   imports = [
     ./agent-skills.nix
     ./calendar.nix
+    ./claude-code.nix
     ./cli.nix
     ./direnv.nix
     ./neovim.nix

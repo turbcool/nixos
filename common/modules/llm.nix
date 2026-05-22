@@ -11,6 +11,10 @@ let
   username = config.local.profile.username;
 
   hasToken = lib.filterAttrs (_: p: p ? tokenFile);
+
+  cc = cfg.claudeCode;
+  ccProvider = cfg.providers.${cc.provider};
+  ccTokenPath = config.age.secrets."${cc.provider}-token".path;
 in
 {
   options.local.llm = {
@@ -28,23 +32,65 @@ in
       type = lib.types.str;
       default = cfg.defaultModel;
     };
-  };
 
-  config = {
-    environment.systemPackages = with inputs.llm-agents.packages.${pkgs.stdenv.hostPlatform.system}; [
-      agent-deck
-      opencode
-    ];
+    claudeCode = {
+      enable = lib.mkEnableOption "Claude Code integration" // { default = true; };
 
-    age.secrets = lib.mapAttrs' (name: p: {
-      name = "${name}-token";
-      value = {
-        file = p.tokenFile;
-        owner = username;
-        mode = "0400";
+      provider = lib.mkOption {
+        type = lib.types.str;
+        default = "flexberry";
       };
-    }) (hasToken cfg.providers);
 
-    local.llm.defaultModel = "qwen3-coder-128k:30b";
+      models = {
+        opus = lib.mkOption {
+          type = lib.types.str;
+          default = "glm-5.1";
+        };
+        sonnet = lib.mkOption {
+          type = lib.types.str;
+          default = "glm-5.1";
+        };
+        haiku = lib.mkOption {
+          type = lib.types.str;
+          default = "qwen3-coder-128k:30b";
+        };
+        subagent = lib.mkOption {
+          type = lib.types.str;
+          default = "qwen3-coder-128k:30b";
+        };
+      };
+    };
   };
+
+  config = lib.mkMerge [
+    {
+      environment.systemPackages = with inputs.llm-agents.packages.${pkgs.stdenv.hostPlatform.system}; [
+        agent-deck
+        opencode
+      ];
+
+      age.secrets = lib.mapAttrs' (name: p: {
+        name = "${name}-token";
+        value = {
+          file = p.tokenFile;
+          owner = username;
+          mode = "0400";
+        };
+      }) (hasToken cfg.providers);
+
+      local.llm.defaultModel = "qwen3-coder-128k:30b";
+    }
+    (lib.mkIf cc.enable {
+      environment.sessionVariables = {
+        ANTHROPIC_BASE_URL = ccProvider.url;
+      };
+
+      assertions = [
+        {
+          assertion = ccProvider ? tokenFile;
+          message = "Claude Code provider '${cc.provider}' must have a tokenFile";
+        }
+      ];
+    })
+  ];
 }
