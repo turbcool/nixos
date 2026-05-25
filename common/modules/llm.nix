@@ -38,17 +38,17 @@ in
 
       provider = lib.mkOption {
         type = lib.types.str;
-        default = "flexberry";
+        default = "neoplatform";
       };
 
       models = {
         opus = lib.mkOption {
           type = lib.types.str;
-          default = "glm-5.1";
+          default = "qwen3-coder-128k:30b";
         };
         sonnet = lib.mkOption {
           type = lib.types.str;
-          default = "glm-5.1";
+          default = "qwen3-coder-128k:30b";
         };
         haiku = lib.mkOption {
           type = lib.types.str;

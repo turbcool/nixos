@@ -58,6 +58,7 @@ in
       setw -g pane-base-index 1
       set -g renumber-windows on
 
+      set -s extended-keys on
       bind -n M-1 select-window -t 1
       bind -n M-2 select-window -t 2
       bind -n M-3 select-window -t 3
