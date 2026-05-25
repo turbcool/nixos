@@ -44,11 +44,11 @@ in
       models = {
         opus = lib.mkOption {
           type = lib.types.str;
-          default = "qwen3-coder-128k:30b";
+          default = "GLM-5.1";
         };
         sonnet = lib.mkOption {
           type = lib.types.str;
-          default = "qwen3-coder-128k:30b";
+          default = "GLM-5.1";
         };
         haiku = lib.mkOption {
           type = lib.types.str;
