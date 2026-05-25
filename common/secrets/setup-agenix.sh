@@ -87,7 +87,6 @@ ask_secret() {
     echo "Saved $SCRIPT_DIR/$secret_path"
 }
 
-ask_secret "flexberry-token.age" "Flexberry API key for opencode: "
 ask_secret "neoplatform-token.age" "Neoplatform API key for opencode: "
 ask_secret "custom-token.age" "Custom provider API key: "
 
