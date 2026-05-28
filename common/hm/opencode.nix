@@ -26,7 +26,7 @@ in
           npm = p.npm or "@ai-sdk/openai-compatible";
           models = cleanJson (p.models or { });
           options = {
-            baseURL = p.url + "/v1";
+            baseURL = p.url;
             apiKey = if p ? tokenFile then "{file:${osConfig.age.secrets."${name}-token".path}}" else "";
           };
         }) llm.providers;

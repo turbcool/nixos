@@ -14,6 +14,28 @@ let
     { name = "ai-timepath"; }
   ];
 
+  mkTmuxDev = pkgs.writeShellScriptBin "dev" ''
+    set -eu
+
+    session=$(basename "$(pwd)")
+
+    if tmux has-session -t "$session" 2>/dev/null; then
+      exec tmux attach -t "$session"
+    fi
+
+    tmux new-session -d -s "$session" -n editor
+    tmux send-keys -t "$session":editor 'nvim' Enter
+
+    tmux new-window -t "$session" -n opencode
+    tmux send-keys -t "$session":opencode 'opencode' Enter
+
+    tmux new-window -t "$session" -n lazygit
+    tmux send-keys -t "$session":lazygit 'lazygit' Enter
+
+    tmux select-window -t "$session":1
+    exec tmux attach -t "$session"
+  '';
+
   mkTmuxVms = pkgs.writeShellScriptBin "tmux-vms" ''
     set -eu
 
@@ -81,5 +103,5 @@ in
     '';
   };
 
-  home.packages = [ mkTmuxVms ];
+  home.packages = [ mkTmuxDev mkTmuxVms ];
 }

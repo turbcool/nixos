@@ -645,6 +645,22 @@
         "type": "github"
       }
     },
+    "playwright-cli": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1778194872,
+        "narHash": "sha256-hHK/GR5Drlt+e0L9kyNmn+ht1PCrVH6WrVbxGB1Wsxg=",
+        "owner": "microsoft",
+        "repo": "playwright-cli",
+        "rev": "3a1bafc8b4e973c72d0364eb5b427d1ce0aa8317",
+        "type": "github"
+      },
+      "original": {
+        "owner": "microsoft",
+        "repo": "playwright-cli",
+        "type": "github"
+      }
+    },
     "qmd": {
       "inputs": {
         "flake-utils": "flake-utils_2",
@@ -683,6 +699,7 @@
           "nixpkgs"
         ],
         "obsidian-wiki": "obsidian-wiki",
+        "playwright-cli": "playwright-cli",
         "qmd": "qmd"
       }
     },

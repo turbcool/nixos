@@ -15,6 +15,7 @@
     };
     shellAliases = {
       build = "sudo nixos-rebuild switch --flake /etc/nixos#$(hostname)";
+      opencode-playwright = "nix develop /etc/nixos#opencode-playwright";
     };
   };
 

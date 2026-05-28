@@ -38,6 +38,11 @@
     qmd.url = "github:tobi/qmd";
 
     claude-code.url = "github:sadjow/claude-code-nix";
+
+    playwright-cli = {
+      url = "github:microsoft/playwright-cli";
+      flake = false;
+    };
   };
 
   outputs =
@@ -72,6 +77,7 @@
       skills = import ./lib/devShells/skills.nix { inherit pkgs inputs; };
       mcp = import ./lib/devShells/mcp.nix { inherit pkgs; };
       cli = import ./lib/scripts/cli.nix { inherit pkgs; };
+      playwright = import ./lib/devShells/playwright.nix { inherit pkgs inputs; };
 
       prefixAttrs =
         prefix: attrs:
@@ -102,6 +108,7 @@
 
         skills = skills.devShell;
         mcp = mcp.devShell;
+        opencode-playwright = playwright.devShell;
       }
       // (prefixAttrs "skills-" skills.shells)
       // (prefixAttrs "mcp-" mcp.shells);
