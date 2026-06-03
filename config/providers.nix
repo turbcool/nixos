@@ -11,6 +11,15 @@
         output = 32000;
       };
     };
+    models."qwen3.6-200k:35b" = {
+      name = "Qwen3.6";
+      family = "qwen";
+      release_date = "2026-02-03";
+      limit = {
+        context = 200000;
+        output = 32000;
+      };
+    };
     models."GLM-5.1" = {
       name = "GLM-5.1";
       family = "glm";
