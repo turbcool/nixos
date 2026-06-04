@@ -1,4 +1,4 @@
-{ lib, osConfig, ... }:
+{ lib, osConfig, pkgs, ... }:
 
 let
   llm = osConfig.local.llm;
@@ -21,6 +21,12 @@ in
         };
         disabled_providers = [ ];
         agent.explore.model = "neoplatform/qwen3-coder-128k:30b";
+        mcp.web-search-prime = {
+          type = "remote";
+          url = "https://api.z.ai/api/mcp/web_search_prime/mcp";
+          enabled = true;
+          headers.Authorization = "Bearer __ZAI_TOKEN__";
+        };
         provider = lib.mapAttrs (name: p: {
           inherit name;
           npm = p.npm or "@ai-sdk/openai-compatible";
@@ -37,4 +43,17 @@ in
       }
     );
   };
+
+  config.home.activation.patch-opencode-zai-token = lib.hm.dag.entryAfter [ "linkGeneration" ] ''
+    tokenFile="${osConfig.age.secrets.zai-token.path}"
+    configFile="$HOME/.config/opencode/opencode.json"
+
+    if [ -f "$tokenFile" ] && [ -f "$configFile" ]; then
+      token=$(cat "$tokenFile")
+      ${pkgs.jq}/bin/jq --arg token "$token" \
+        '.mcp["web-search-prime"].headers.Authorization = "Bearer \($token)"' \
+        "$configFile" > "$configFile.tmp" \
+        && mv "$configFile.tmp" "$configFile"
+    fi
+  '';
 }

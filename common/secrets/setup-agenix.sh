@@ -96,5 +96,6 @@ ask_secret "vm-ai-neoplatform.age" "Password for ai-neoplatform: "
 ask_secret "vm-ai-skyori.age" "Password for ai-skyori: "
 ask_secret "vm-ai-proinfoservice.age" "Password for ai-proinfoservice: "
 ask_secret "vm-ai-timepath.age" "Password for ai-timepath: "
+ask_secret "zai-token.age" "Z.AI Web Search API key: "
 
 echo "Rebuild the system to apply: sudo nixos-rebuild switch --flake /etc/nixos#<host>"

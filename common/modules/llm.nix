@@ -69,14 +69,22 @@ in
         opencode
       ];
 
-      age.secrets = lib.mapAttrs' (name: p: {
-        name = "${name}-token";
-        value = {
-          file = p.tokenFile;
-          owner = username;
-          mode = "0400";
+      age.secrets =
+        lib.mapAttrs' (name: p: {
+          name = "${name}-token";
+          value = {
+            file = p.tokenFile;
+            owner = username;
+            mode = "0400";
+          };
+        }) (hasToken cfg.providers)
+        // {
+          zai-token = {
+            file = ../secrets/zai-token.age;
+            owner = username;
+            mode = "0400";
+          };
         };
-      }) (hasToken cfg.providers);
 
       local.llm.defaultModel = "qwen3-coder-128k:30b";
     }
