@@ -118,24 +118,14 @@ in
     openFirewall = true;
     ports = [ sshTargetPort ];
     settings.SetEnv = lib.concatStringsSep " " [
-      "HTTP_PROXY=${hostProxyUrl}"
-      "HTTPS_PROXY=${hostProxyUrl}"
-      "http_proxy=${hostProxyUrl}"
-      "https_proxy=${hostProxyUrl}"
-      "NO_PROXY=${noProxy}"
-      "no_proxy=${noProxy}"
+      "PROXY_URL=${hostProxyUrl}"
     ];
   };
 
   time.timeZone = profile.timezone;
 
   environment.sessionVariables = {
-    HTTP_PROXY = hostProxyUrl;
-    HTTPS_PROXY = hostProxyUrl;
-    http_proxy = hostProxyUrl;
-    https_proxy = hostProxyUrl;
-    NO_PROXY = noProxy;
-    no_proxy = noProxy;
+    PROXY_URL = hostProxyUrl;
   };
 
   nixpkgs.config.allowUnfree = true;
