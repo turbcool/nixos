@@ -90,6 +90,8 @@ in
     shell = pkgs.zsh; # Default shell (options: pkgs.bash, pkgs.zsh, pkgs.fish)
   };
 
+  age.identityPaths = [ "/home/${username}/.ssh/id_ed25519" ];
+
   # Hydenix Configuration - Main configuration for the Hydenix desktop environment
   hydenix = {
     enable = true; # Enable Hydenix modules
