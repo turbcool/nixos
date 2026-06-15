@@ -43,6 +43,8 @@
       url = "github:microsoft/playwright-cli";
       flake = false;
     };
+
+    paseo.url = "github:getpaseo/paseo";
   };
 
   outputs =
@@ -69,6 +71,7 @@
           modules = commonModules ++ [
             inputs.nixos-wsl.nixosModules.default
             inputs.home-manager.nixosModules.home-manager
+            inputs.paseo.nixosModules.paseo
             ./wsl/configuration.nix
           ];
         };

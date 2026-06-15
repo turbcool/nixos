@@ -122,6 +122,14 @@ in
     ];
   };
 
+  services.paseo = {
+    enable = true;
+    user = username;
+    listenAddress = "0.0.0.0";
+    port = 6767;
+    openFirewall = true;
+  };
+
   time.timeZone = profile.timezone;
 
   environment.sessionVariables = {
