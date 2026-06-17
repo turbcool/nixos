@@ -11,6 +11,7 @@ let
 in
 {
   config.home.file.".config/opencode/opencode.json" = lib.mkForce {
+    force = true;
     text = builtins.toJSON (
       {
         "$schema" = "https://opencode.ai/config.json";

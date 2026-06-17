@@ -18,21 +18,12 @@ let
       ''export ANTHROPIC_API_KEY="$(cat ${ccTokenPath})"'';
 in
 {
+  # The immutable Claude Code config (env, marketplaces, enabled plugins) is
+  # emitted by the system module common/modules/llm.nix as
+  # /etc/claude-code/managed-settings.json. This deliberately does NOT manage
+  # ~/.claude/settings.json so that file stays a writable user-owned file that
+  # Claude's plugin install flow can write to.
   config = lib.mkIf cc.enable {
-    home.file.".claude/settings.json" = {
-      force = true;
-      text = builtins.toJSON {
-        env = {
-          ANTHROPIC_BASE_URL = ccBaseUrl;
-          ANTHROPIC_DEFAULT_OPUS_MODEL = cc.models.opus;
-          ANTHROPIC_DEFAULT_SONNET_MODEL = cc.models.sonnet;
-          ANTHROPIC_DEFAULT_HAIKU_MODEL = cc.models.haiku;
-          CLAUDE_CODE_SUBAGENT_MODEL = cc.models.subagent;
-          CLAUDE_CODE_AUTO_COMPACT_WINDOW = "1000000";
-        };
-      };
-    };
-
     programs.zsh.initContent = ''
       ${authExport}
       export ANTHROPIC_BASE_URL="${ccBaseUrl}"

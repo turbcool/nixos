@@ -15,6 +15,28 @@ let
   cc = cfg.claudeCode;
   ccProvider = cfg.providers.${cc.provider};
   ccTokenPath = config.age.secrets."${cc.provider}-token".path;
+  ccBaseUrl = ccProvider.anthropicUrl or ccProvider.url;
+
+  pluginsConfig = import ../../config/plugins.nix;
+
+  managedSettings = builtins.toJSON (
+    {
+      env = {
+        ANTHROPIC_BASE_URL = ccBaseUrl;
+        ANTHROPIC_DEFAULT_OPUS_MODEL = cc.models.opus;
+        ANTHROPIC_DEFAULT_SONNET_MODEL = cc.models.sonnet;
+        ANTHROPIC_DEFAULT_HAIKU_MODEL = cc.models.haiku;
+        CLAUDE_CODE_SUBAGENT_MODEL = cc.models.subagent;
+        CLAUDE_CODE_AUTO_COMPACT_WINDOW = "1000000";
+      };
+    }
+    // (lib.optionalAttrs (pluginsConfig.marketplaces != { }) {
+      extraKnownMarketplaces = pluginsConfig.marketplaces;
+    })
+    // (lib.optionalAttrs (pluginsConfig.plugins != { }) {
+      enabledPlugins = pluginsConfig.plugins;
+    })
+  );
 in
 {
   options.local.llm = {
@@ -86,6 +108,12 @@ in
       environment.sessionVariables = {
         ANTHROPIC_BASE_URL = ccProvider.anthropicUrl or ccProvider.url;
       };
+
+      # Declarative, immutable Claude Code config. Managed settings take the
+      # highest precedence and cannot be overridden, freeing the user-scope
+      # ~/.claude/settings.json to be a writable file that Claude's plugin
+      # install flow can write to.
+      environment.etc."claude-code/managed-settings.json".text = managedSettings;
 
       assertions = [
         {
