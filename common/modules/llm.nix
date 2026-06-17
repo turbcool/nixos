@@ -34,29 +34,31 @@ in
     };
 
     claudeCode = {
-      enable = lib.mkEnableOption "Claude Code integration" // { default = true; };
+      enable = lib.mkEnableOption "Claude Code integration" // {
+        default = true;
+      };
 
       provider = lib.mkOption {
         type = lib.types.str;
-        default = "neoplatform";
+        default = "zai";
       };
 
       models = {
         opus = lib.mkOption {
           type = lib.types.str;
-          default = "GLM-5.1";
+          default = "glm-5.2[1m]";
         };
         sonnet = lib.mkOption {
           type = lib.types.str;
-          default = "GLM-5.1";
+          default = "glm-5.2[1m]";
         };
         haiku = lib.mkOption {
           type = lib.types.str;
-          default = "qwen3-coder-128k:30b";
+          default = "glm-4.5-air";
         };
         subagent = lib.mkOption {
           type = lib.types.str;
-          default = "qwen3-coder-128k:30b";
+          default = "glm-5.2[1m]";
         };
       };
     };
@@ -69,28 +71,20 @@ in
         opencode
       ];
 
-      age.secrets =
-        lib.mapAttrs' (name: p: {
-          name = "${name}-token";
-          value = {
-            file = p.tokenFile;
-            owner = username;
-            mode = "0400";
-          };
-        }) (hasToken cfg.providers)
-        // {
-          zai-token = {
-            file = ../secrets/zai-token.age;
-            owner = username;
-            mode = "0400";
-          };
+      age.secrets = lib.mapAttrs' (name: p: {
+        name = "${name}-token";
+        value = {
+          file = p.tokenFile;
+          owner = username;
+          mode = "0400";
         };
+      }) (hasToken cfg.providers);
 
-      local.llm.defaultModel = "qwen3-coder-128k:30b";
+      local.llm.defaultModel = "zai/glm-5.2";
     }
     (lib.mkIf cc.enable {
       environment.sessionVariables = {
-        ANTHROPIC_BASE_URL = ccProvider.url;
+        ANTHROPIC_BASE_URL = ccProvider.anthropicUrl or ccProvider.url;
       };
 
       assertions = [

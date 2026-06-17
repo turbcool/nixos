@@ -29,14 +29,39 @@
       interleaved.field = "reasoning_content";
       structured_output = true;
       temperature = true;
-      release_date = "2026-03-27";
-      last_updated = "2026-03-27";
+      release_date = "2026-06-13";
+      last_updated = "2026-06-13";
       modalities = {
         input = [ "text" ];
         output = [ "text" ];
       };
       limit = {
-        context = 200000;
+        context = 1000000;
+        output = 131072;
+      };
+      cost = {
+        input = 1.4;
+        output = 4.4;
+        cache_read = 0.26;
+      };
+    };
+    models."GLM-5.1A" = {
+      name = "GLM-5.1A";
+      family = "glm";
+      opencode = false;
+      attachment = false;
+      reasoning = true;
+      tool_call = true;
+      structured_output = true;
+      temperature = true;
+      release_date = "2026-06-13";
+      last_updated = "2026-06-13";
+      modalities = {
+        input = [ "text" ];
+        output = [ "text" ];
+      };
+      limit = {
+        context = 1000000;
         output = 131072;
       };
       cost = {
@@ -52,6 +77,36 @@
     models.coder = {
       name = "Coder";
       family = "coder";
+    };
+  };
+  zai = {
+    url = "https://api.z.ai/api/coding/paas/v4";
+    anthropicUrl = "https://api.z.ai/api/anthropic";
+    authToken = true;
+    tokenFile = ../common/secrets/zai-token.age;
+    models."glm-5.2" = {
+      name = "GLM-5.2";
+      family = "glm";
+      attachment = false;
+      reasoning = true;
+      tool_call = true;
+      interleaved.field = "reasoning_content";
+      structured_output = true;
+      temperature = true;
+      release_date = "2026-06-13";
+      last_updated = "2026-06-13";
+      modalities = {
+        input = [ "text" ];
+        output = [ "text" ];
+      };
+      limit = {
+        context = 1000000;
+        output = 131072;
+      };
+      cost = {
+        input = 0.0;
+        output = 0.0;
+      };
     };
   };
 }

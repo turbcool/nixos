@@ -1,4 +1,9 @@
-{ lib, osConfig, pkgs, ... }:
+{
+  lib,
+  osConfig,
+  pkgs,
+  ...
+}:
 
 let
   llm = osConfig.local.llm;
@@ -30,7 +35,11 @@ in
         provider = lib.mapAttrs (name: p: {
           inherit name;
           npm = p.npm or "@ai-sdk/openai-compatible";
-          models = cleanJson (p.models or { });
+          models = cleanJson (
+            lib.mapAttrs (_: m: builtins.removeAttrs m [ "opencode" ]) (
+              lib.filterAttrs (_: m: m.opencode or true) (p.models or { })
+            )
+          );
           options = {
             baseURL = p.url;
             apiKey = if p ? tokenFile then "{file:${osConfig.age.secrets."${name}-token".path}}" else "";
