@@ -41,4 +41,20 @@
     frontend = [ "svelte" "daisyui" "lucide-icons"];
     wiki = [ "wiki" ];
   };
+
+  # ── Claude Code (the `claude` CLI) MCP servers ────────────────────────────
+  # Native Claude Code schema, kept separate from the opencode-style registry
+  # above (the two schemas differ). The `claude` wrapper in common/hm/cli.nix
+  # turns this into a runtime --mcp-config file.
+  #
+  # Secret header values use the @@SECRET:<agenix-name>@@ sentinel: the wrapper
+  # substitutes them at runtime from /run/agenix/<name>, so keys never enter the
+  # nix store, /etc, or the process arguments.
+  claudeCode = {
+    web-search-prime = {
+      type = "http";
+      url = "https://api.z.ai/api/mcp/web_search_prime/mcp";
+      headers.Authorization = "Bearer @@SECRET:zai-token@@";
+    };
+  };
 }

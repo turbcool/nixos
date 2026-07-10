@@ -21,11 +21,13 @@ let
 
   managedSettings = builtins.toJSON (
     {
+      # Only host-agnostic Claude Code knobs live here. Managed settings take the
+      # highest precedence and cannot be overridden, so anything provider-specific
+      # (ANTHROPIC_BASE_URL, the ANTHROPIC_DEFAULT_*_MODEL tier map) must NOT be
+      # set here — otherwise paseo's per-provider profiles (see wsl/paseo.nix)
+      # couldn't repoint Claude Code at a different endpoint. Interactive `claude`
+      # still gets those via the .zshrc exports in common/hm/claude-code.nix.
       env = {
-        ANTHROPIC_BASE_URL = ccBaseUrl;
-        ANTHROPIC_DEFAULT_OPUS_MODEL = cc.models.opus;
-        ANTHROPIC_DEFAULT_SONNET_MODEL = cc.models.sonnet;
-        ANTHROPIC_DEFAULT_HAIKU_MODEL = cc.models.haiku;
         CLAUDE_CODE_SUBAGENT_MODEL = cc.models.subagent;
         CLAUDE_CODE_AUTO_COMPACT_WINDOW = "1000000";
       };

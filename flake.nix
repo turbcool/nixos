@@ -45,6 +45,13 @@
     };
 
     paseo.url = "github:getpaseo/paseo";
+
+    # VS Code "Dark Modern" yazi flavor (956MB/vscode-dark-modern.yazi).
+    # Raw checkout (not a flake) — sourced as a path for the yazi flavors dir.
+    vscode-yazi = {
+      url = "github:956MB/vscode-dark-modern.yazi";
+      flake = false;
+    };
   };
 
   outputs =

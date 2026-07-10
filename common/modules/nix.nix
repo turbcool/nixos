@@ -3,9 +3,13 @@
 {
   nix.settings = {
     experimental-features = [ "nix-command" "flakes" ];
-    "connect-timeout" = 10;
-    "stalled-download-timeout" = 20;
-    "download-attempts" = 3;
+    # Tolerate slow/throttled binary-cache edges: raise the stall ceiling and
+    # retry harder so a transient blip doesn't fail a whole `nixos-rebuild`.
+    # (Throttled cachix transfers are handled separately via the nix-daemon
+    # proxy in wsl/configuration.nix; these values are the backstop.)
+    "connect-timeout" = 30;
+    "stalled-download-timeout" = 60;
+    "download-attempts" = 5;
     substituters = [
       "https://cache.nixos.org"
       "https://claude-code.cachix.org"

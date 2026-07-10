@@ -93,6 +93,7 @@ in
   imports = [
     ../common/pkgs/default.nix
     ../common/modules/default.nix
+    ./paseo.nix
   ];
 
   local.profile = {
@@ -122,18 +123,26 @@ in
     ];
   };
 
-  services.paseo = {
-    enable = true;
-    user = username;
-    listenAddress = "0.0.0.0";
-    port = 6767;
-    openFirewall = true;
-  };
-
   time.timeZone = profile.timezone;
 
   environment.sessionVariables = {
     PROXY_URL = hostProxyUrl;
+  };
+
+  # nix-daemon downloads: route international binary caches (cachix, github, npm)
+  # through the Windows host proxy. Direct sustained transfers to e.g.
+  # claude-code.cachix.org are throttled to ~500 B/s on this network, while the
+  # proxy gives ~1 MB/s. cache.nixos.org is the exception — it's fast direct
+  # (~7 MB/s) and the proxy can't reach it, so it (plus LAN/local) is excluded
+  # via no_proxy and keeps going direct. If the :10809 proxy is down, only
+  # cachix fetches fail (fast, connection-refused); nixpkgs still works.
+  systemd.services.nix-daemon.environment = {
+    http_proxy = hostProxyUrl;
+    https_proxy = hostProxyUrl;
+    HTTP_PROXY = hostProxyUrl;
+    HTTPS_PROXY = hostProxyUrl;
+    no_proxy = "${noProxy},cache.nixos.org";
+    NO_PROXY = "${noProxy},cache.nixos.org";
   };
 
   nixpkgs.config.allowUnfree = true;

@@ -11,6 +11,7 @@
     ./opencode.nix
     ./ssh.nix
     ./tmux.nix
+    ./yazi.nix
     ./zoxide.nix
   ];
 }
