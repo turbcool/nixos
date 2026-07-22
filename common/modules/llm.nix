@@ -64,25 +64,25 @@ in
 
       provider = lib.mkOption {
         type = lib.types.str;
-        default = "zai";
+        default = "neoplatform";
       };
 
       models = {
         opus = lib.mkOption {
           type = lib.types.str;
-          default = "glm-5.2[1m]";
+          default = "neoplatform/deepseek-v4-flash";
         };
         sonnet = lib.mkOption {
           type = lib.types.str;
-          default = "glm-5.2[1m]";
+          default = "neoplatform/deepseek-v4-flash";
         };
         haiku = lib.mkOption {
           type = lib.types.str;
-          default = "glm-4.5-air";
+          default = "neoplatform/qwen3-coder-128k:30b";
         };
         subagent = lib.mkOption {
           type = lib.types.str;
-          default = "glm-5.2[1m]";
+          default = "neoplatform/deepseek-v4-flash";
         };
       };
     };
@@ -104,7 +104,8 @@ in
         };
       }) (hasToken cfg.providers);
 
-      local.llm.defaultModel = "zai/glm-5.2";
+      local.llm.defaultModel = "neoplatform/deepseek-v4-flash";
+      local.llm.smallModel = "neoplatform/qwen3-coder-128k:30b";
     }
     (lib.mkIf cc.enable {
       environment.sessionVariables = {

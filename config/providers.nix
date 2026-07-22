@@ -11,9 +11,18 @@
         output = 32000;
       };
     };
-    models."qwen3.6-200k:35b" = {
-      name = "Qwen3.6";
-      family = "qwen";
+    models."gemma-4-31b-it" = {
+      name = "Gemma 4 31B";
+      family = "gemma";
+      release_date = "2026-02-03";
+      limit = {
+        context = 200000;
+        output = 32000;
+      };
+    };
+    models."deepseek-v4-flash" = {
+      name = "Deepseek V4 Flash";
+      family = "deepseek";
       release_date = "2026-02-03";
       limit = {
         context = 200000;
@@ -74,9 +83,9 @@
   custom = {
     url = "https://llm.naidanov.ru";
     tokenFile = ../common/secrets/custom-token.age;
-    models.coder = {
-      name = "Coder";
-      family = "coder";
+    models."minimax-m3-zen" = {
+      name = "Minimax M3 Zen";
+      family = "minimax";
     };
   };
   zai = {

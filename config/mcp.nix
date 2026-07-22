@@ -36,6 +36,18 @@
     enabled = true;
   };
 
+  # Hound MCP — web fetch / crawl / search with Patchright anti-bot bypass and
+  # optional PDF+OCR (via the [all] extras). Runs inside an ephemeral Docker
+  # container so the heavy browser + browserforge data files ship with the
+  # image and the user doesn't need a Nix env. Build the image once with
+  # `common/services/hound/build.sh`; run.sh wraps `docker run` with the
+  # flags MCP stdio needs.
+  hound = {
+    type = "local";
+    command = [ "/etc/nixos/common/services/hound/run.sh" ];
+    enabled = true;
+  };
+
   groups = {
     nixos = [ "nixos" ];
     frontend = [ "svelte" "daisyui" "lucide-icons"];
@@ -51,10 +63,9 @@
   # substitutes them at runtime from /run/agenix/<name>, so keys never enter the
   # nix store, /etc, or the process arguments.
   claudeCode = {
-    web-search-prime = {
-      type = "http";
-      url = "https://api.z.ai/api/mcp/web_search_prime/mcp";
-      headers.Authorization = "Bearer @@SECRET:zai-token@@";
+    hound = {
+      type = "stdio";
+      command = "/etc/nixos/common/services/hound/run.sh";
     };
   };
 }

@@ -22,6 +22,11 @@ common/secrets/setup-agenix.sh [--skip-existing]   # interactive secret provisio
 
 # Devshell
 direnv allow   # run once after entering /etc/nixos; provides nixfmt, nixd, statix, agenix, jq
+
+# Hound MCP — build the image once, then MCP starts it on demand
+common/services/hound/build.sh                 # builds hound-mcp:latest
+docker images hound-mcp                         # verify it built
+docker run --rm -i hound-mcp < /dev/null        # smoke test (should print MCP banner)
 ```
 
 ## Architecture
@@ -33,6 +38,7 @@ direnv allow   # run once after entering /etc/nixos; provides nixfmt, nixd, stat
   - `modules/` — system modules (cert, docker, git, llm, nix, profile, shell); `profile.nix` defines `local.profile` options (username, email, timezone, locale)
   - `hm/` — shared Home Manager modules (agent-skills, calendar, cli, direnv, neovim, opencode, ssh, tmux, zoxide)
   - `secrets/` — agenix secrets and `secrets.nix` (public key manifest)
+  - `services/` — non-Nix service definitions (currently just `hound/`, a Dockerfile + compose + run wrapper)
 - **`hydenix/`** — desktop-only:
   - `configuration.nix` — host identity, `local.features` toggles, Home Manager + hydenix HM wiring
   - `modules/system/` — `base/`, `browsers/`, `gaming/`, `work/`; gated by `local.features.*.enable`
@@ -43,10 +49,18 @@ direnv allow   # run once after entering /etc/nixos; provides nixfmt, nixd, stat
 - **`lib/`** — `mk-host.nix`, `devShells/`, `scripts/cli.nix` (builds `skills` and `mcp` CLI wrappers)
 - **`default.nix`** files in module directories import all child modules
 
+## Feature toggles
+
+- `local.features.browsers.enable`, `local.features.gaming.enable`, `local.features.work.enable` — desktop-only, defined in `hydenix/modules/system/features.nix`
+
+## Services
+
+- `common/services/hound/` — Hound MCP server. Containerized to avoid the heavy browserforge data + Patchright Chromium from being baked into the Nix closure. Built with `build.sh`, run on demand by the opencode MCP config (which calls `run.sh` → `docker run --rm -i hound-mcp`). Both hosts have docker enabled via `common/modules/docker.nix`, so hound works everywhere.
+
 ## Conventions
 
 - `default.nix` in every module directory aggregates child imports — follow this pattern when adding modules
-- Feature toggles are NixOS options defined in `hydenix/modules/system/features.nix` and set in `hydenix/configuration.nix` under `local.features`
+- Feature toggles for desktop-only modules live in `hydenix/modules/system/features.nix`; common toggles go in a module under `common/modules/`
 - Profile defaults live in `common/modules/profile.nix` (`local.profile` options); hosts override in their own `configuration.nix`
 - Hydenix HM config files (hyprland, remmina, wolf) live alongside their `.nix` module as data directories
 - `.age` secret paths in `common/secrets/secrets.nix` can reference files outside `common/secrets/` via relative paths (e.g., `../../hydenix/secrets/work-pc.age`)
@@ -59,5 +73,6 @@ direnv allow   # run once after entering /etc/nixos; provides nixfmt, nixd, stat
 - agenix `secrets.nix` must be in the directory where you run `agenix -e` (or paths won't resolve)
 - `hydenix/hardware-configuration.nix` is auto-generated, not committed to the template
 - The devshell uses `use flake` via `.envrc` — run `direnv allow` once; `.direnv/` is gitignored
+- Hound MCP image is not built by `nixos-rebuild` — run `common/services/hound/build.sh` once after first install (or whenever you want to pick up a new hound-mcp version). The opencode MCP config will fail to start hound until the image exists, but other MCPs continue to work.
 
 P.S. When user asks to install a NixOS package, use MCP Tool `nixos` to search and validate configuration options.

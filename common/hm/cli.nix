@@ -1,4 +1,10 @@
-{ inputs, lib, pkgs, ... }:
+{
+  inputs,
+  osConfig,
+  lib,
+  pkgs,
+  ...
+}:
 
 let
   realClaude = inputs.claude-code.packages.${pkgs.stdenv.hostPlatform.system}.default;
@@ -43,15 +49,30 @@ let
     exec "$real" "$@"
   '');
 
+  # Custom provider that `writing` repoints Claude Code at, folder-locally. Same
+  # endpoint + agenix token as providers.custom (llm.naidanov.ru). `glm-5.2` is
+  # the model id that endpoint serves (per its /v1/models).
+  ccCustom = osConfig.local.llm.providers.custom;
+  ccCustomUrl = ccCustom.url;
+  ccCustomToken = osConfig.age.secrets."custom-token".path;
+  ccCustomModel = "glm-5.2";
+
   # `writing` prepares the current folder for ARIS (Auto-Research-In-Sleep):
   # clones the skill repo to ~/aris_repo (once) and symlinks its skills into
   # .claude/skills/ here, so launching `claude` exposes the research/writing
-  # slash-commands (/research-pipeline, /paper-writing, ...). Folder-local only
-  # — the Codex MCP reviewer (for cross-model review skills) is a global,
-  # one-time step and is printed, not run.
+  # slash-commands (/research-pipeline, /paper-writing, ...). It also repoints
+  # Claude Code at the custom provider (llm.naidanov.ru / glm-5.2) for this
+  # folder only, via .claude/settings.local.json. Folder-local — the Codex MCP
+  # reviewer (for cross-model review skills) is a global, one-time step and is
+  # printed, not run.
   # https://github.com/wanshuiyin/auto-claude-code-research-in-sleep
   writing = pkgs.writeShellScriptBin "writing" ''
     set -euo pipefail
+
+    # jq isn't a system-wide package (only in this flake's devShell), and `writing`
+    # runs from arbitrary folders — so invoke it by its absolute store path instead
+    # of relying on PATH.
+    JQ="${pkgs.jq}/bin/jq"
 
     REPO="''${ARIS_REPO:-$HOME/aris_repo}"
     URL="https://github.com/wanshuiyin/Auto-claude-code-research-in-sleep.git"
@@ -88,10 +109,43 @@ let
     fi
     echo "› $(ls -1 "$skills_dir" | wc -l | tr -d ' ') skill(s) linked into $skills_dir"
 
-    # 3. Cross-model review skills need the Codex MCP reviewer — a global,
+    # 3. Repoint Claude Code at the custom provider (llm.naidanov.ru / glm-5.2)
+    #    for THIS folder only, by merging an env block into .claude/settings.local.json.
+    #    That file sits below the immutable managed-settings.json but ABOVE the global
+    #    zai exports from .zshrc, so it cleanly overrides ANTHROPIC_BASE_URL, the token
+    #    (both AUTH_TOKEN and API_KEY, so Claude's auth-precedence can't pick the stale
+    #    zai value), and the model tiers. Token is read fresh from agenix and written
+    #    mode-0600; jq merges so existing keys (permissions, ...) survive.
+    #    NOTE: managed-settings.json locks CLAUDE_CODE_SUBAGENT_MODEL system-wide, so
+    #    subagents keep the global model — change it in common/modules/llm.nix if the
+    #    custom endpoint rejects the global id.
+    sfile="$PWD/.claude/settings.local.json"
+    mkdir -p "$PWD/.claude"
+    if [ ! -r "${ccCustomToken}" ]; then
+      echo "✗ Custom provider token missing (${ccCustomToken})"
+      echo "  Provision the agenix 'custom-token' secret, then re-run 'writing'."
+      exit 1
+    fi
+    tok="$(cat "${ccCustomToken}")"
+    base="$(cat "$sfile" 2>/dev/null || echo '{}')"
+    "$JQ" -e . >/dev/null 2>&1 <<<"$base" || base='{}'
+    merged="$("$JQ" --arg url "${ccCustomUrl}" --arg key "$tok" --arg m "${ccCustomModel}" \
+      '.env = ((.env // {}) + {
+         "ANTHROPIC_BASE_URL": $url,
+         "ANTHROPIC_AUTH_TOKEN": $key,
+         "ANTHROPIC_API_KEY": $key,
+         "ANTHROPIC_DEFAULT_OPUS_MODEL": $m,
+         "ANTHROPIC_DEFAULT_SONNET_MODEL": $m,
+         "ANTHROPIC_DEFAULT_HAIKU_MODEL": $m
+       })' <<<"$base")"
+    ( umask 077; printf '%s\n' "$merged" > "$sfile" )
+    chmod 600 "$sfile"   # umask only governs creation; clamp a pre-existing file too
+    echo "› Claude → custom provider (${ccCustomUrl}, ${ccCustomModel}) via $sfile"
+
+    # 4. Cross-model review skills need the Codex MCP reviewer — a global,
     #    one-time step. Print it; don't mutate ~/.claude.json from here.
     echo ""
-    echo "✅ ARIS ready in this folder. Next: run  claude"
+    echo "✅ ARIS ready in this folder (Claude → ${ccCustomUrl}). Next: run  claude"
     echo "   then try a workflow, e.g.:"
     echo '     /research-pipeline "your research direction"'
     echo '     /paper-writing "NARRATIVE_REPORT.md"'

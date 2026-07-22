@@ -1,0 +1,18 @@
+name: hound
+
+services:
+  hound:
+    image: hound-mcp:latest
+    build:
+      context: .
+      dockerfile: Dockerfile
+    # The MCP server speaks JSON-RPC over stdio, so no ports / no daemon.
+    # Use `docker compose run --rm hound` for an interactive test, or use
+    # `run.sh` from the opencode MCP config (which is how opencode starts it).
+    stdin_open: true
+    tty: false
+    init: true
+    network_mode: host
+    security_opt:
+      - no-new-privileges:true
+    # Container is ephemeral — no volumes, no restart policy.
