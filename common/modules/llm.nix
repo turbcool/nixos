@@ -70,19 +70,19 @@ in
       models = {
         opus = lib.mkOption {
           type = lib.types.str;
-          default = "neoplatform/deepseek-v4-flash";
+          default = "deepseek-v4-flash";
         };
         sonnet = lib.mkOption {
           type = lib.types.str;
-          default = "neoplatform/deepseek-v4-flash";
+          default = "deepseek-v4-flash";
         };
         haiku = lib.mkOption {
           type = lib.types.str;
-          default = "neoplatform/qwen3-coder-128k:30b";
+          default = "qwen3-coder-128k:30b";
         };
         subagent = lib.mkOption {
           type = lib.types.str;
-          default = "neoplatform/deepseek-v4-flash";
+          default = "deepseek-v4-flash";
         };
       };
     };
