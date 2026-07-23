@@ -87,8 +87,9 @@ ask_secret() {
     echo "Saved $SCRIPT_DIR/$secret_path"
 }
 
-ask_secret "neoplatform-token.age" "Neoplatform API key for opencode: "
+ask_secret "free-token.age" "OmniRouter API key: "
 ask_secret "custom-token.age" "Custom provider API key: "
+ask_secret "neoplatform-token.age" "Neoplatform API key for opencode: "
 
 echo ""
 echo "--- VM SSH passwords ---"

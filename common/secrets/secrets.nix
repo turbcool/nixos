@@ -12,4 +12,5 @@ in
   "vm-ai-proinfoservice.age".publicKeys = [ nixos ];
   "vm-ai-timepath.age".publicKeys = [ nixos ];
   "zai-token.age".publicKeys = [ nixos ];
+  "free-token.age".publicKeys = [ nixos ];
 }

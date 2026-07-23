@@ -88,6 +88,22 @@
       family = "minimax";
     };
   };
+  free = {
+    url = "https://llm-free.naidanov.ru";
+    tokenFile = ../common/secrets/free-token.age;
+    models."auto/coding" = {
+      name = "Auto Coding";
+      family = "auto";
+    };
+    models."auto/best-coding" = {
+      name = "Auto Best Coding";
+      family = "auto";
+    };
+    models."auto/best-coding-fast" = {
+      name = "Auto Best Coding Fast";
+      family = "auto";
+    };
+  };
   zai = {
     url = "https://api.z.ai/api/coding/paas/v4";
     anthropicUrl = "https://api.z.ai/api/anthropic";
