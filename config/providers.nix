@@ -103,6 +103,18 @@
       name = "Auto Best Coding Fast";
       family = "auto";
     };
+    models."deepseek-zen-free" = {
+      name = "Deepseek Zen Free";
+      family = "deepseek";
+    };
+    models."minimax-zen-free" = {
+      name = "Minimax Zen Free";
+      family = "minimax";
+    };
+    models."zen-free" = {
+      name = "Zen Free";
+      family = "zen";
+    };
   };
   zai = {
     url = "https://api.z.ai/api/coding/paas/v4";
