@@ -104,7 +104,7 @@ in
         };
       }) (hasToken cfg.providers);
 
-      local.llm.defaultModel = "custom/deepseek-v4-flash";
+      local.llm.defaultModel = "custom/deepseek-v4-flash-np";
       local.llm.smallModel = "custom/qwen3-coder-next";
     }
     (lib.mkIf cc.enable {

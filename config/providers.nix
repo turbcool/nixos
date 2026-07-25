@@ -92,6 +92,15 @@
         output = 32000;
       };
     };
+    models."deepseek-v4-flash-np" = {
+      name = "Deepseek V4 Flash";
+      family = "deepseek";
+      release_date = "2026-02-03";
+      limit = {
+        context = 200000;
+        output = 32000;
+      };
+    };
     models."qwen3-coder-next" = {
       name = "Qwen3-Coder-Next";
       family = "qwen";
