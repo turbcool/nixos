@@ -83,6 +83,24 @@
   custom = {
     url = "https://llm.naidanov.ru";
     tokenFile = ../common/secrets/custom-token.age;
+    models."deepseek-v4-flash" = {
+      name = "Deepseek V4 Flash";
+      family = "deepseek";
+      release_date = "2026-02-03";
+      limit = {
+        context = 200000;
+        output = 32000;
+      };
+    };
+    models."qwen3-coder-next" = {
+      name = "Qwen3-Coder-Next";
+      family = "qwen";
+      release_date = "2026-02-03";
+      limit = {
+        context = 128000;
+        output = 32000;
+      };
+    };
     models."minimax-m3-zen" = {
       name = "Minimax M3 Zen";
       family = "minimax";

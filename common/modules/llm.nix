@@ -64,7 +64,7 @@ in
 
       provider = lib.mkOption {
         type = lib.types.str;
-        default = "neoplatform";
+        default = "custom";
       };
 
       models = {
@@ -104,8 +104,8 @@ in
         };
       }) (hasToken cfg.providers);
 
-      local.llm.defaultModel = "neoplatform/deepseek-v4-flash";
-      local.llm.smallModel = "neoplatform/qwen3-coder-128k:30b";
+      local.llm.defaultModel = "custom/deepseek-v4-flash";
+      local.llm.smallModel = "custom/qwen3-coder-next";
     }
     (lib.mkIf cc.enable {
       environment.sessionVariables = {
