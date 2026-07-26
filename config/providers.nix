@@ -83,8 +83,8 @@
   custom = {
     url = "https://llm.naidanov.ru";
     tokenFile = ../common/secrets/custom-token.age;
-    models."deepseek-v4-flash" = {
-      name = "Deepseek V4 Flash";
+    models."deepseek-v4-flash-direct" = {
+      name = "Deepseek V4 Flash (DeepSeek API)";
       family = "deepseek";
       release_date = "2026-02-03";
       limit = {
@@ -92,8 +92,8 @@
         output = 32000;
       };
     };
-    models."deepseek-v4-flash-np" = {
-      name = "Deepseek V4 Flash";
+    models."deepseek-v4-flash" = {
+      name = "Deepseek V4 Flash (Neoplatform)";
       family = "deepseek";
       release_date = "2026-02-03";
       limit = {
