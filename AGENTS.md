@@ -56,6 +56,7 @@ docker run --rm -i hound-mcp < /dev/null        # smoke test (should print MCP b
 ## Services
 
 - `common/services/hound/` — Hound MCP server. Containerized to avoid the heavy browserforge data + Patchright Chromium from being baked into the Nix closure. Built with `build.sh`, run on demand by the opencode MCP config (which calls `run.sh` → `docker run --rm -i hound-mcp`). Both hosts have docker enabled via `common/modules/docker.nix`, so hound works everywhere.
+- `common/services/playwright/` — Custom Playwright MCP Docker image with internal CA certificates baked in (SRVHADCS-CA, etc.) so Chromium trusts them. Built with `build.sh`, used as `playwright-mcp` in opencode MCP configs.
 
 ## Conventions
 

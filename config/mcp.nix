@@ -74,7 +74,7 @@ in
       caBundleVal
       nodeExtraCA
       nodeExtraCAVal
-      "mcp/playwright"
+      "playwright-mcp"
     ];
     enabled = true;
   };
@@ -97,7 +97,7 @@ in
         "run" "-i" "--rm" "--init"
         caBundleArg caBundleVal
         nodeExtraCA nodeExtraCAVal
-        "mcp/playwright"
+        "playwright-mcp"
       ];
     };
   };

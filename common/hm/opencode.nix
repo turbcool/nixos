@@ -60,7 +60,7 @@ in
             caBundleVal
             nodeExtraCA
             nodeExtraCAVal
-            "mcp/playwright"
+            "playwright-mcp"
           ];
           enabled = true;
         };
