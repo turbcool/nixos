@@ -5,6 +5,7 @@
     ./cert.nix
     ./docker.nix
     ./git.nix
+    ./hosts.nix
     ./llm.nix
     ./nix.nix
     ./profile.nix

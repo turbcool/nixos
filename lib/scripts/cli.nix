@@ -2,7 +2,7 @@
 
 let
   skillsConfig = import ../../config/skills.nix;
-  mcpConfig = import ../../config/mcp.nix;
+  mcpConfig = import ../../config/mcp.nix { inherit pkgs; };
 
   skillsGroups = skillsConfig.groups or { };
   skillsSources = builtins.attrNames (builtins.removeAttrs skillsConfig [ "groups" ]);

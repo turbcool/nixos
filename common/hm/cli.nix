@@ -13,7 +13,7 @@ let
   # a template: it carries @@SECRET:<name>@@ sentinels, never real keys.
   claudeMcpTemplate = pkgs.writeText "claude-code-mcp.json" (
     builtins.toJSON {
-      mcpServers = (import ../../config/mcp.nix).claudeCode;
+      mcpServers = (import ../../config/mcp.nix { inherit pkgs; }).claudeCode;
     }
   );
 
