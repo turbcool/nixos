@@ -29,6 +29,7 @@ in
         lazydocker
         repomix
         sshpass
+        gnumake
       ]
       ++ [
         inputs.qmd.packages.${pkgs.stdenv.hostPlatform.system}.default

@@ -1,10 +1,13 @@
 #!/usr/bin/env bash
-# Wrapper used as the opencode MCP command for hound. Spawns an ephemeral
-# container per MCP session and pipes its stdio through to the host.
+# Wrapper used as the MCP command for hound.
 #
-# Kept in the repo (under common/services/hound/) so the MCP config can
-# reference a single stable path. Any pre-existing `hound-mcp` container
-# is left alone; --rm cleans up on exit.
+# Always runs in stdio mode so it works as a drop-in for opencode / Claude Code.
+# For the HTTP sidecar, use:  docker compose up -d
+#
+# Build the image first with ./build.sh
+
+set -euo pipefail
+
 exec docker run \
     --rm \
     -i \
@@ -12,4 +15,4 @@ exec docker run \
     --network=host \
     --security-opt=no-new-privileges:true \
     hound-mcp:latest \
-    "$@"
+    "hound" "$@"

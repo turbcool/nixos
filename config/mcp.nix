@@ -37,14 +37,17 @@
   };
 
   # Hound MCP — web fetch / crawl / search with Patchright anti-bot bypass and
-  # optional PDF+OCR (via the [all] extras). Runs inside an ephemeral Docker
-  # container so the heavy browser + browserforge data files ship with the
-  # image and the user doesn't need a Nix env. Build the image once with
-  # `common/services/hound/build.sh`; run.sh wraps `docker run` with the
-  # flags MCP stdio needs.
+  # optional PDF+OCR (via the [all] extras). Runs as a Docker HTTP sidecar.
+  #
+  # Build:  /etc/nixos/common/services/hound/build.sh
+  #   Clones upstream (https://github.com/dondai1234/master-fetch) to ~/hound-mcp
+  #   and builds from its Dockerfile (no local fork).
+  # Start:  /etc/nixos/common/services/hound/serve.sh
+  #   Listens on http://localhost:8765/mcp (streamable-HTTP MCP transport).
+  # Stop:   docker compose -f ~/hound-mcp/docker-compose.yml down
   hound = {
-    type = "local";
-    command = [ "/etc/nixos/common/services/hound/run.sh" ];
+    type = "http";
+    url = "http://localhost:8765/mcp";
     enabled = true;
   };
 
@@ -59,13 +62,16 @@
   # above (the two schemas differ). The `claude` wrapper in common/hm/cli.nix
   # turns this into a runtime --mcp-config file.
   #
+  # Both schemas use the HTTP streamable transport. Start the sidecar first:
+  #   /etc/nixos/common/services/hound/serve.sh
+  #
   # Secret header values use the @@SECRET:<agenix-name>@@ sentinel: the wrapper
   # substitutes them at runtime from /run/agenix/<name>, so keys never enter the
   # nix store, /etc, or the process arguments.
   claudeCode = {
     hound = {
-      type = "stdio";
-      command = "/etc/nixos/common/services/hound/run.sh";
+      type = "url";
+      url = "http://localhost:8765/mcp";
     };
   };
 }
