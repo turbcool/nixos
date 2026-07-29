@@ -179,6 +179,7 @@ in
       build = "sudo nixos-rebuild switch --flake /etc/nixos#$(hostname)";
       opencode-playwright = "nix develop /etc/nixos#opencode-playwright";
       proxy = "proxy-toggle";
+      hound = "hound-toggle";
     };
     initExtra = ''
       proxy-toggle() {
@@ -197,6 +198,18 @@ in
           export no_proxy="localhost,127.0.0.1"
           export NO_PROXY="localhost,127.0.0.1"
           echo "Proxy enabled: $PROXY_URL"
+        fi
+      }
+      hound-toggle() {
+        local compose="$HOME/hound-mcp/docker-compose.yml"
+        if docker ps --format '{{.Names}}' 2>/dev/null | grep -q '^hound$'; then
+          echo "→ Hound is running — stopping ..."
+          docker compose -f "$compose" down
+          echo "✓ Hound stopped"
+        else
+          echo "→ Hound is stopped — starting ..."
+          docker compose -f "$compose" up -d --wait
+          echo "✓ Hound started (http://localhost:8765/mcp)"
         fi
       }
     '';
