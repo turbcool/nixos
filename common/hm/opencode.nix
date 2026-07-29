@@ -27,13 +27,13 @@ in
         };
         disabled_providers = [ ];
         agent.explore.model = "neoplatform/qwen3-coder-128k:30b";
-        # Hound MCP — baked into the global config so it follows the user into
-        # every project (not just ones where they remembered to run
-        # `mcp hound`). Runs in an ephemeral Docker container via run.sh; the
-        # image is built from common/services/hound/.
+        # Hound MCP — baked into the global config as a streamable-HTTP server.
+        # Start the sidecar with `hound` (alias) or hound-toggle().
+        # Built from upstream (github.com/dondai1234/master-fetch) via
+        # /etc/nixos/common/services/hound/build.sh.
         mcp.hound = {
-          type = "local";
-          command = [ "/etc/nixos/common/services/hound/run.sh" ];
+          type = "remote";
+          url = "http://localhost:8765/mcp";
           enabled = true;
         };
       }

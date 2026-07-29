@@ -46,7 +46,7 @@
   #   Listens on http://localhost:8765/mcp (streamable-HTTP MCP transport).
   # Stop:   docker compose -f ~/hound-mcp/docker-compose.yml down
   hound = {
-    type = "http";
+    type = "remote";
     url = "http://localhost:8765/mcp";
     enabled = true;
   };

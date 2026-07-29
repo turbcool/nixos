@@ -200,8 +200,32 @@ in
           echo "Proxy enabled: $PROXY_URL"
         fi
       }
+      hound-build() {
+        local repo="$HOME/hound-mcp"
+        if [ ! -d "$repo/.git" ]; then
+          echo "→ Cloning upstream master-fetch ..."
+          git clone --depth=1 https://github.com/dondai1234/master-fetch.git "$repo"
+        fi
+        # Pin mcp<2.0.0 — upstream's code uses the 1.x decorator API
+        # that was removed in mcp SDK v2.0.0. Revert the pin once
+        # upstream updates their code for the new SDK.
+        echo "→ Patching pyproject.toml to avoid mcp SDK v2 breakage ..."
+        cd "$repo"
+        git checkout -- pyproject.toml src/master_fetch/server.py 2>/dev/null
+        sed -i 's/"mcp>=1.27.0"/"mcp>=1.27.0,<2.0.0"/' pyproject.toml
+        echo "→ Building Docker image (hound-mcp:latest) ..."
+        docker build -t hound-mcp:latest .
+      }
+
       hound-toggle() {
-        local compose="$HOME/hound-mcp/docker-compose.yml"
+        local repo="$HOME/hound-mcp"
+        local compose="$repo/docker-compose.yml"
+
+        # Build if the image is missing
+        if ! docker image inspect hound-mcp:latest >/dev/null 2>&1; then
+          hound-build
+        fi
+
         if docker ps --format '{{.Names}}' 2>/dev/null | grep -q '^hound$'; then
           echo "→ Hound is running — stopping ..."
           docker compose -f "$compose" down
