@@ -24,6 +24,9 @@ let
   caBundleVal = "${combinedCABundle}:/etc/ssl/certs/ca-certificates.crt:ro";
   nodeExtraCA = "-e";
   nodeExtraCAVal = "NODE_EXTRA_CA_CERTS=/etc/ssl/certs/ca-certificates.crt";
+
+  playwrightTmpArg = "-v";
+  playwrightTmpVal = "/tmp/.playwright-mcp:/tmp/.playwright-mcp";
 in
 {
   config.home.file.".config/opencode/opencode.json" = lib.mkForce {
@@ -56,10 +59,14 @@ in
             "-i"
             "--rm"
             "--init"
+            "--network"
+            "host"
             caBundleArg
             caBundleVal
             nodeExtraCA
             nodeExtraCAVal
+            playwrightTmpArg
+            playwrightTmpVal
             "playwright-mcp"
           ];
           enabled = true;

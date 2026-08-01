@@ -17,6 +17,9 @@ let
   caBundleVal = "${combinedCABundle}:/etc/ssl/certs/ca-certificates.crt:ro";
   nodeExtraCA = "-e";
   nodeExtraCAVal = "NODE_EXTRA_CA_CERTS=/etc/ssl/certs/ca-certificates.crt";
+
+  playwrightTmpArg = "-v";
+  playwrightTmpVal = "/tmp/.playwright-mcp:/tmp/.playwright-mcp";
 in
 {
   nixos = {
@@ -70,10 +73,14 @@ in
       "-i"
       "--rm"
       "--init"
+      "--network"
+      "host"
       caBundleArg
       caBundleVal
       nodeExtraCA
       nodeExtraCAVal
+      playwrightTmpArg
+      playwrightTmpVal
       "playwright-mcp"
     ];
     enabled = true;
@@ -95,8 +102,10 @@ in
       command = "docker";
       args = [
         "run" "-i" "--rm" "--init"
+        "--network" "host"
         caBundleArg caBundleVal
         nodeExtraCA nodeExtraCAVal
+        playwrightTmpArg playwrightTmpVal
         "playwright-mcp"
       ];
     };

@@ -56,11 +56,11 @@ in
       zai = mkClaudeProfile {
         key = "zai";
         label = "Claude Code (Z.AI)";
-        mainModel = config.local.llm.claudeCode.models.opus; # glm-5.2[1m] (1M ctx)
+        mainModel = "glm-5.2"; # z.ai's model id (no [1m] suffix); decoupled from the global claudeCode opus default
         haikuModel = "glm-4.5-air"; # z.ai has no qwen; smallest GLM
         models = [
           {
-            id = config.local.llm.claudeCode.models.opus;
+            id = "glm-5.2";
             label = "GLM-5.2 1M";
             isDefault = true;
           }

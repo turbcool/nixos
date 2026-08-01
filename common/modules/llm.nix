@@ -64,25 +64,25 @@ in
 
       provider = lib.mkOption {
         type = lib.types.str;
-        default = "custom";
+        default = "free";
       };
 
       models = {
         opus = lib.mkOption {
           type = lib.types.str;
-          default = "deepseek-v4-flash";
+          default = "deepseek-zen-free";
         };
         sonnet = lib.mkOption {
           type = lib.types.str;
-          default = "deepseek-v4-flash";
+          default = "deepseek-zen-free";
         };
         haiku = lib.mkOption {
           type = lib.types.str;
-          default = "qwen3-coder-128k:30b";
+          default = "deepseek-zen-free";
         };
         subagent = lib.mkOption {
           type = lib.types.str;
-          default = "deepseek-v4-flash";
+          default = "deepseek-zen-free";
         };
       };
     };
@@ -104,8 +104,8 @@ in
         };
       }) (hasToken cfg.providers);
 
-      local.llm.defaultModel = "custom/deepseek-v4-flash";
-      local.llm.smallModel = "custom/qwen3-coder-next";
+      local.llm.defaultModel = "free/deepseek-zen-free";
+      local.llm.smallModel = "free/deepseek-zen-free";
     }
     (lib.mkIf cc.enable {
       environment.sessionVariables = {
