@@ -8,6 +8,22 @@
 let
   llm = osConfig.local.llm;
   cleanJson = lib.filterAttrsRecursive (_: v: v != null);
+
+  # Combined CA bundle: standard CAs + custom CAs
+  combinedCABundle = pkgs.runCommand "combined-ca-bundle.crt" {
+    buildInputs = [ pkgs.cacert ];
+  } ''
+    cat ${pkgs.cacert}/etc/ssl/certs/ca-bundle.crt \
+        ${./../modules/cert/ca-ff.ru.crt} \
+        ${./../modules/cert/ca-skyori.ru.crt} \
+        ${./../modules/cert/ca-neoplatform.ru.crt} \
+        ${./../modules/cert/SRVHADCS-CA.crt} > $out
+  '';
+
+  caBundleArg = "-v";
+  caBundleVal = "${combinedCABundle}:/etc/ssl/certs/ca-certificates.crt:ro";
+  nodeExtraCA = "-e";
+  nodeExtraCAVal = "NODE_EXTRA_CA_CERTS=/etc/ssl/certs/ca-certificates.crt";
 in
 {
   config.home.file.".config/opencode/opencode.json" = lib.mkForce {
@@ -27,13 +43,25 @@ in
         };
         disabled_providers = [ ];
         agent.explore.model = "neoplatform/qwen3-coder-128k:30b";
-        # Hound MCP — baked into the global config so it follows the user into
-        # every project (not just ones where they remembered to run
-        # `mcp hound`). Runs in an ephemeral Docker container via run.sh; the
-        # image is built from common/services/hound/.
         mcp.hound = {
+          type = "remote";
+          url = "http://localhost:8765/mcp";
+          enabled = true;
+        };
+        mcp.playwright = {
           type = "local";
-          command = [ "/etc/nixos/common/services/hound/run.sh" ];
+          command = [
+            "docker"
+            "run"
+            "-i"
+            "--rm"
+            "--init"
+            caBundleArg
+            caBundleVal
+            nodeExtraCA
+            nodeExtraCAVal
+            "playwright-mcp"
+          ];
           enabled = true;
         };
       }

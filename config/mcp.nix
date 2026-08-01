@@ -1,3 +1,23 @@
+{ pkgs }:
+
+let
+  # Combined CA bundle: standard CAs + custom CAs for skyori, neoplatform, ff.ru, SRVHADCS.
+  # Mounted into the playwright container so Chrome and Node.js trust these CAs.
+  combinedCABundle = pkgs.runCommand "combined-ca-bundle.crt" {
+    buildInputs = [ pkgs.cacert ];
+  } ''
+    cat ${pkgs.cacert}/etc/ssl/certs/ca-bundle.crt \
+        ${./../common/modules/cert/ca-ff.ru.crt} \
+        ${./../common/modules/cert/ca-skyori.ru.crt} \
+        ${./../common/modules/cert/ca-neoplatform.ru.crt} \
+        ${./../common/modules/cert/SRVHADCS-CA.crt} > $out
+  '';
+
+  caBundleArg = "-v";
+  caBundleVal = "${combinedCABundle}:/etc/ssl/certs/ca-certificates.crt:ro";
+  nodeExtraCA = "-e";
+  nodeExtraCAVal = "NODE_EXTRA_CA_CERTS=/etc/ssl/certs/ca-certificates.crt";
+in
 {
   nixos = {
     type = "local";
@@ -36,15 +56,26 @@
     enabled = true;
   };
 
-  # Hound MCP — web fetch / crawl / search with Patchright anti-bot bypass and
-  # optional PDF+OCR (via the [all] extras). Runs inside an ephemeral Docker
-  # container so the heavy browser + browserforge data files ship with the
-  # image and the user doesn't need a Nix env. Build the image once with
-  # `common/services/hound/build.sh`; run.sh wraps `docker run` with the
-  # flags MCP stdio needs.
   hound = {
+    type = "remote";
+    url = "http://localhost:8765/mcp";
+    enabled = true;
+  };
+
+  playwright = {
     type = "local";
-    command = [ "/etc/nixos/common/services/hound/run.sh" ];
+    command = [
+      "docker"
+      "run"
+      "-i"
+      "--rm"
+      "--init"
+      caBundleArg
+      caBundleVal
+      nodeExtraCA
+      nodeExtraCAVal
+      "playwright-mcp"
+    ];
     enabled = true;
   };
 
@@ -54,18 +85,20 @@
     wiki = [ "wiki" ];
   };
 
-  # ── Claude Code (the `claude` CLI) MCP servers ────────────────────────────
-  # Native Claude Code schema, kept separate from the opencode-style registry
-  # above (the two schemas differ). The `claude` wrapper in common/hm/cli.nix
-  # turns this into a runtime --mcp-config file.
-  #
-  # Secret header values use the @@SECRET:<agenix-name>@@ sentinel: the wrapper
-  # substitutes them at runtime from /run/agenix/<name>, so keys never enter the
-  # nix store, /etc, or the process arguments.
   claudeCode = {
     hound = {
+      type = "url";
+      url = "http://localhost:8765/mcp";
+    };
+    playwright = {
       type = "stdio";
-      command = "/etc/nixos/common/services/hound/run.sh";
+      command = "docker";
+      args = [
+        "run" "-i" "--rm" "--init"
+        caBundleArg caBundleVal
+        nodeExtraCA nodeExtraCAVal
+        "playwright-mcp"
+      ];
     };
   };
 }

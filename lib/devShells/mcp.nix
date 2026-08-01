@@ -1,7 +1,7 @@
 { pkgs }:
 
 let
-  raw = import ../../config/mcp.nix;
+  raw = import ../../config/mcp.nix { inherit pkgs; };
   groups = raw.groups or { };
   servers = builtins.removeAttrs raw [ "groups" ];
   serverNames = builtins.attrNames servers;
