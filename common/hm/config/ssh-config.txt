@@ -47,3 +47,19 @@ Host lego
   Hostname 10.150.7.5
   User devops
   Port 22
+
+Host gits-jump
+  HostName git.naidanov.ru
+  Port 20572
+  User gitea-jump
+  IdentityFile ~/.ssh/id_gits_jump
+  IdentitiesOnly yes
+  StrictHostKeyChecking accept-new
+
+Host git.gits
+  HostName 127.0.0.1
+  Port 222
+  User git
+  IdentityFile ~/.ssh/id_ed25519
+  IdentitiesOnly yes
+  ProxyJump gits-jump
