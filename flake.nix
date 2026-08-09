@@ -44,6 +44,11 @@
       flake = false;
     };
 
+    helium = {
+      url = "github:oxcl/nix-flake-helium-browser";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     paseo.url = "github:getpaseo/paseo";
 
     # VS Code "Dark Modern" yazi flavor (956MB/vscode-dark-modern.yazi).

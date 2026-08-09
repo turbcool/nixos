@@ -27,6 +27,7 @@ in
         vim
         lazygit
         lazydocker
+        ffmpeg
         repomix
         sshpass
         gnumake

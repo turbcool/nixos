@@ -14,7 +14,9 @@ in
     programs.chromium = {
       enable = true;
       extensions = [
-        "nngceckbapebfimnlniiiahkandclblb" # bitwarden
+        # Note: bitwarden is intentionally absent - it is force-installed into
+        # Helium via the external-extensions mechanism, and a policy entry here
+        # would leak into Helium's pending-extension set and block that install.
         "dbepggeogbaibhgnhhndojpepiihcmeb" # vimium
         "fnaicdffflnofjppbagibeoednhnbjhg" # floccus
       ];

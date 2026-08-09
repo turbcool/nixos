@@ -3,6 +3,7 @@
 {
   imports = [
     ../../../common/hm/default.nix
+    ./helium.nix
     ./hyprland.nix
     ./remmina.nix
     ./vscode.nix
