@@ -64,25 +64,25 @@ in
 
       provider = lib.mkOption {
         type = lib.types.str;
-        default = "free";
+        default = "neoplatform";
       };
 
       models = {
         opus = lib.mkOption {
           type = lib.types.str;
-          default = "deepseek-zen-free";
+          default = "deepseek-v4-flash";
         };
         sonnet = lib.mkOption {
           type = lib.types.str;
-          default = "deepseek-zen-free";
+          default = "deepseek-v4-flash";
         };
         haiku = lib.mkOption {
           type = lib.types.str;
-          default = "deepseek-zen-free";
+          default = "qwen3-coder-128k:30b";
         };
         subagent = lib.mkOption {
           type = lib.types.str;
-          default = "deepseek-zen-free";
+          default = "qwen3-coder-128k:30b";
         };
       };
     };
