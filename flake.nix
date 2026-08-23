@@ -95,7 +95,8 @@
       };
 
       mcp = import ./lib/devShells/mcp.nix { inherit pkgs; };
-      cli = import ./lib/scripts/cli.nix { inherit pkgs; };
+      skillsInstall = import ./lib/skills-install.nix { inherit pkgs inputs; };
+      cli = import ./lib/scripts/cli.nix { inherit pkgs inputs; };
       playwright = import ./lib/devShells/playwright.nix { inherit pkgs inputs; };
 
       prefixAttrs =
@@ -120,6 +121,7 @@
             pkgs.nixd
             pkgs.statix
             pkgs.jq
+            cli.skills
             cli.mcp
           ];
         };
@@ -127,6 +129,7 @@
         opencode-playwright = playwright.devShell;
       };
 
-      packages.${system} = prefixAttrs "mcp-config-" mcp.configs;
+      packages.${system} =
+        (prefixAttrs "mcp-config-" mcp.configs) // (prefixAttrs "skills-install-" skillsInstall.installs);
     };
 }
