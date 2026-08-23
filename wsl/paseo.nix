@@ -14,8 +14,8 @@ let
   # the inherited catalog rather than appending).
   #
   # Models were discovered from each provider's /models endpoint (keys in
-  # agenix). The OPUS/SONNET tiers map to the main GLM model, HAIKU to a small
-  # coder model; the picker lists every chat model the endpoint serves.
+  # agenix). The OPUS/SONNET tiers map to the main deepseek model, HAIKU to the
+  # qwen coder model; the picker lists every chat model the endpoint serves.
   mkClaudeProfile =
     {
       key,
@@ -53,67 +53,20 @@ in
     openFirewall = true;
 
     settings.agents.providers = {
-      zai = mkClaudeProfile {
-        key = "zai";
-        label = "Claude Code (Z.AI)";
-        mainModel = "glm-5.2"; # z.ai's model id (no [1m] suffix); decoupled from the global claudeCode opus default
-        haikuModel = "glm-4.5-air"; # z.ai has no qwen; smallest GLM
+      free = mkClaudeProfile {
+        key = "free"; # llm-free.naidanov.ru — Anthropic API at root
+        label = "Claude Code (Free)";
+        mainModel = "deepseek-zen-free"; # Opus/Sonnet tier
+        haikuModel = "qwen3-coder-next"; # Haiku tier
         models = [
           {
-            id = "glm-5.2";
-            label = "GLM-5.2 1M";
-            isDefault = true;
-          }
-          {
-            id = "glm-4.5-air";
-            label = "GLM-4.5 Air";
-          }
-        ];
-      };
-      custom = mkClaudeProfile {
-        key = "custom"; # llm.naidanov.ru — Anthropic API at root
-        label = "Claude Code (Naidanov)";
-        mainModel = "glm-5.2"; # plain id (no [1m]) — naidanov doesn't speak the suffix
-        haikuModel = "qwen3-coder-next";
-        # Every chat model llm.naidanov.ru serves (embedding models excluded).
-        # glm-5.2 is the default; qwen3-coder-next backs the HAIKU tier.
-        models = [
-          {
-            id = "glm-5.2";
-            label = "GLM-5.2";
+            id = "deepseek-zen-free";
+            label = "Deepseek Zen Free";
             isDefault = true;
           }
           {
             id = "qwen3-coder-next";
             label = "Qwen3-Coder Next";
-          }
-          {
-            id = "glm-5.2-direct";
-            label = "GLM-5.2 Direct";
-          }
-          {
-            id = "glm-5.2-zen";
-            label = "GLM-5.2 Zen";
-          }
-          {
-            id = "qwen3.6-200k";
-            label = "Qwen3.6 200K";
-          }
-          {
-            id = "deepseek-v4-flash";
-            label = "DeepSeek V4 Flash";
-          }
-          {
-            id = "deepseek-v4-flash-zen";
-            label = "DeepSeek V4 Flash Zen";
-          }
-          {
-            id = "kimi-k2.7-code-zen";
-            label = "Kimi K2.7 Code Zen";
-          }
-          {
-            id = "minimax-m3-zen";
-            label = "MiniMax M3 Zen";
           }
         ];
       };

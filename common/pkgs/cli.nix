@@ -31,6 +31,7 @@ in
         repomix
         sshpass
         gnumake
+        openssl
       ]
       ++ [
         inputs.qmd.packages.${pkgs.stdenv.hostPlatform.system}.default
