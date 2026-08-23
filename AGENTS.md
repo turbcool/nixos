@@ -23,10 +23,16 @@ common/secrets/setup-agenix.sh [--skip-existing]   # interactive secret provisio
 # Devshell
 direnv allow   # run once after entering /etc/nixos; provides nixfmt, nixd, statix, agenix, jq
 
-# Hound MCP — build the image once, then MCP starts it on demand
-common/services/hound/build.sh                 # builds hound-mcp:latest
-docker images hound-mcp                         # verify it built
-docker run --rm -i hound-mcp < /dev/null        # smoke test (should print MCP banner)
+# Hound MCP — build the image once, then start the HTTP sidecar
+common/services/hound/build.sh                 # builds hound-mcp:latest (from dondai44423/master-fetch)
+common/services/hound/serve.sh                 # starts the container (serves http://localhost:8765/mcp)
+curl http://localhost:8765/mcp                 # smoke test (bare GET → HTTP 400; that's expected)
+
+# Claude Code MCP — claudeCode servers in config/mcp.nix are delivered at runtime by the
+# `claude` wrapper via --mcp-config, but that does NOT make them appear in `claude mcp list`.
+# Register them in the user scope once per host for visibility + health checks:
+claude mcp add --transport http hound http://localhost:8765/mcp -s user
+# playwright (CA bundle path comes from the wrapper's generated ~/.cache/claude-code/mcp.json)
 ```
 
 ## Architecture
@@ -55,8 +61,23 @@ docker run --rm -i hound-mcp < /dev/null        # smoke test (should print MCP b
 
 ## Services
 
-- `common/services/hound/` — Hound MCP server. Containerized to avoid the heavy browserforge data + Patchright Chromium from being baked into the Nix closure. Built with `build.sh`, run on demand by the opencode MCP config (which calls `run.sh` → `docker run --rm -i hound-mcp`). Both hosts have docker enabled via `common/modules/docker.nix`, so hound works everywhere.
+- `common/services/hound/` — Hound MCP server. Containerized to avoid the heavy browserforge data + Patchright Chromium from being baked into the Nix closure. Built with `build.sh` (clones/pulls `dondai44423/master-fetch`, which ships mcp SDK 2.x and needs no patching), then started as an HTTP sidecar on `http://localhost:8765/mcp` via `serve.sh` (or the `hound-toggle` zsh alias). MCP configs reference it as a `remote` server. Both hosts have docker enabled via `common/modules/docker.nix`.
 - `common/services/playwright/` — Custom Playwright MCP Docker image with internal CA certificates baked in (SRVHADCS-CA, etc.) so Chromium trusts them. Built with `build.sh`, used as `playwright-mcp` in opencode MCP configs.
+
+## Helium extension bumps (Bitwarden/Passbolt)
+
+When a rebuild fails on a CRX hash in `hydenix/modules/hm/helium.nix` (store version bumped):
+
+1. Get new hash + version for the extension:
+   ```bash
+   curl -sL -o /tmp/e.crx "https://clients2.google.com/service/update2/crx?response=redirect&prodversion=127.0.0.0&acceptformat=crx3&x=id%3D<ID>%26installsource%3Dondemand%26uc"
+   nix hash convert --hash-algo sha256 --to sri $(nix hash path /tmp/e.crx)
+   unzip -p /tmp/e.crx manifest.json | jq -r .version
+   ```
+2. Update `version` + `sha256` for that extension in `hydenix/modules/hm/helium.nix`.
+3. `git add` then `nixos-rebuild switch --flake /etc/nixos#hydenix`.
+
+Extension IDs: Bitwarden `nngceckbapebfimnlniiiahkandclblb`, Passbolt `didegimhafipceonhjepacocaffmoppf`. uBlock is bundled as a Helium component — never bump it. Do NOT use `ExtensionInstallForcelist` (broken: Helium sends `prod=chromecrx`, CWS replies `noupdate`).
 
 ## Conventions
 

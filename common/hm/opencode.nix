@@ -45,7 +45,7 @@ in
           reserved = 16000;
         };
         disabled_providers = [ ];
-        agent.explore.model = "neoplatform/qwen3-coder-128k:30b";
+        agent.explore.model = "custom/deepseek-v4-flash";
         mcp.hound = {
           type = "remote";
           url = "http://localhost:8765/mcp";
