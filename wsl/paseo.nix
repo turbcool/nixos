@@ -53,19 +53,19 @@ in
     openFirewall = true;
 
     settings.agents.providers = {
-      free = mkClaudeProfile {
-        key = "free"; # llm-free.naidanov.ru — Anthropic API at root
-        label = "Claude Code (Free)";
-        mainModel = "deepseek-zen-free"; # Opus/Sonnet tier
-        haikuModel = "qwen3-coder-next"; # Haiku tier
+      custom = mkClaudeProfile {
+        key = "custom"; # llm.naidanov.ru — Anthropic API at root
+        label = "Claude Code (Custom)";
+        mainModel = config.local.llm.defaultModel; # Opus/Sonnet tier
+        haikuModel = config.local.llm.smallModel; # Haiku tier
         models = [
           {
-            id = "deepseek-zen-free";
-            label = "Deepseek Zen Free";
+            id = lib.removePrefix "custom/" config.local.llm.defaultModel;
+            label = "Deepseek V4 Flash";
             isDefault = true;
           }
           {
-            id = "qwen3-coder-next";
+            id = lib.removePrefix "custom/" config.local.llm.smallModel;
             label = "Qwen3-Coder Next";
           }
         ];

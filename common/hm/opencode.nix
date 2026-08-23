@@ -1,4 +1,5 @@
 {
+  inputs,
   lib,
   osConfig,
   pkgs,
@@ -10,15 +11,18 @@ let
   cleanJson = lib.filterAttrsRecursive (_: v: v != null);
 
   # Combined CA bundle: standard CAs + custom CAs
-  combinedCABundle = pkgs.runCommand "combined-ca-bundle.crt" {
-    buildInputs = [ pkgs.cacert ];
-  } ''
-    cat ${pkgs.cacert}/etc/ssl/certs/ca-bundle.crt \
-        ${./../modules/cert/ca-ff.ru.crt} \
-        ${./../modules/cert/ca-skyori.ru.crt} \
-        ${./../modules/cert/ca-neoplatform.ru.crt} \
-        ${./../modules/cert/SRVHADCS-CA.crt} > $out
-  '';
+  combinedCABundle =
+    pkgs.runCommand "combined-ca-bundle.crt"
+      {
+        buildInputs = [ pkgs.cacert ];
+      }
+      ''
+        cat ${pkgs.cacert}/etc/ssl/certs/ca-bundle.crt \
+            ${./../modules/cert/ca-ff.ru.crt} \
+            ${./../modules/cert/ca-skyori.ru.crt} \
+            ${./../modules/cert/ca-neoplatform.ru.crt} \
+            ${./../modules/cert/SRVHADCS-CA.crt} > $out
+      '';
 
   caBundleArg = "-v";
   caBundleVal = "${combinedCABundle}:/etc/ssl/certs/ca-certificates.crt:ro";
@@ -45,7 +49,10 @@ in
           reserved = 16000;
         };
         disabled_providers = [ ];
-        agent.explore.model = "custom/qwen3-coder-next";
+        plugin = [
+          "${inputs.ponytail}/.opencode/plugins/ponytail.mjs"
+        ];
+        agent.explore.model = llm.smallModel;
         mcp.hound = {
           type = "remote";
           url = "http://localhost:8765/mcp";
@@ -75,12 +82,8 @@ in
       // {
         provider = lib.mapAttrs (name: p: {
           inherit name;
-          npm = p.npm or "@ai-sdk/openai-compatible";
-          models = cleanJson (
-            lib.mapAttrs (_: m: builtins.removeAttrs m [ "opencode" ]) (
-              lib.filterAttrs (_: m: m.opencode or true) (p.models or { })
-            )
-          );
+          npm = "@ai-sdk/openai-compatible";
+          models = cleanJson (p.models or { });
           options = {
             baseURL = p.url;
             apiKey = if p ? tokenFile then "{file:${osConfig.age.secrets."${name}-token".path}}" else "";

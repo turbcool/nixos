@@ -27,10 +27,10 @@ in
     programs.zsh.initContent = ''
       ${authExport}
       export ANTHROPIC_BASE_URL="${ccBaseUrl}"
-      export ANTHROPIC_DEFAULT_OPUS_MODEL="${cc.models.opus}"
-      export ANTHROPIC_DEFAULT_SONNET_MODEL="${cc.models.sonnet}"
-      export ANTHROPIC_DEFAULT_HAIKU_MODEL="${cc.models.haiku}"
-      export CLAUDE_CODE_SUBAGENT_MODEL="${cc.models.subagent}"
+      export ANTHROPIC_DEFAULT_OPUS_MODEL="${llm.defaultModel}"
+      export ANTHROPIC_DEFAULT_SONNET_MODEL="${llm.defaultModel}"
+      export ANTHROPIC_DEFAULT_HAIKU_MODEL="${llm.smallModel}"
+      export CLAUDE_CODE_SUBAGENT_MODEL="${llm.smallModel}"
       export CLAUDE_CODE_AUTO_COMPACT_WINDOW="1000000"
     '';
   };

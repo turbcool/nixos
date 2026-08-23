@@ -727,6 +727,22 @@
         "type": "github"
       }
     },
+    "ponytail": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1786139041,
+        "narHash": "sha256-bGdXvzhWPwGdz3T2Yh2h6lf+3PBRFAfdBxP5pESmCHI=",
+        "owner": "DietrichGebert",
+        "repo": "ponytail",
+        "rev": "2ed6c52c9d7e5e56942508591085fd45dea277d3",
+        "type": "github"
+      },
+      "original": {
+        "owner": "DietrichGebert",
+        "repo": "ponytail",
+        "type": "github"
+      }
+    },
     "qmd": {
       "inputs": {
         "flake-utils": "flake-utils_2",
@@ -768,6 +784,7 @@
         "obsidian-wiki": "obsidian-wiki",
         "paseo": "paseo",
         "playwright-cli": "playwright-cli",
+        "ponytail": "ponytail",
         "qmd": "qmd",
         "vscode-yazi": "vscode-yazi"
       }

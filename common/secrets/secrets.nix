@@ -5,12 +5,32 @@ let
   nixos-old = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIKTqEJJ50htCOsmbULT7xdANQ/9ZRwrEdyTJyOAVHKOl";
 in
 {
-  "neoplatform-token.age".publicKeys = [ nixos nixos-old ];
-  "custom-token.age".publicKeys = [ nixos nixos-old ];
-  "../../hydenix/secrets/work-pc.age".publicKeys = [ nixos nixos-old ];
-  "vm-ai-neoplatform.age".publicKeys = [ nixos nixos-old ];
-  "vm-ai-skyori.age".publicKeys = [ nixos nixos-old ];
-  "vm-ai-proinfoservice.age".publicKeys = [ nixos nixos-old ];
-  "vm-ai-timepath.age".publicKeys = [ nixos nixos-old ];
-  "free-token.age".publicKeys = [ nixos nixos-old ];
+  "neoplatform-token.age".publicKeys = [
+    nixos
+    nixos-old
+  ];
+  "custom-token.age".publicKeys = [
+    nixos
+    nixos-old
+  ];
+  "../../hydenix/secrets/work-pc.age".publicKeys = [
+    nixos
+    nixos-old
+  ];
+  "vm-ai-neoplatform.age".publicKeys = [
+    nixos
+    nixos-old
+  ];
+  "vm-ai-skyori.age".publicKeys = [
+    nixos
+    nixos-old
+  ];
+  "vm-ai-proinfoservice.age".publicKeys = [
+    nixos
+    nixos-old
+  ];
+  "vm-ai-timepath.age".publicKeys = [
+    nixos
+    nixos-old
+  ];
 }

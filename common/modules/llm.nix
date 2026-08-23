@@ -28,7 +28,7 @@ let
       # couldn't repoint Claude Code at a different endpoint. Interactive `claude`
       # still gets those via the .zshrc exports in common/hm/claude-code.nix.
       env = {
-        CLAUDE_CODE_SUBAGENT_MODEL = cc.models.subagent;
+        CLAUDE_CODE_SUBAGENT_MODEL = cfg.smallModel;
         CLAUDE_CODE_AUTO_COMPACT_WINDOW = "1000000";
       };
     }
@@ -66,25 +66,6 @@ in
         type = lib.types.str;
         default = "custom";
       };
-
-      models = {
-        opus = lib.mkOption {
-          type = lib.types.str;
-          default = "deepseek-v4-flash";
-        };
-        sonnet = lib.mkOption {
-          type = lib.types.str;
-          default = "deepseek-v4-flash";
-        };
-        haiku = lib.mkOption {
-          type = lib.types.str;
-          default = "qwen3-coder-next";
-        };
-        subagent = lib.mkOption {
-          type = lib.types.str;
-          default = "qwen3-coder-next";
-        };
-      };
     };
   };
 
@@ -105,7 +86,7 @@ in
       }) (hasToken cfg.providers);
 
       local.llm.defaultModel = "custom/deepseek-v4-flash";
-      local.llm.smallModel = "custom/deepseek-v4-flash";
+      local.llm.smallModel = "custom/qwen3-coder-next";
     }
     (lib.mkIf cc.enable {
       environment.sessionVariables = {
