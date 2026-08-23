@@ -2,6 +2,8 @@
 
 let
   username = osConfig.local.profile.username;
+  skillConfig = import ../../config/skills.nix;
+  skillSources = builtins.removeAttrs skillConfig [ "groups" ];
 in
 {
   imports = [ inputs.agent-skills.homeManagerModules.default ];
@@ -9,11 +11,11 @@ in
   programs.agent-skills = {
     enable = true;
 
-    sources = import ../../config/skills.nix;
+    sources = skillSources;
 
     skills.enableAll = true;
 
-    targets = { };
+    targets.opencode.enable = true;
   };
 
   home.file.".obsidian-wiki/config".text = ''

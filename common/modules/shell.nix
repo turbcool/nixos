@@ -7,7 +7,6 @@ in
   programs.zsh.enable = true;
 
   environment.systemPackages = [
-    cli.skills
     cli.mcp
   ];
 }

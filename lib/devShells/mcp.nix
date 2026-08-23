@@ -18,21 +18,6 @@ let
     in
     pkgs.writeText "opencode-mcp.json" (builtins.toJSON { mcp = selected; });
 
-  mkMcpShell =
-    serverNames':
-    pkgs.mkShellNoCC {
-      OPENCODE_CONFIG = toString (mkMcpConfig serverNames');
-    };
-
-  groupShells = builtins.mapAttrs (_: serverNames': mkMcpShell serverNames') groups;
-
-  individualShells = builtins.listToAttrs (
-    builtins.map (name: {
-      inherit name;
-      value = mkMcpShell [ name ];
-    }) serverNames
-  );
-
   allConfigs =
     groups
     // (builtins.listToAttrs (
@@ -43,9 +28,5 @@ let
     ));
 in
 {
-  devShell = mkMcpShell serverNames;
-
-  shells = groupShells // individualShells;
-
   configs = builtins.mapAttrs (_: mkMcpConfig) allConfigs;
 }
