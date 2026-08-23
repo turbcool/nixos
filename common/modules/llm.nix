@@ -78,11 +78,11 @@ in
         };
         haiku = lib.mkOption {
           type = lib.types.str;
-          default = "deepseek-v4-flash";
+          default = "qwen3-coder-next";
         };
         subagent = lib.mkOption {
           type = lib.types.str;
-          default = "deepseek-v4-flash";
+          default = "qwen3-coder-next";
         };
       };
     };
