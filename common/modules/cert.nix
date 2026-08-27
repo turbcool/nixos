@@ -6,5 +6,6 @@
     ./cert/ca-skyori.ru.crt
     ./cert/ca-neoplatform.ru.crt
     ./cert/SRVHADCS-CA.crt
+    ./cert/ca-ai-expert-openhands.crt
   ];
 }

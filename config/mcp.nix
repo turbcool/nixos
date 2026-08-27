@@ -10,7 +10,8 @@ let
         ${./../common/modules/cert/ca-ff.ru.crt} \
         ${./../common/modules/cert/ca-skyori.ru.crt} \
         ${./../common/modules/cert/ca-neoplatform.ru.crt} \
-        ${./../common/modules/cert/SRVHADCS-CA.crt} > $out
+        ${./../common/modules/cert/SRVHADCS-CA.crt} \
+        ${./../common/modules/cert/ca-ai-expert-openhands.crt} > $out
   '';
 
   caBundleArg = "-v";

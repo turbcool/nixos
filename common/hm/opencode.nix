@@ -21,7 +21,8 @@ let
             ${./../modules/cert/ca-ff.ru.crt} \
             ${./../modules/cert/ca-skyori.ru.crt} \
             ${./../modules/cert/ca-neoplatform.ru.crt} \
-            ${./../modules/cert/SRVHADCS-CA.crt} > $out
+            ${./../modules/cert/SRVHADCS-CA.crt} \
+            ${./../modules/cert/ca-ai-expert-openhands.crt} > $out
       '';
 
   caBundleArg = "-v";
