@@ -1,27 +1,5 @@
 { pkgs }:
 
-let
-  # Combined CA bundle: standard CAs + custom CAs for skyori, neoplatform, ff.ru, SRVHADCS.
-  # Mounted into the playwright container so Chrome and Node.js trust these CAs.
-  combinedCABundle = pkgs.runCommand "combined-ca-bundle.crt" {
-    buildInputs = [ pkgs.cacert ];
-  } ''
-    cat ${pkgs.cacert}/etc/ssl/certs/ca-bundle.crt \
-        ${./../common/modules/cert/ca-ff.ru.crt} \
-        ${./../common/modules/cert/ca-skyori.ru.crt} \
-        ${./../common/modules/cert/ca-neoplatform.ru.crt} \
-        ${./../common/modules/cert/SRVHADCS-CA.crt} \
-        ${./../common/modules/cert/ca-ai-expert-openhands.crt} > $out
-  '';
-
-  caBundleArg = "-v";
-  caBundleVal = "${combinedCABundle}:/etc/ssl/certs/ca-certificates.crt:ro";
-  nodeExtraCA = "-e";
-  nodeExtraCAVal = "NODE_EXTRA_CA_CERTS=/etc/ssl/certs/ca-certificates.crt";
-
-  playwrightTmpArg = "-v";
-  playwrightTmpVal = "/tmp/.playwright-mcp:/tmp/.playwright-mcp";
-in
 {
   nixos = {
     type = "local";
@@ -60,30 +38,15 @@ in
     enabled = true;
   };
 
-  hound = {
-    type = "remote";
-    url = "http://localhost:8765/mcp";
+  donsetch = {
+    type = "local";
+    command = [ "donsetch" "mcp" ];
     enabled = true;
   };
 
-  playwright = {
+  bladebro = {
     type = "local";
-    command = [
-      "docker"
-      "run"
-      "-i"
-      "--rm"
-      "--init"
-      "--network"
-      "host"
-      caBundleArg
-      caBundleVal
-      nodeExtraCA
-      nodeExtraCAVal
-      playwrightTmpArg
-      playwrightTmpVal
-      "playwright-mcp"
-    ];
+    command = [ "bladebro" "mcp" ];
     enabled = true;
   };
 
@@ -94,21 +57,15 @@ in
   };
 
   claudeCode = {
-    hound = {
-      type = "url";
-      url = "http://localhost:8765/mcp";
-    };
-    playwright = {
+    donsetch = {
       type = "stdio";
-      command = "docker";
-      args = [
-        "run" "-i" "--rm" "--init"
-        "--network" "host"
-        caBundleArg caBundleVal
-        nodeExtraCA nodeExtraCAVal
-        playwrightTmpArg playwrightTmpVal
-        "playwright-mcp"
-      ];
+      command = "donsetch";
+      args = [ "mcp" ];
+    };
+    bladebro = {
+      type = "stdio";
+      command = "bladebro";
+      args = [ "mcp" ];
     };
   };
 }

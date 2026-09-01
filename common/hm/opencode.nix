@@ -9,29 +9,6 @@
 let
   llm = osConfig.local.llm;
   cleanJson = lib.filterAttrsRecursive (_: v: v != null);
-
-  # Combined CA bundle: standard CAs + custom CAs
-  combinedCABundle =
-    pkgs.runCommand "combined-ca-bundle.crt"
-      {
-        buildInputs = [ pkgs.cacert ];
-      }
-      ''
-        cat ${pkgs.cacert}/etc/ssl/certs/ca-bundle.crt \
-            ${./../modules/cert/ca-ff.ru.crt} \
-            ${./../modules/cert/ca-skyori.ru.crt} \
-            ${./../modules/cert/ca-neoplatform.ru.crt} \
-            ${./../modules/cert/SRVHADCS-CA.crt} \
-            ${./../modules/cert/ca-ai-expert-openhands.crt} > $out
-      '';
-
-  caBundleArg = "-v";
-  caBundleVal = "${combinedCABundle}:/etc/ssl/certs/ca-certificates.crt:ro";
-  nodeExtraCA = "-e";
-  nodeExtraCAVal = "NODE_EXTRA_CA_CERTS=/etc/ssl/certs/ca-certificates.crt";
-
-  playwrightTmpArg = "-v";
-  playwrightTmpVal = "/tmp/.playwright-mcp:/tmp/.playwright-mcp";
 in
 {
   config.home.file.".config/opencode/opencode.json" = lib.mkForce {
@@ -54,29 +31,14 @@ in
           "${inputs.ponytail}/.opencode/plugins/ponytail.mjs"
         ];
         agent.explore.model = llm.smallModel;
-        mcp.hound = {
-          type = "remote";
-          url = "http://localhost:8765/mcp";
+        mcp.donsetch = {
+          type = "local";
+          command = [ "donsetch" "mcp" ];
           enabled = true;
         };
-        mcp.playwright = {
+        mcp.bladebro = {
           type = "local";
-          command = [
-            "docker"
-            "run"
-            "-i"
-            "--rm"
-            "--init"
-            "--network"
-            "host"
-            caBundleArg
-            caBundleVal
-            nodeExtraCA
-            nodeExtraCAVal
-            playwrightTmpArg
-            playwrightTmpVal
-            "playwright-mcp"
-          ];
+          command = [ "bladebro" "mcp" ];
           enabled = true;
         };
       }

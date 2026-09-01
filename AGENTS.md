@@ -23,16 +23,18 @@ common/secrets/setup-agenix.sh [--skip-existing]   # interactive secret provisio
 # Devshell
 direnv allow   # run once after entering /etc/nixos; provides nixfmt, nixd, statix, agenix, jq
 
-# Hound MCP — build the image once, then start the HTTP sidecar
-common/services/hound/build.sh                 # builds hound-mcp:latest (from dondai44423/master-fetch)
-common/services/hound/serve.sh                 # starts the container (serves http://localhost:8765/mcp)
-curl http://localhost:8765/mcp                 # smoke test (bare GET → HTTP 400; that's expected)
+# MCP tools (bladebro + donsetch) — installed per-user via npm into `$HOME/.npm/`
+# (NixOS-wiki home approach; prefix set by programs.npm in common/pkgs/dev.nix).
+# `programs.nix-ld` (common/modules/nix-ld.nix) is required: both ship prebuilt
+# glibc binaries that the NixOS stub loader would otherwise reject.
+npm i -g bladebro donsetch        # install/update; binaries land in $HOME/.npm/bin
+donsetch doctor                   # health check (also prints MCP registration)
 
 # Claude Code MCP — claudeCode servers in config/mcp.nix are delivered at runtime by the
 # `claude` wrapper via --mcp-config, but that does NOT make them appear in `claude mcp list`.
 # Register them in the user scope once per host for visibility + health checks:
-claude mcp add --transport http hound http://localhost:8765/mcp -s user
-# playwright (CA bundle path comes from the wrapper's generated ~/.cache/claude-code/mcp.json)
+claude mcp add -s user -- bladebro mcp
+claude mcp add -s user -- donsetch mcp
 ```
 
 ## Architecture
@@ -44,7 +46,6 @@ claude mcp add --transport http hound http://localhost:8765/mcp -s user
   - `modules/` — system modules (cert, docker, git, llm, nix, profile, shell); `profile.nix` defines `local.profile` options (username, email, timezone, locale)
   - `hm/` — shared Home Manager modules (agent-skills, calendar, cli, direnv, neovim, opencode, ssh, tmux, zoxide)
   - `secrets/` — agenix secrets and `secrets.nix` (public key manifest)
-  - `services/` — non-Nix service definitions (currently just `hound/`, a Dockerfile + compose + run wrapper)
 - **`hydenix/`** — desktop-only:
   - `configuration.nix` — host identity, `local.features` toggles, Home Manager + hydenix HM wiring
   - `modules/system/` — `base/`, `browsers/`, `gaming/`, `work/`; gated by `local.features.*.enable`
@@ -61,8 +62,7 @@ claude mcp add --transport http hound http://localhost:8765/mcp -s user
 
 ## Services
 
-- `common/services/hound/` — Hound MCP server. Containerized to avoid the heavy browserforge data + Patchright Chromium from being baked into the Nix closure. Built with `build.sh` (clones/pulls `dondai44423/master-fetch`, which ships mcp SDK 2.x and needs no patching), then started as an HTTP sidecar on `http://localhost:8765/mcp` via `serve.sh` (or the `hound-toggle` zsh alias). MCP configs reference it as a `remote` server. Both hosts have docker enabled via `common/modules/docker.nix`.
-- `common/services/playwright/` — Custom Playwright MCP Docker image with internal CA certificates baked in (SRVHADCS-CA, etc.) so Chromium trusts them. Built with `build.sh`, used as `playwright-mcp` in opencode MCP configs.
+- No containerized services remain. MCP web tools (donsetch = fetch/search/crawl, bladebro = stealth browser) are npm-installed per-user (`$HOME/.npm`) and run as native glibc binaries under `programs.nix-ld`; see `common/pkgs/dev.nix` (npm prefix) + `common/modules/nix-ld.nix`. CA trust for internal hosts (skyori, neoplatform, ff.ru, SRVHADCS) comes from `common/modules/cert.nix`, which bladebro inherits since it drives the host's Chromium.
 
 ## Helium extension bumps (Bitwarden/Passbolt)
 
@@ -95,6 +95,6 @@ Extension IDs: Bitwarden `nngceckbapebfimnlniiiahkandclblb`, Passbolt `didegimha
 - agenix `secrets.nix` must be in the directory where you run `agenix -e` (or paths won't resolve)
 - `hydenix/hardware-configuration.nix` is auto-generated, not committed to the template
 - The devshell uses `use flake` via `.envrc` — run `direnv allow` once; `.direnv/` is gitignored
-- Hound MCP image is not built by `nixos-rebuild` — run `common/services/hound/build.sh` once after first install (or whenever you want to pick up a new hound-mcp version). The opencode MCP config will fail to start hound until the image exists, but other MCPs continue to work.
+- bladebro/donsetch are not packages — they're npm-installed into `$HOME/.npm` and need `programs.nix-ld` enabled (the NixOS stub loader rejects their prebuilt glibc binaries otherwise). Run `npm i -g bladebro donsetch` after a fresh install.
 
 P.S. When user asks to install a NixOS package, use MCP Tool `nixos` to search and validate configuration options.
