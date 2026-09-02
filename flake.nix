@@ -54,7 +54,7 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    paseo.url = "github:getpaseo/paseo";
+    orca-nix.url = "github:kevinpita/orca-nix";
 
     # VS Code "Dark Modern" yazi flavor (956MB/vscode-dark-modern.yazi).
     # Raw checkout (not a flake) — sourced as a path for the yazi flavors dir.
@@ -88,7 +88,6 @@
           modules = commonModules ++ [
             inputs.nixos-wsl.nixosModules.default
             inputs.home-manager.nixosModules.home-manager
-            inputs.paseo.nixosModules.paseo
             ./wsl/configuration.nix
           ];
         };

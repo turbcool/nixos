@@ -93,7 +93,7 @@ in
   imports = [
     ../common/pkgs/default.nix
     ../common/modules/default.nix
-    ./paseo.nix
+    ./orca.nix
   ];
 
   local.profile = {
@@ -121,6 +121,15 @@ in
     settings.SetEnv = lib.concatStringsSep " " [
       "PROXY_URL=${hostProxyUrl}"
     ];
+  };
+
+  services.orcaServer = {
+    enable = true;
+    port = 6767;
+    openFirewall = true;
+    # Client-facing address for pairing (Tailscale hostname/IP). Set this once
+    # you know the tailnet address the laptop reaches the WSL host on.
+    pairingAddress = null;
   };
 
   time.timeZone = profile.timezone;

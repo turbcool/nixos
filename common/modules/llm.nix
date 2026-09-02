@@ -24,11 +24,12 @@ let
       # Only host-agnostic Claude Code knobs live here. Managed settings take the
       # highest precedence and cannot be overridden, so anything provider-specific
       # (ANTHROPIC_BASE_URL, the ANTHROPIC_DEFAULT_*_MODEL tier map) must NOT be
-      # set here — otherwise paseo's per-provider profiles (see wsl/paseo.nix)
+      # set here — otherwise per-agent provider overrides (ANTHROPIC_BASE_URL in
+      # .zshrc / Orca) couldn't repoint the agents at a different endpoint.
       # couldn't repoint Claude Code at a different endpoint. Interactive `claude`
       # still gets those via the .zshrc exports in common/hm/claude-code.nix.
       env = {
-        CLAUDE_CODE_SUBAGENT_MODEL = cfg.smallModel;
+        CLAUDE_CODE_SUBAGENT_MODEL = lib.removePrefix "custom/" cfg.smallModel;
         CLAUDE_CODE_AUTO_COMPACT_WINDOW = "1000000";
       };
     }

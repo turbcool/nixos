@@ -17,16 +17,14 @@ let
     }
   );
 
-  # Wraps `claude` so every invocation gets the managed MCP config via
-  # --mcp-config. Non-strict, so it merges with ~/.claude.json and project
-  # .mcp.json servers, and `claude mcp add` keeps working. The resolved config
-  # (the only place secrets land) is a mode-0600 file under the user's cache dir
-  # — never the store or CLI args. Falls back to plain `claude` if anything goes
-  # wrong, so the binary is never broken by MCP config issues.
-  claudeWithMcp = lib.hiPrio (pkgs.writeShellScriptBin "claude" ''
+  # Resolves the managed MCP config (secrets landed to a mode-0600 file under the
+  # user's cache dir — never the store or CLI args) and execs the real claude with
+  # it. Falls back to plain `claude` if anything goes wrong. Shared by the default
+  # `claude` and per-provider wrappers (claude-neoplatform).
+  mkClaudeMcp = binName: ''
     umask 077   # resolved secrets land in $out — never world/group readable
     real="${realClaude}/bin/claude"
-    out="''${XDG_CACHE_HOME:-$HOME/.cache}/claude-code/mcp.json"
+    out="''${XDG_CACHE_HOME:-$HOME/.cache}/claude-code/mcp-${binName}.json"
     ok=0
     if mkdir -p "$(dirname "$out")" 2>/dev/null; then
       json="$(cat ${claudeMcpTemplate})"
@@ -40,14 +38,34 @@ let
         ok=1
       fi
     fi
-    if [ "$ok" = 1 ]; then
-      # `=` form is essential: --mcp-config is variadic, so `--mcp-config "$out"
-      # mcp list` would swallow `mcp`/`list` as extra config files. The `=` form
-      # delimits a single value and leaves "$@" (subcommands, flags) intact.
-      exec "$real" --mcp-config="$out" "$@"
-    fi
-    exec "$real" "$@"
+    exec "$real" --mcp-config="$out" "$@"
+  '';
+
+  # Wraps `claude` so every invocation gets the managed MCP config via
+  # --mcp-config. Non-strict, so it merges with ~/.claude.json and project
+  # .mcp.json servers, and `claude mcp add` keeps working.
+  claudeWithMcp = lib.hiPrio (pkgs.writeShellScriptBin "claude" ''
+    ${mkClaudeMcp "default"}
   '');
+
+  # `claude-neoplatform` — same claude, but every provider variable repointed at
+  # the neoplatform endpoint (llm.neoplatform.ru). Main model → deepseek-v4-flash
+  # (Opus/Sonnet tier), smallModel → qwen3-coder-128k:30b (Haiku/subagent tier).
+  # Env here overrides the global .zshrc exports (common/hm/claude-code.nix) for
+  # this process only — the global `claude` is untouched.
+  neoPlatform = osConfig.local.llm.providers.neoplatform;
+  neoToken = osConfig.age.secrets."neoplatform-token".path;
+  neoMainModel = "deepseek-v4-flash";
+  neoSmallModel = "qwen3-coder-128k:30b";
+  claudeNeoplatform = pkgs.writeShellScriptBin "claude-neoplatform" ''
+    export ANTHROPIC_BASE_URL="${neoPlatform.url}"
+    export ANTHROPIC_API_KEY="$(cat "${neoToken}" 2>/dev/null || true)"
+    export ANTHROPIC_DEFAULT_OPUS_MODEL="${neoMainModel}"
+    export ANTHROPIC_DEFAULT_SONNET_MODEL="${neoMainModel}"
+    export ANTHROPIC_DEFAULT_HAIKU_MODEL="${neoSmallModel}"
+    export CLAUDE_CODE_SUBAGENT_MODEL="${neoSmallModel}"
+    ${mkClaudeMcp "neoplatform"}
+  '';
 
   # Custom provider that `writing` repoints Claude Code at, folder-locally. Same
   # endpoint + agenix token as providers.custom (llm.naidanov.ru). Deepseek serves
@@ -168,6 +186,7 @@ in
     pkgs.yt-dlp
     realClaude
     claudeWithMcp
+    claudeNeoplatform
     writing
   ];
 
@@ -217,5 +236,6 @@ in
   home.sessionPath = [
     "$HOME/.npm/bin"
     "$HOME/.dotnet/tools"
+    "$HOME/.local/bin"
   ];
 }
