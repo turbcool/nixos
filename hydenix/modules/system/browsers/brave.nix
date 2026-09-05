@@ -7,9 +7,7 @@ in
 
 {
   config = lib.mkIf cfg.enable {
-    environment.systemPackages = with pkgs; [
-      pkgs.brave
-    ];
+    environment.systemPackages = with pkgs; [ ];
 
     programs.chromium = {
       enable = true;

@@ -51,6 +51,10 @@ in
     work.syncthing.enable = false;
   };
 
+  i18n = {
+    defaultLocale = "ru_RU.UTF-8";
+  };
+
   # If enabling NVIDIA, you will be prompted to configure hardware.nvidia
   # hardware.nvidia = {
   #   open = true; # For newer cards, you may want open drivers
