@@ -3,6 +3,7 @@
   lib,
   osConfig,
   pkgs,
+  config,
   ...
 }:
 
@@ -31,14 +32,16 @@ in
           "${inputs.ponytail}/.opencode/plugins/ponytail.mjs"
         ];
         agent.explore.model = llm.smallModel;
+        # Absolute paths: MCP servers inherit the agent's environment, which
+        # may predate home.sessionPath (e.g. GUI-launched) — never rely on PATH.
         mcp.donsetch = {
           type = "local";
-          command = [ "donsetch" "mcp" ];
+          command = [ "${config.home.homeDirectory}/.npm/bin/donsetch" "mcp" ];
           enabled = true;
         };
         mcp.bladebro = {
           type = "local";
-          command = [ "bladebro" "mcp" ];
+          command = [ "${config.home.homeDirectory}/.npm/bin/bladebro" "mcp" ];
           enabled = true;
         };
       }

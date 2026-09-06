@@ -33,8 +33,8 @@ donsetch doctor                   # health check (also prints MCP registration)
 # Claude Code MCP — claudeCode servers in config/mcp.nix are delivered at runtime by the
 # `claude` wrapper via --mcp-config, but that does NOT make them appear in `claude mcp list`.
 # Register them in the user scope once per host for visibility + health checks:
-claude mcp add -s user -- bladebro mcp
-claude mcp add -s user -- donsetch mcp
+claude mcp add -s user bladebro -- ~/.npm/bin/bladebro mcp
+claude mcp add -s user donsetch -- ~/.npm/bin/donsetch mcp
 ```
 
 ## Architecture

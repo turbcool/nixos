@@ -1,6 +1,7 @@
 {
   inputs,
   osConfig,
+  config,
   lib,
   pkgs,
   ...
@@ -11,9 +12,14 @@ let
 
   # Claude Code MCP config, sourced from config/mcp.nix. Built into the store as
   # a template: it carries @@SECRET:<name>@@ sentinels, never real keys.
+  # Commands are rewritten to absolute $HOME/.npm/bin paths: the wrapper runs
+  # inside the agent's environment, which may predate home.sessionPath
+  # (e.g. GUI-launched) — never rely on PATH.
   claudeMcpTemplate = pkgs.writeText "claude-code-mcp.json" (
     builtins.toJSON {
-      mcpServers = (import ../../config/mcp.nix { inherit pkgs; }).claudeCode;
+      mcpServers = builtins.mapAttrs (
+        name: srv: srv // { command = "${config.home.homeDirectory}/.npm/bin/${name}"; }
+      ) (import ../../config/mcp.nix { inherit pkgs; }).claudeCode;
     }
   );
 
@@ -238,4 +244,14 @@ in
     "$HOME/.dotnet/tools"
     "$HOME/.local/bin"
   ];
+
+  # Keep the npm-installed MCP browsers present declaratively: a fresh
+  # machine (or a wiped $HOME/.npm) gets them back on the next switch
+  # instead of failing with "Executable not found in PATH". Skips when
+  # both binaries already run.
+  home.activation.installMcpBrowsers = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+    if [ ! -x "$HOME/.npm/bin/bladebro" ] || [ ! -x "$HOME/.npm/bin/donsetch" ]; then
+      $DRY_RUN_CMD ${pkgs.nodejs}/bin/npm install --prefix "$HOME/.npm" -g bladebro donsetch
+    fi
+  '';
 }
