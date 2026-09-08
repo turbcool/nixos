@@ -713,6 +713,22 @@
         "type": "github"
       }
     },
+    "orca-skills": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1788334287,
+        "narHash": "sha256-HhGOjiOk15PwSbl6iX3atJnf3X4etpOxcr3tZ/sS/Gs=",
+        "owner": "stablyai",
+        "repo": "orca",
+        "rev": "3924b7276f9ca2c976b36c231c1f0a58f4c19762",
+        "type": "github"
+      },
+      "original": {
+        "owner": "stablyai",
+        "repo": "orca",
+        "type": "github"
+      }
+    },
     "playwright-cli": {
       "flake": false,
       "locked": {
@@ -785,6 +801,7 @@
         ],
         "obsidian-wiki": "obsidian-wiki",
         "orca-nix": "orca-nix",
+        "orca-skills": "orca-skills",
         "playwright-cli": "playwright-cli",
         "ponytail": "ponytail",
         "qmd": "qmd",

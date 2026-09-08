@@ -35,6 +35,11 @@
       flake = false;
     };
 
+    orca-skills = {
+      url = "github:stablyai/orca";
+      flake = false;
+    };
+
     qmd.url = "github:tobi/qmd";
 
     claude-code.url = "github:sadjow/claude-code-nix";

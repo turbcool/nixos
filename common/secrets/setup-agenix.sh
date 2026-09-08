@@ -98,4 +98,9 @@ ask_secret "vm-ai-skyori.age" "Password for ai-skyori: "
 ask_secret "vm-ai-proinfoservice.age" "Password for ai-proinfoservice: "
 ask_secret "vm-ai-timepath.age" "Password for ai-timepath: "
 
+echo ""
+echo "--- GitLab CLI tokens ---"
+ask_secret "gitlab-neoplatform-token.age" "Glab token for gitlab.neoplatform.ru: "
+ask_secret "gitlab-skyori-token.age" "Glab token for gitlab.skyori.ru: "
+
 echo "Rebuild the system to apply: sudo nixos-rebuild switch --flake /etc/nixos#<host>"

@@ -33,4 +33,12 @@ in
     nixos
     nixos-old
   ];
+  "gitlab-neoplatform-token.age".publicKeys = [
+    nixos
+    nixos-old
+  ];
+  "gitlab-skyori-token.age".publicKeys = [
+    nixos
+    nixos-old
+  ];
 }

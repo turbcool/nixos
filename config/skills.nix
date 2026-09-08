@@ -8,6 +8,11 @@
     subdir = "skills";
   };
 
+  orca = {
+    input = "orca-skills";
+    subdir = "skills";
+  };
+
   groups = {
     wiki = [
       "obsidian-wiki"

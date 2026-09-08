@@ -24,6 +24,7 @@ in
     skills.enableAll = true;
 
     targets.opencode.enable = true;
+    targets.claude.enable = true;
   };
 
   home.file.".obsidian-wiki/config".text = ''

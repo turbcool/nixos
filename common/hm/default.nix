@@ -7,6 +7,7 @@
     ./claude-code.nix
     ./cli.nix
     ./direnv.nix
+    ./glab.nix
     ./neovim.nix
     ./opencode.nix
     ./ssh.nix
