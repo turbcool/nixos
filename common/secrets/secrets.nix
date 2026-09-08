@@ -13,6 +13,10 @@ in
     nixos
     nixos-old
   ];
+  "free-token.age".publicKeys = [
+    nixos
+    nixos-old
+  ];
   "../../hydenix/secrets/work-pc.age".publicKeys = [
     nixos
     nixos-old
