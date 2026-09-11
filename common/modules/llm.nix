@@ -29,7 +29,7 @@ let
       # couldn't repoint Claude Code at a different endpoint. Interactive `claude`
       # still gets those via the .zshrc exports in common/hm/claude-code.nix.
       env = {
-        CLAUDE_CODE_SUBAGENT_MODEL = lib.removePrefix "custom/" cfg.smallModel;
+        CLAUDE_CODE_SUBAGENT_MODEL = cc.smallModel;
         CLAUDE_CODE_AUTO_COMPACT_WINDOW = "1000000";
       };
     }
@@ -65,7 +65,17 @@ in
 
       provider = lib.mkOption {
         type = lib.types.str;
-        default = "custom";
+        default = "free";
+      };
+
+      mainModel = lib.mkOption {
+        type = lib.types.str;
+        default = "main";
+      };
+
+      smallModel = lib.mkOption {
+        type = lib.types.str;
+        default = "small";
       };
     };
   };

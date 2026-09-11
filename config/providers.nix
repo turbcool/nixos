@@ -33,6 +33,7 @@
   };
   free = {
     url = "https://llm-free.naidanov.ru/v1";
+    anthropicUrl = "https://llm-free.naidanov.ru";
     tokenFile = ../common/secrets/free-token.age;
     models."muse-spark-1.3-contributor".name = "Muse Spark 1.3 Contributor";
   };
