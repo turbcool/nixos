@@ -11,6 +11,7 @@ let
       url = "https://dotnetcli.azureedge.net/dotnet/Sdk/${version}/dotnet-sdk-${version}-linux-x64.tar.gz";
       inherit hash;
     };
+    dontUnpack = true; # flat tarball: no single root dir; installPhase untars
     installPhase = ''
       mkdir -p "$out/share/dotnet"
       tar xzf "$src" -C "$out/share/dotnet"
