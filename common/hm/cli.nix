@@ -47,30 +47,44 @@ let
     exec "$real" --mcp-config="$out" "$@"
   '';
 
-  # Wraps `claude` so every invocation gets the managed MCP config via
-  # --mcp-config. Non-strict, so it merges with ~/.claude.json and project
-  # .mcp.json servers, and `claude mcp add` keeps working.
-  claudeWithMcp = lib.hiPrio (pkgs.writeShellScriptBin "claude" ''
-    ${mkClaudeMcp "default"}
-  '');
-
-  # `claude-neoplatform` — same claude, but every provider variable repointed at
-  # the neoplatform endpoint (llm.neoplatform.ru). Main model → deepseek-v4-flash
-  # (Opus/Sonnet tier), smallModel → qwen3-coder-128k:30b (Haiku/subagent tier).
-  # Env here overrides the global .zshrc exports (common/hm/claude-code.nix) for
-  # this process only — the global `claude` is untouched.
+  # Wraps `claude` (the default neoplatform build) so every invocation gets the
+  # managed MCP config via --mcp-config. Non-strict, so it merges with
+  # ~/.claude.json and project .mcp.json servers, and `claude mcp add` keeps
+  # working. Env here overrides the global .zshrc exports
+  # (common/hm/claude-code.nix) for this process only.
+  #
+  # `claude` = neoplatform endpoint (llm.neoplatform.ru). Main model →
+  # deepseek-v4-flash (Opus/Sonnet tier), smallModel → qwen3-coder-128k:30b
+  # (Haiku/subagent tier).
   neoPlatform = osConfig.local.llm.providers.neoplatform;
   neoToken = osConfig.age.secrets."neoplatform-token".path;
   neoMainModel = "deepseek-v4-flash";
   neoSmallModel = "qwen3-coder-128k:30b";
-  claudeNeoplatform = pkgs.writeShellScriptBin "claude-neoplatform" ''
+  claudeWithMcp = lib.hiPrio (pkgs.writeShellScriptBin "claude" ''
     export ANTHROPIC_BASE_URL="${neoPlatform.url}"
     export ANTHROPIC_API_KEY="$(cat "${neoToken}" 2>/dev/null || true)"
     export ANTHROPIC_DEFAULT_OPUS_MODEL="${neoMainModel}"
     export ANTHROPIC_DEFAULT_SONNET_MODEL="${neoMainModel}"
     export ANTHROPIC_DEFAULT_HAIKU_MODEL="${neoSmallModel}"
     export CLAUDE_CODE_SUBAGENT_MODEL="${neoSmallModel}"
-    ${mkClaudeMcp "neoplatform"}
+    ${mkClaudeMcp "claude"}
+  '');
+
+  # `claude-free` — same claude, but repointed at the free endpoint
+  # (llm-free.naidanov.ru). Uses the same tier model names as the global
+  # defaults (main/small pass-through), with the free-account token.
+  freeProvider = osConfig.local.llm.providers.free;
+  freeToken = osConfig.age.secrets."free-token".path;
+  freeMainModel = osConfig.local.llm.claudeCode.mainModel;
+  freeSmallModel = osConfig.local.llm.claudeCode.smallModel;
+  claudeFree = pkgs.writeShellScriptBin "claude-free" ''
+    export ANTHROPIC_BASE_URL="${freeProvider.anthropicUrl or freeProvider.url}"
+    export ANTHROPIC_API_KEY="$(cat "${freeToken}" 2>/dev/null || true)"
+    export ANTHROPIC_DEFAULT_OPUS_MODEL="${freeMainModel}"
+    export ANTHROPIC_DEFAULT_SONNET_MODEL="${freeMainModel}"
+    export ANTHROPIC_DEFAULT_HAIKU_MODEL="${freeSmallModel}"
+    export CLAUDE_CODE_SUBAGENT_MODEL="${freeSmallModel}"
+    ${mkClaudeMcp "claude-free"}
   '';
 
   # Custom provider that `writing` repoints Claude Code at, folder-locally. Same
@@ -192,7 +206,7 @@ in
     pkgs.yt-dlp
     realClaude
     claudeWithMcp
-    claudeNeoplatform
+    claudeFree
     writing
   ];
 
