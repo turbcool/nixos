@@ -1,0 +1,14 @@
+# pi-starship footer config (https://github.com/narumiruna/pi-extensions).
+# Read by @narumitw/pi-starship at session_start, including /reload. Note this
+# file does NOT feed your shell prompt — pi-starship renders pi's footer only,
+# and has no access to ~/.config/starship.toml.
+#
+# These values mirror the shell prompt from starship's own defaults (verify with
+# `starship explain`). directory (cyan bold), git_branch (bold purple) and
+# git_status (red bold) already match pi-starship's defaults, so the only thing
+# ported across is starship's ` on <branch>` separator. $model leads the line
+# because that is the one piece of context this footer has that the shell lacks.
+format = "$model$directory$git_branch$git_status"
+
+[git_branch]
+format = "on [$symbol$branch]($style) "

@@ -65,17 +65,17 @@ in
 
       provider = lib.mkOption {
         type = lib.types.str;
-        default = "free";
+        default = "neoplatform";
       };
 
       mainModel = lib.mkOption {
         type = lib.types.str;
-        default = "main";
+        default = "deepseek-v4-flash";
       };
 
       smallModel = lib.mkOption {
         type = lib.types.str;
-        default = "small";
+        default = "qwen3-coder-128k:30b";
       };
     };
   };
@@ -85,6 +85,16 @@ in
       environment.systemPackages = with inputs.llm-agents.packages.${pkgs.stdenv.hostPlatform.system}; [
         agent-deck
         opencode
+        # Hides donsetch's web_crawl. pi has no settings key for this —
+        # `defaultTools` cannot do it either, because AgentSession passes
+        # `includeAllExtensionTools: true` unconditionally, which re-activates
+        # every extension tool regardless of that list (agent-session.js:198).
+        # Only the --exclude-tools flag reaches _excludedToolNames.
+        (pkgs.runCommand "pi-no-crawl" { nativeBuildInputs = [ pkgs.makeWrapper ]; } ''
+          mkdir -p "$out/bin"
+          makeWrapper ${inputs.llm-agents.packages.${pkgs.stdenv.hostPlatform.system}.pi}/bin/pi \
+            "$out/bin/pi" --add-flags "--exclude-tools web_crawl"
+        '')
       ];
 
       age.secrets = lib.mapAttrs' (name: p: {
@@ -96,7 +106,9 @@ in
         };
       }) (hasToken cfg.providers);
 
-      local.llm.defaultModel = "custom/deepseek-v4-flash";
+      # Both pi (common/hm/pi.nix) and opencode (common/hm/opencode.nix) take
+      # their default from here, so this one line moves both agents.
+      local.llm.defaultModel = "free/main";
       local.llm.smallModel = "custom/qwen3-coder-next";
     }
     (lib.mkIf cc.enable {

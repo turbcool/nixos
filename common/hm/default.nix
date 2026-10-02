@@ -10,6 +10,7 @@
     ./glab.nix
     ./neovim.nix
     ./opencode.nix
+    ./pi.nix
     ./ssh.nix
     ./tmux.nix
     ./yazi.nix
