@@ -11,11 +11,6 @@ let
   ccProvider = llm.providers.${cc.provider};
   ccTokenPath = osConfig.age.secrets."${cc.provider}-token".path;
   ccBaseUrl = ccProvider.anthropicUrl or ccProvider.url;
-  authExport =
-    if (ccProvider.authToken or false) then
-      ''export ANTHROPIC_AUTH_TOKEN="$(cat ${ccTokenPath})"''
-    else
-      ''export ANTHROPIC_API_KEY="$(cat ${ccTokenPath})"'';
 in
 {
   # The immutable Claude Code config (env, marketplaces, enabled plugins) is
@@ -25,7 +20,7 @@ in
   # Claude's plugin install flow can write to.
   config = lib.mkIf cc.enable {
     programs.zsh.initContent = ''
-      ${authExport}
+      export ANTHROPIC_API_KEY="$(cat ${ccTokenPath})"
       export ANTHROPIC_BASE_URL="${ccBaseUrl}"
       export ANTHROPIC_DEFAULT_OPUS_MODEL="${cc.mainModel}"
       export ANTHROPIC_DEFAULT_SONNET_MODEL="${cc.mainModel}"

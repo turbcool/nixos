@@ -71,12 +71,13 @@ let
   '');
 
   # `claude-free` — same claude, but repointed at the free endpoint
-  # (llm-free.naidanov.ru). Uses the same tier model names as the global
-  # defaults (main/small pass-through), with the free-account token.
+  # (llm-free.naidanov.ru). Free-endpoint model names, with the free-account
+  # token. Deliberately NOT local.llm.claudeCode.mainModel/smallModel — those
+  # are the neoplatform defaults.
   freeProvider = osConfig.local.llm.providers.free;
   freeToken = osConfig.age.secrets."free-token".path;
-  freeMainModel = osConfig.local.llm.claudeCode.mainModel;
-  freeSmallModel = osConfig.local.llm.claudeCode.smallModel;
+  freeMainModel = "main";
+  freeSmallModel = "small";
   claudeFree = pkgs.writeShellScriptBin "claude-free" ''
     export ANTHROPIC_BASE_URL="${freeProvider.anthropicUrl or freeProvider.url}"
     export ANTHROPIC_API_KEY="$(cat "${freeToken}" 2>/dev/null || true)"
