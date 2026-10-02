@@ -13,6 +13,16 @@
     subdir = "skills";
   };
 
+  i-have-adhd = {
+    input = "i-have-adhd";
+    subdir = "skills";
+  };
+
+  archify = {
+    input = "archify";
+    subdir = "archify";
+  };
+
   groups = {
     wiki = [
       "obsidian-wiki"

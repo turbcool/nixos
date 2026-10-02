@@ -40,6 +40,16 @@
       flake = false;
     };
 
+    i-have-adhd = {
+      url = "github:ayghri/i-have-adhd";
+      flake = false;
+    };
+
+    archify = {
+      url = "github:tt-a1i/archify";
+      flake = false;
+    };
+
     qmd.url = "github:tobi/qmd";
 
     claude-code.url = "github:sadjow/claude-code-nix";

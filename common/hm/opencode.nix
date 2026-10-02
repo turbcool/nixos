@@ -30,6 +30,7 @@ in
         disabled_providers = [ ];
         plugin = [
           "${inputs.ponytail}/.opencode/plugins/ponytail.mjs"
+          "${inputs.i-have-adhd}/.opencode/plugins/i-have-adhd.mjs"
         ];
         agent.explore.model = llm.smallModel;
         # Absolute paths: MCP servers inherit the agent's environment, which
