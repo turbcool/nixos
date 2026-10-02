@@ -70,9 +70,14 @@ in
       # pi entry point is the npm package (`pi.extensions` = ./pi-extension.ts).
       # Its prebuilt Rust binary is glibc, which programs.nix-ld
       # (common/modules/nix-ld.nix) already covers.
+      # @ff-labs/pi-fff — Rust/SIMD FFF file+content search, replacing the
+      # built-in find/grep; mode config in pi/pi-fff.json below. Its two native
+      # layers (@ff-labs/fff-node via ffi-rs) ship per-platform prebuilds, and
+      # the linux-x64-gnu ones match this host, so nothing is compiled here.
       packages = [
         "npm:@narumitw/pi-starship"
         "npm:donsetch"
+        "npm:@ff-labs/pi-fff"
       ];
 
       # Skills and extensions are plain files in the agent dir — declare them
@@ -84,6 +89,18 @@ in
   };
 
   home.file.".pi/agent/pi-starship.toml".source = ./pi/pi-starship.toml;
+
+  # https://pi.dev/packages/@ff-labs/pi-fff
+  # "override" swaps pi's built-in find/grep for fffind/ffgrep and adds
+  # multi_grep. pi reads this file before registering tools, and /fff-mode only
+  # changes the running session (mode changes also want a /reload) — so this
+  # file, not the session, is the place the mode is set.
+  home.file.".pi/agent/pi-fff.json" = lib.mkForce {
+    force = true;
+    text = builtins.toJSON {
+      mode = "override";
+    };
+  };
 
   # pi coding-agent — https://pi.dev
   assertions = [
