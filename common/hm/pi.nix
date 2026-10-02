@@ -74,10 +74,15 @@ in
       # built-in find/grep; mode config in pi/pi-fff.json below. Its two native
       # layers (@ff-labs/fff-node via ffi-rs) ship per-platform prebuilds, and
       # the linux-x64-gnu ones match this host, so nothing is compiled here.
+      # @piex-dev/init — /init prompt template that writes or improves the repo's
+      # AGENTS.md. Prompt-only (`pi.prompts`), no extension and no tools, so it
+      # costs nothing per request; pi already auto-loads AGENTS.md from the cwd
+      # and its parents, so this only keeps that file honest.
       packages = [
         "npm:@narumitw/pi-starship"
         "npm:donsetch"
         "npm:@ff-labs/pi-fff"
+        "npm:@piex-dev/init"
       ];
 
       # Skills and extensions are plain files in the agent dir — declare them
