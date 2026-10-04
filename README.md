@@ -4,18 +4,21 @@ This repo is organized for quick edits with minimal indirection.
 
 ## Where to change things
 
-- Host identity and feature toggles (desktop): `hydenix/configuration.nix`
+- Host identity and feature toggles (Hydenix desktop): `hydenix/configuration.nix`
+- Host identity and feature toggles (Nixarchy desktop): `nixarchy/configuration.nix`
 - Host identity (WSL): `wsl/configuration.nix`
 - Shared defaults for identity fields: `common/modules/profile.nix`
 - Shared system packages: `common/pkgs/`
 - Shared system modules/services: `common/modules/`
 - Shared Home Manager modules: `common/hm/`
-- Desktop-only system modules: `hydenix/modules/system/`
-- Desktop-only Home Manager modules: `hydenix/modules/hm/`
+- Desktop system modules, shared by both desktops: `hydenix/modules/system/`
+- Hydenix-only Home Manager modules: `hydenix/modules/hm/`
+- Nixarchy Home Manager modules: `nixarchy/modules/hm/`
 
 ## Feature toggles (desktop)
 
-Set these in `hydenix/configuration.nix` under `local.features`:
+Set these under `local.features` in `hydenix/configuration.nix` or
+`nixarchy/configuration.nix`:
 
 - `browsers.enable` -> `hydenix/modules/system/browsers/`
 - `gaming.enable` -> `hydenix/modules/system/gaming/`
@@ -25,7 +28,8 @@ Set these in `hydenix/configuration.nix` under `local.features`:
 
 ## Module-owned config files
 
-- Hyprland HM config files: `hydenix/modules/hm/hyprland/`
+- Hyprland HM config files: `hydenix/modules/hm/hyprland/` (Hydenix only)
+- Kitty HM config file: `nixarchy/modules/hm/kitty/` (Nixarchy only)
 - Remmina HM config files: `hydenix/modules/hm/remmina/`
 - Wolf HM config files: `hydenix/modules/hm/wolf/`
 - L2TP NetworkManager profile: `hydenix/modules/system/work/vpn/work.conf`
@@ -35,6 +39,7 @@ Set these in `hydenix/configuration.nix` under `local.features`:
 ```bash
 nix flake check --no-build
 sudo nixos-rebuild switch --flake /etc/nixos#hydenix
+sudo nixos-rebuild switch --flake /etc/nixos#nixarchy
 sudo nixos-rebuild switch --flake /etc/nixos#wsl
 ```
 

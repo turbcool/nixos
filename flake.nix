@@ -1,8 +1,10 @@
 {
-  description = "NixOS configurations for hydenix and wsl";
+  description = "NixOS configurations for hydenix, nixarchy and wsl";
 
   inputs = {
-    nixpkgs.follows = "hydenix/nixpkgs";
+    # nixpkgs tracks upstream directly. It used to follow hydenix/nixpkgs, which
+    # was only a Dec-2025 pin, not a fork — nothing needed it once the nixarchy
+    # host stopped importing the hydenix module.
     llm-agents.url = "github:numtide/llm-agents.nix";
 
     nixos-wsl = {
@@ -10,11 +12,16 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    home-manager = {
-      follows = "hydenix/home-manager";
-    };
+    # nixarchy's NixOS module imports its own home-manager module. Two HM
+    # versions in one configuration is a duplicated option set, so ours has to
+    # be the same one.
+    home-manager.follows = "nixarchy/home-manager";
 
     hydenix.url = "github:richen604/hydenix";
+
+    # Omarchy 4.x vendored for NixOS. The `release` branch is a release branch,
+    # not main: patch fixes arrive, nothing moves under you.
+    nixarchy.url = "github:olafkfreund/nixarchy/release";
 
     agenix = {
       url = "github:ryantm/agenix";
@@ -104,6 +111,21 @@
             inputs.nixos-wsl.nixosModules.default
             inputs.home-manager.nixosModules.home-manager
             ./wsl/configuration.nix
+          ];
+        };
+
+        # No `inputs.hydenix.nixosModules.default` here, and never will be:
+        # nixarchy sets programs.hyprland.package at plain priority (Omarchy *is*
+        # Hyprland) and hydenix sets it at plain priority too, so importing both
+        # is "conflicting definition values". hydenix/modules/system is still
+        # reused below — it has no dependency on the hydenix module.
+        nixarchy = {
+          modules = commonModules ++ [
+            inputs.home-manager.nixosModules.home-manager
+            inputs.nixarchy.nixosModules.nixarchy
+            inputs.nixos-hardware.nixosModules.common-cpu-intel
+            inputs.nixos-hardware.nixosModules.common-pc-ssd
+            ./nixarchy/configuration.nix
           ];
         };
       };

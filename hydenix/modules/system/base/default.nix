@@ -9,10 +9,8 @@
     ./user.nix
   ];
 
-  services.journald = {
-    extraConfig = ''
-      SystemMaxUse=1G
-      SystemKeepFree=1G
-    '';
+  services.journald.settings.Journal = {
+    SystemMaxUse = "1G";
+    SystemKeepFree = "1G";
   };
 }

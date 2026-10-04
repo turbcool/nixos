@@ -1,4 +1,6 @@
-NixOS flake-based configuration with Home Manager, two hosts: `hydenix` (desktop) and `wsl`.
+NixOS flake-based configuration with Home Manager, three hosts: `hydenix` (Hydenix desktop),
+`nixarchy` (Omarchy/nixarchy desktop) and `wsl`. The intent is to switch from hydenix to
+nixarchy entirely, so keep hydenix working until then.
 
 ## Key commands
 
@@ -8,6 +10,7 @@ nix flake check --no-build
 
 # Rebuild hosts (must be run from a git-tracked tree)
 sudo nixos-rebuild switch --flake /etc/nixos#hydenix
+sudo nixos-rebuild switch --flake /etc/nixos#nixarchy
 sudo nixos-rebuild switch --flake /etc/nixos#wsl
 
 # Format
@@ -40,7 +43,7 @@ claude mcp add -s user donsetch -- ~/.npm/bin/donsetch mcp
 ## Architecture
 
 - **`flake.nix`** — single entry point; `lib/mk-host.nix` builds hosts via `nixpkgs.lib.nixosSystem`, passes `inputs` as `specialArgs`
-- **Two hosts** toggled by flake output attribute: `hydenix` (Hyde desktop), `wsl`
+- **Three hosts** toggled by flake output attribute: `hydenix` (Hyde desktop), `nixarchy` (Omarchy desktop), `wsl`
 - **`common/`** — shared across both hosts:
   - `pkgs/` — system package lists (cli, dev, database, dotnet, networking, python)
   - `modules/` — system modules (cert, docker, git, llm, nix, profile, shell); `profile.nix` defines `local.profile` options (username, email, timezone, locale)
@@ -51,6 +54,12 @@ claude mcp add -s user donsetch -- ~/.npm/bin/donsetch mcp
   - `modules/system/` — `base/`, `browsers/`, `gaming/`, `work/`; gated by `local.features.*.enable`
   - `modules/hm/` — desktop HM modules (hyprland, remmina, vscode, wolf); imports `common/hm/` then adds desktop-only
   - `secrets/` — host-specific agenix secrets (paths referenced from `common/secrets/secrets.nix`)
+- **`nixarchy/`** — second desktop, Omarchy 4.x vendored by the `nixarchy` input:
+  - `configuration.nix` — host identity, `local.features` toggles, `programs.nixarchy.*`, HM wiring
+  - `modules/hm/` — thin layer importing `common/hm/` plus the reusable `hydenix/modules/hm/*` modules
+  - No `modules/system/` of its own: it imports `hydenix/modules/system/` directly, which has no
+    dependency on the hydenix module
+  - Reuses `hydenix/hardware-configuration.nix` (same physical machine)
 - **`wsl/`** — `configuration.nix` only; imports `common/pkgs` + `common/modules`; HM imports `common/hm/` directly
 - **`config/`** — opencode-related config: `skills.nix`, `mcp.nix`, `providers.nix` (LLM provider definitions with token files pointing to agenix secrets)
 - **`lib/`** — `mk-host.nix`, `devShells/`, `scripts/cli.nix` (builds `skills` and `mcp` CLI wrappers)
@@ -95,6 +104,27 @@ Extension IDs: Bitwarden `nngceckbapebfimnlniiiahkandclblb`, Passbolt `didegimha
 - agenix `secrets.nix` must be in the directory where you run `agenix -e` (or paths won't resolve)
 - `hydenix/hardware-configuration.nix` is auto-generated, not committed to the template
 - The devshell uses `use flake` via `.envrc` — run `direnv allow` once; `.direnv/` is gitignored
+- **The nixarchy host must never import `inputs.hydenix.nixosModules.default`.** nixarchy sets
+  `programs.hyprland.package` at *plain* priority (Omarchy *is* Hyprland, see its
+  `modules/nixos.nix`) and hydenix sets it at plain priority too — two plain definitions is
+  `conflicting definition values`. `hydenix/modules/system/` is still safe to import: it has no
+  dependency on the hydenix module. Same for `hydenix/modules/hm/{helium,vscode,remmina,wolf}.nix`;
+  `firefox.nix` is shared too, which is why the `hydenix.hm.firefox.enable = false` line lives in
+  the hydenix-only `hydenix/modules/hm/default.nix`.
+- `home-manager.follows = "nixarchy/home-manager"` in `flake.nix` is mandatory: nixarchy's NixOS
+  module imports its own home-manager module, and two HM versions in one config is a duplicated
+  option set. It applies to hydenix and wsl too.
+- `nix flake check --no-build` cannot evaluate `hydenix` after an input bump until
+  `pkgs.hyde` (the `hyde-modified` derivation) is realised — hydenix's HM interpolates its store
+  path into `home.file.source`. Fix: `nix build --impure --no-link --expr
+  '(builtins.getFlake "git+file:///etc/nixos").nixosConfigurations.hydenix.pkgs.hyde'`.
+- nixarchy sets `boot.kernelPackages = pkgs.linuxPackages_latest` at `mkDefault` (7.2.x), where
+  hydenix pins `pkgs.linuxPackages` (6.18.x). The NVIDIA driver is built per kernel
+  (`nvidia-kernel-modules-595.104.02-<kernel>`), so switching changes the kernel module that has to
+  compile and load. Everything else GPU-related is identical on both hosts: nixarchy never touches
+  `hardware.graphics` or `hardware.nvidia`, and `hardware.graphics.package` is nixpkgs' `mesa`
+  default on both, with the NVIDIA userspace arriving via `graphics.extraPackages`. This is the
+  one genuinely unproven path — prove it with `nixos-rebuild build --flake /etc/nixos#nixarchy`.
 - bladebro/donsetch are not packages — they're npm-installed into `$HOME/.npm` and need `programs.nix-ld` enabled (the NixOS stub loader rejects their prebuilt glibc binaries otherwise). Run `npm i -g bladebro donsetch` after a fresh install.
 
 P.S. When user asks to install a NixOS package, use MCP Tool `nixos` to search and validate configuration options.

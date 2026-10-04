@@ -20,6 +20,11 @@
 
   hydenix.hm = {
     enable = true;
+    # hydenix adds a plain `firefox` to home.packages; disable it so the
+    # firefox.nix module can manage Firefox and pull in the ru language pack.
+    # It lives here rather than in firefox.nix because that module is shared
+    # with the nixarchy host, which has no hydenix options.
+    firefox.enable = false;
     spotify.enable = true;
     social.enable = false;
     shell.pokego.enable = false;
