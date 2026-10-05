@@ -1,21 +1,25 @@
+# Host-only skills (config/skills.nix), merged with the ones the agent runtime
+# ships (agent-runtime/data/skills.nix).
+#
+# Both contribute entries to `programs.agent-skills.sources`, so the result is
+# one source set → one catalog → one bundle → one sync per target.
+#
+# This module deliberately does NOT import agent-skills' Home Manager module:
+# agent-runtime/modules/skills.nix already does, and importing a Nix function
+# module twice makes every programs.agent-skills.* option collide. It is
+# therefore only importable alongside the agent runtime (agent.skills.enable
+# must stay on).
 {
-  inputs,
-  osConfig,
   lib,
   ...
 }:
 
 let
-  username = osConfig.local.profile.username;
   skillConfig = import ../../config/skills.nix;
   # `groups` is a CLI-only concept; the HM `sources` option can't parse it.
   skillSources = builtins.removeAttrs skillConfig [ "groups" ];
 in
 {
-  imports = [ inputs.agent-skills.homeManagerModules.default ];
-
-  # Always-on global baseline (all enabled skills → ~/.config/opencode/skills).
-  # On-demand per-project installs are handled by the `skills <group>` CLI.
   programs.agent-skills = {
     enable = true;
 
@@ -26,13 +30,4 @@ in
     targets.opencode.enable = true;
     targets.claude.enable = true;
   };
-
-  home.file.".obsidian-wiki/config".text = ''
-    OBSIDIAN_VAULT_PATH=/home/${username}/repos/obsidian-wiki-vault
-    OBSIDIAN_WIKI_REPO=${inputs.obsidian-wiki}
-  '';
-
-  home.activation.create-obsidian-vault = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
-    mkdir -p "$HOME/repos/obsidian-wiki-vault"
-  '';
 }

@@ -93,12 +93,14 @@ Extension IDs: Bitwarden `nngceckbapebfimnlniiiahkandclblb`, Passbolt `didegimha
 
 Everything about the coding agents lives in this nested flake, not in `common/`.
 
-- **`data/`** — pure data, no OS: `providers.nix` (endpoints, models, token sources), `mcp.nix`, `plugins.nix`, `pi-starship.toml`.
+- **`data/`** — pure data, no OS: `providers.nix` (endpoints, models, token sources), `mcp.nix`, `plugins.nix`, `skills.nix`, `pi-starship.toml`.
 - **`modules/home.nix`** — OS-agnostic Home Manager module: pi config, opencode.json, binaries, and all `agent.*` options. Works both under NixOS+HM and under the standalone `homeConfigurations.agent-runtime` (plain HM, no OS).
 - **`modules/nixos.nix`** — agenix secrets, `/etc/claude-code/managed-settings.json`, `ANTHROPIC_BASE_URL`. Rewrites each provider's `tokenSource` into the decrypted secret's store path (`agent.resolvedProviders`).
 - **`modules/wrappers.nix`** — `claude`, `claude-free`, `writing` (per-provider wrappers).
+- **`modules/skills.nix`** — the bundled skills (`data/skills.nix`). **The only** place that imports `agent-skills`' HM module: it is a Nix function, not a path, so a second import makes every `programs.agent-skills.*` option collide. Host modules may extend `programs.agent-skills.sources` but must never re-import it.
 - **`modules/container.nix`** — home dir + headless tweaks for the standalone config only.
 - **`common/hm/agent-bridge.nix`** (3 lines) — the only NixOS↔HM glue: `agent.providers = osConfig.agent.resolvedProviders`.
+- **`common/hm/agent-skills.nix`** — adds the host-only skills (`config/skills.nix`) to `programs.agent-skills.sources`. Both modules merge into one source set → one catalog → one bundle → one sync.
 
 ### Tokens
 
@@ -113,12 +115,25 @@ Everything about the coding agents lives in this nested flake, not in `common/`.
 
 Keys never enter the store or a config file in the store. Export `AGENT_NEOPLATFORM_TOKEN`, `AGENT_CUSTOM_TOKEN`, `AGENT_FREE_TOKEN` in containers.
 
+### Skills
+
+Two registries that merge into one catalog:
+
+| | file | skills |
+|---|---|---|
+| **runtime** (hosts + containers) | `agent-runtime/data/skills.nix` | `archify`, `archify-review`, `i-have-adhd`, `qmd`, `ponytail` + 5 `ponytail-*` = **10** |
+| **host only** | `config/skills.nix` | `orca` + 7 `orca-*` = **8** |
+
+Targets: `.agents/skills` (cross-vendor), `.claude/skills`, `.config/opencode/skills`. `pi` is still not a target — it has no dir wired up. Per-project installs via the `skills <group>` CLI stay host-side and cover `config/skills.nix` only.
+
+**`input` names resolve against the *consuming* flake's inputs.** Anything in `agent-runtime/data/skills.nix` must therefore also be declared in `/etc/nixos/flake.nix` and wired with `inputs.agent-runtime.inputs.<name>.follows`.
+
 ### Container usage
 
 ```bash
 nix profile install github:richen604/hydenix/agent-runtime#agent-runtime             # pi, opencode, claude, claude-free, writing
-nix profile install github:richen604/hydenix/agent-runtime#agent-runtime-install       # one-shot: lay ~/.pi + ~/.config/opencode into $HOME
-nix build github:richen604/hydenix/agent-runtime#agent-runtime-config                 # rendered config tree, for COPY in a Dockerfile
+nix profile install github:richen604/hydenix/agent-runtime#agent-runtime-install       # one-shot: lay ~/.pi, ~/.config/opencode + skills into $HOME
+nix build github:richen604/hydenix/agent-runtime#agent-runtime-config                 # rendered config + skill trees, for COPY in a Dockerfile
 nix develop github:richen604/hydenix/agent-runtime                                   # ad-hoc shell
 ```
 

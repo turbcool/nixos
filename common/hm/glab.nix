@@ -1,4 +1,10 @@
-{ config, lib, osConfig, pkgs, ... }:
+{
+  config,
+  lib,
+  osConfig,
+  pkgs,
+  ...
+}:
 
 let
   # glab global config template. Tokens are @@SECRET:gitlab-<host>-token@@
@@ -17,9 +23,11 @@ in
     mkdir -p "$(dirname "$out")"
     ( umask 077
       cfg="$(cat ${template})"
-      ${lib.concatStringsSep "\n" (lib.mapAttrsToList (name: path: ''
-        cfg="''${cfg//@@SECRET:${name}@@/$(cat ${path} 2>/dev/null || true)}"
-      '') secrets)}
+      ${lib.concatStringsSep "\n" (
+        lib.mapAttrsToList (name: path: ''
+          cfg="''${cfg//@@SECRET:${name}@@/$(cat ${path} 2>/dev/null || true)}"
+        '') secrets
+      )}
       printf '%s\n' "$cfg" > "$out"
     )
     chmod 0600 "$out"

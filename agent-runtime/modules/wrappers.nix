@@ -16,7 +16,7 @@ let
   cfg = config.agent;
   inherit (cfg) providers;
 
-  system = pkgs.stdenv.hostPlatform.system;
+  inherit (pkgs.stdenv.hostPlatform) system;
   realClaude = inputs.claude-code.packages.${system}.default;
 
   cc = cfg.claudeCode;
@@ -82,8 +82,8 @@ let
   defaultWrapper = {
     name = "claude";
     provider = cc.provider;
-    mainModel = cc.mainModel;
-    smallModel = cc.smallModel;
+    inherit (cc) mainModel;
+    inherit (cc) smallModel;
     comment = "Primary Claude Code wrapper (managed-settings.json stays in modules/nixos.nix).";
   };
 

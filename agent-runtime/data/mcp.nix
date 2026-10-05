@@ -34,25 +34,38 @@
 
   wiki = {
     type = "local";
-    command = [ "qmd" "mcp" ];
+    command = [
+      "qmd"
+      "mcp"
+    ];
     enabled = true;
   };
 
   donsetch = {
     type = "local";
-    command = [ "donsetch" "mcp" ];
+    command = [
+      "donsetch"
+      "mcp"
+    ];
     enabled = true;
   };
 
   bladebro = {
     type = "local";
-    command = [ "bladebro" "mcp" ];
+    command = [
+      "bladebro"
+      "mcp"
+    ];
     enabled = true;
   };
 
   groups = {
     nixos = [ "nixos" ];
-    frontend = [ "svelte" "daisyui" "lucide-icons"];
+    frontend = [
+      "svelte"
+      "daisyui"
+      "lucide-icons"
+    ];
     wiki = [ "wiki" ];
   };
 

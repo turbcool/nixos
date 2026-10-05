@@ -103,5 +103,8 @@ in
     '';
   };
 
-  home.packages = [ mkTmuxDev mkTmuxVms ];
+  home.packages = [
+    mkTmuxDev
+    mkTmuxVms
+  ];
 }

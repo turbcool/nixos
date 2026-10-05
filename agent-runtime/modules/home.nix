@@ -18,7 +18,7 @@ let
   cfg = config.agent;
   inherit (cfg) providers;
 
-  system = pkgs.stdenv.hostPlatform.system;
+  inherit (pkgs.stdenv.hostPlatform) system;
   llmAgents = inputs.llm-agents.packages.${system};
 
   # --- token resolution ---------------------------------------------------
@@ -263,6 +263,10 @@ in
       description = "Small/subagent tier. Both pi and opencode read this, so one line moves both agents.";
     };
 
+    skills.enable = lib.mkEnableOption "the bundled agent skills" // {
+      default = true;
+    };
+
     agents = {
       enable = lib.mkEnableOption "the agent binaries (pi, opencode) in home.packages" // {
         default = true;
@@ -407,5 +411,8 @@ in
     }) providers;
   };
 
-  imports = [ ./wrappers.nix ];
+  imports = [
+    ./skills.nix
+    ./wrappers.nix
+  ];
 }

@@ -22,7 +22,10 @@
         home-manager.follows = "home-manager";
         llm-agents.follows = "llm-agents";
         claude-code.follows = "claude-code";
+        agent-skills.follows = "agent-skills";
+        archify.follows = "archify";
         ponytail.follows = "ponytail";
+        qmd.follows = "qmd";
         i-have-adhd.follows = "i-have-adhd";
       };
     };
@@ -51,16 +54,6 @@
     nixos-hardware.url = "github:nixos/nixos-hardware/master";
 
     agent-skills.url = "github:Kyure-A/agent-skills-nix";
-
-    obsidian-wiki = {
-      url = "github:Ar9av/obsidian-wiki";
-      flake = false;
-    };
-
-    kepano-obsidian-skills = {
-      url = "github:kepano/obsidian-skills";
-      flake = false;
-    };
 
     orca-skills = {
       url = "github:stablyai/orca";

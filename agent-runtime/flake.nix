@@ -16,6 +16,18 @@
     # reproducible (and to reach a binary cache).
     claude-code.url = "github:sadjow/claude-code-nix";
 
+    # Skill discovery + install (Home Manager module + the bundle lib).
+    agent-skills.url = "github:Kyure-A/agent-skills-nix";
+
+    # Referenced by data/skills.nix. Must exist here too: agent-skills
+    # resolves `input` against the *consuming* flake's inputs, and /etc/nixos
+    # evaluates this module through homeModules.default.
+    archify = {
+      url = "github:tt-a1i/archify";
+      flake = false;
+    };
+    qmd.url = "github:tobi/qmd";
+
     # opencode plugins referenced by absolute store path in opencode.json.
     ponytail = {
       url = "github:DietrichGebert/ponytail";
@@ -38,7 +50,7 @@
       # Keep in sync with /etc/nixos/flake.nix; the hosts pin x86_64-linux.
       system = "x86_64-linux";
       pkgs = nixpkgs.legacyPackages.${system};
-      lib = nixpkgs.lib;
+      inherit (nixpkgs) lib;
 
       # Standalone Home Manager: the exact module the NixOS hosts get through
       # common/hm/default.nix, evaluated with no OS underneath. That is what
@@ -84,9 +96,11 @@
         set -euo pipefail
         target="''${1:-$HOME}"
         mkdir -p "$target"
+        # -L: the config is a link farm of store paths, dereference it so $HOME
+        # ends up with real files.
         cp -rL ${agentRuntimeConfig}/. "$target/"
         echo "✓ agent config installed into $target"
-        echo "  providers: $(ls -1 ${agentRuntimeConfig}/.pi/agent >/dev/null 2>&1 && echo ok)"
+        echo "  skills: $(ls -1 "$target/.agents/skills" | wc -l | tr -d ' ') into .agents, .claude and .config/opencode"
         echo "  export the AGENT_*_TOKEN env vars (see data/providers.nix) before running the agents"
       '';
     in
