@@ -114,6 +114,18 @@ in
     interop.register = true;
   };
 
+  # systemd-binfmt always exits 1 on WSL2 and is not fixable by bumping
+  # nixos-wsl or systemd (HEAD == our lock; v261, v262 and main all share the
+  # bug): WSL mounts a read-only tmpfs over /proc/sys/fs/binfmt_misc/status, so
+  # the "flush out all rules" step returns -EROFS. systemd logs "ignoring" but
+  # never clears `r`, so RET_GATHER keeps the stale error and the unit returns
+  # it -- every registration still succeeds, only the exit status is wrong.
+  #
+  # Do NOT mask or disable the unit instead: nixos-wsl's own warning states that
+  # dropping the WSLInterop registration breaks running .exe files, and
+  # wsl-refresh-windows-ssh-proxy needs powershell.exe/netsh.exe.
+  systemd.services.systemd-binfmt.serviceConfig.SuccessExitStatus = [ 1 ];
+
   services.openssh = {
     enable = true;
     openFirewall = true;
