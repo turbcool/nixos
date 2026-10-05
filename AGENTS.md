@@ -131,10 +131,10 @@ Targets: `.agents/skills` (cross-vendor), `.claude/skills`, `.config/opencode/sk
 ### Container usage
 
 ```bash
-nix profile install github:richen604/hydenix/agent-runtime#agent-runtime             # pi, opencode, claude, claude-free, writing
-nix profile install github:richen604/hydenix/agent-runtime#agent-runtime-install       # one-shot: lay ~/.pi, ~/.config/opencode + skills into $HOME
-nix build github:richen604/hydenix/agent-runtime#agent-runtime-config                 # rendered config + skill trees, for COPY in a Dockerfile
-nix develop github:richen604/hydenix/agent-runtime                                   # ad-hoc shell
+nix profile install github:turbcool/nixos/agent-runtime#agent-runtime             # pi, opencode, claude, claude-free, writing
+nix profile install github:turbcool/nixos/agent-runtime#agent-runtime-install       # one-shot: lay ~/.pi, ~/.config/opencode + skills into $HOME
+nix build github:turbcool/nixos/agent-runtime#agent-runtime-config                 # rendered config + skill trees, for COPY in a Dockerfile
+nix develop github:turbcool/nixos/agent-runtime                                   # ad-hoc shell
 ```
 
 Known container gaps: `bladebro`/`donsetch` stay a runtime `npm i -g` (need manual `nix-ld` setup outside NixOS), and pi npm-installs its declared packages on first startup, so an air-gapped container needs them pre-seeded.

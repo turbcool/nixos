@@ -13,7 +13,7 @@
 
     # The agent runtime (claude-code + opencode + pi + providers/keys) lives in
     # a nested flake so the same definition can be installed standalone in the
-    # agent-runtime containers via `github:richen604/hydenix/agent-runtime`.
+    # agent-runtime containers via `github:turbcool/nixos/agent-runtime`.
     # Its own inputs are forced to follow ours so nothing is fetched twice.
     agent-runtime = {
       url = "path:./agent-runtime";
