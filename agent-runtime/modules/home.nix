@@ -99,8 +99,14 @@ let
       # enough — no activation hook needed. A network-less container therefore
       # needs its npm packages pre-seeded or it fails on first boot.
       #
-      # @narumitw/pi-starship — native Starship-style footer plus its
-      # configuring-pi-starship skill; config in data/pi-starship.toml.
+      # pi-zentui — full TUI skin (Editor, user messages, thinking, working
+      # line, Starship-style Footer, extension statuses). Replaces
+      # @narumitw/pi-starship, whose Starship footer it subsumes.
+      # Config lives in ~/.pi/agent/zentui.json and is written by pi's /zentui
+      # command, so it stays user-owned like auth.json — force-managing it here
+      # would revert every /zentui change on the next activation.
+      # Note: its Thinking (Experimental) renderer is tested against pi 0.85.0
+      # and 0.87.1 and may misbehave on pi 1.x. It is disabled by default.
       # donsetch — web_fetch/search/crawl/screenshot as native tools. The
       # github.com/dondai44423/donsetch README suggests a git: source, but the
       # pi entry point is the npm package (`pi.extensions` = ./pi-extension.ts).
@@ -115,7 +121,7 @@ let
       # costs nothing per request; pi already auto-loads AGENTS.md from the cwd
       # and its parents, so this only keeps that file honest.
       packages = [
-        "npm:@narumitw/pi-starship"
+        "npm:pi-zentui"
         "npm:donsetch"
         "npm:@ff-labs/pi-fff"
         "npm:@piex-dev/init"
@@ -227,7 +233,6 @@ let
     ".pi/agent/models.json" = piModels;
     ".pi/agent/settings.json" = piSettings;
     ".pi/agent/pi-fff.json" = piFff;
-    ".pi/agent/pi-starship.toml" = ../data/pi-starship.toml;
     ".config/opencode/opencode.json" = opencodeJson;
   };
 in
@@ -384,7 +389,6 @@ in
           source = piSettings;
           force = true;
         };
-        ".pi/agent/pi-starship.toml".source = ../data/pi-starship.toml;
         ".pi/agent/pi-fff.json" = {
           source = piFff;
           force = true;
