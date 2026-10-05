@@ -43,6 +43,7 @@ claude mcp add -s user donsetch -- ~/.npm/bin/donsetch mcp
 ## Architecture
 
 - **`flake.nix`** — single entry point; `lib/mk-host.nix` builds hosts via `nixpkgs.lib.nixosSystem`, passes `inputs` as `specialArgs`
+- **`agent-runtime/`** — **nested flake** holding all LLM/agent logic (claude-code + opencode + pi + providers/keys + MCP + bundled skills). Consumed by the hosts as `path:./agent-runtime` (its inputs `follow` the host's), and installable standalone in containers as `github:turbcool/nixos/agent-runtime`. See "Agent runtime" below.
 - **Three hosts** toggled by flake output attribute: `hydenix` (Hyde desktop), `nixarchy` (Omarchy desktop), `wsl`
 - **`common/`** — shared across both hosts:
   - `pkgs/` — system package lists (cli, dev, database, dotnet, networking, python)
@@ -88,13 +89,49 @@ When a rebuild fails on a CRX hash in `hydenix/modules/hm/helium.nix` (store ver
 
 Extension IDs: Bitwarden `nngceckbapebfimnlniiiahkandclblb`, Passbolt `didegimhafipceonhjepacocaffmoppf`. uBlock is bundled as a Helium component — never bump it. Do NOT use `ExtensionInstallForcelist` (broken: Helium sends `prod=chromecrx`, CWS replies `noupdate`).
 
+## Agent runtime (`agent-runtime/`)
+
+Everything about the coding agents lives in this nested flake, not in `common/`.
+
+- **`data/`** — pure data, no OS: `providers.nix` (endpoints, models, token sources), `mcp.nix`, `plugins.nix`, `pi-starship.toml`.
+- **`modules/home.nix`** — OS-agnostic Home Manager module: pi config, opencode.json, binaries, and all `agent.*` options. Works both under NixOS+HM and under the standalone `homeConfigurations.agent-runtime` (plain HM, no OS).
+- **`modules/nixos.nix`** — agenix secrets, `/etc/claude-code/managed-settings.json`, `ANTHROPIC_BASE_URL`. Rewrites each provider's `tokenSource` into the decrypted secret's store path (`agent.resolvedProviders`).
+- **`modules/wrappers.nix`** — `claude`, `claude-free`, `writing` (per-provider wrappers).
+- **`modules/container.nix`** — home dir + headless tweaks for the standalone config only.
+- **`common/hm/agent-bridge.nix`** (3 lines) — the only NixOS↔HM glue: `agent.providers = osConfig.agent.resolvedProviders`.
+
+### Tokens
+
+`data/providers.nix` declares `tokenSource = { env = "AGENT_FREE_TOKEN"; }`. One field, two resolvers:
+
+| | NixOS host | Container |
+|---|---|---|
+| source | `{ file = /run/agenix/<name>-token; }` (rewritten by `nixos.nix`) | `{ env = "AGENT_*_TOKEN"; }` (as declared) |
+| opencode | `{file:…}` | `{env:…}` |
+| pi | `!cat …` | `!printenv …` |
+| shell wrappers | `$(cat …)` | `"$AGENT_*_TOKEN"` |
+
+Keys never enter the store or a config file in the store. Export `AGENT_NEOPLATFORM_TOKEN`, `AGENT_CUSTOM_TOKEN`, `AGENT_FREE_TOKEN` in containers.
+
+### Container usage
+
+```bash
+nix profile install github:richen604/hydenix/agent-runtime#agent-runtime             # pi, opencode, claude, claude-free, writing
+nix profile install github:richen604/hydenix/agent-runtime#agent-runtime-install       # one-shot: lay ~/.pi + ~/.config/opencode into $HOME
+nix build github:richen604/hydenix/agent-runtime#agent-runtime-config                 # rendered config tree, for COPY in a Dockerfile
+nix develop github:richen604/hydenix/agent-runtime                                   # ad-hoc shell
+```
+
+Known container gaps: `bladebro`/`donsetch` stay a runtime `npm i -g` (need manual `nix-ld` setup outside NixOS), and pi npm-installs its declared packages on first startup, so an air-gapped container needs them pre-seeded.
+
 ## Conventions
 
 - `default.nix` in every module directory aggregates child imports — follow this pattern when adding modules
 - Feature toggles for desktop-only modules live in `hydenix/modules/system/features.nix`; common toggles go in a module under `common/modules/`
 - Profile defaults live in `common/modules/profile.nix` (`local.profile` options); hosts override in their own `configuration.nix`
 - Hydenix HM config files (hyprland, remmina, wolf) live alongside their `.nix` module as data directories
-- `.age` secret paths in `common/secrets/secrets.nix` can reference files outside `common/secrets/` via relative paths (e.g., `../../hydenix/secrets/work-pc.age`)
+- LLM/agent changes go in `agent-runtime/`, never in `common/` — including its own `flake.lock`
+- `.age` secret paths in `common/secrets/secrets.nix` can reference files outside `common/secrets/` via relative paths (e.g., `../../hydenix/secrets/work-pc.age`); `agent-runtime/data/providers.nix` references them as `../../common/secrets/<name>-token.age` and is the only file in that flake reaching outside it
 - `inputs` is available in all NixOS and HM modules via `specialArgs`
 - Flakes require a git-tracked tree — `git add` new files before rebuild
 

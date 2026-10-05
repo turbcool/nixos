@@ -5,7 +5,27 @@
     # nixpkgs tracks upstream directly. It used to follow hydenix/nixpkgs, which
     # was only a Dec-2025 pin, not a fork — nothing needed it once the nixarchy
     # host stopped importing the hydenix module.
+    #
+    # The agent-input block below (llm-agents, claude-code, ponytail, ...) is
+    # kept only so agent-runtime can `follows` it — the host modules
+    # themselves no longer reference any of them.
     llm-agents.url = "github:numtide/llm-agents.nix";
+
+    # The agent runtime (claude-code + opencode + pi + providers/keys) lives in
+    # a nested flake so the same definition can be installed standalone in the
+    # agent-runtime containers via `github:richen604/hydenix/agent-runtime`.
+    # Its own inputs are forced to follow ours so nothing is fetched twice.
+    agent-runtime = {
+      url = "path:./agent-runtime";
+      inputs = {
+        nixpkgs.follows = "nixpkgs";
+        home-manager.follows = "home-manager";
+        llm-agents.follows = "llm-agents";
+        claude-code.follows = "claude-code";
+        ponytail.follows = "ponytail";
+        i-have-adhd.follows = "i-have-adhd";
+      };
+    };
 
     nixos-wsl = {
       url = "github:nix-community/NixOS-WSL/main";
@@ -95,6 +115,7 @@
 
       commonModules = [
         inputs.agenix.nixosModules.default
+        inputs.agent-runtime.nixosModules.default
       ];
 
       hosts = {

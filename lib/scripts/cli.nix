@@ -1,7 +1,7 @@
 { pkgs, inputs }:
 
 let
-  mcpConfig = import ../../config/mcp.nix { inherit pkgs; };
+  mcpConfig = import ../../agent-runtime/data/mcp.nix { inherit pkgs; };
   skillsConfig = import ../../config/skills.nix;
 
   mcpGroups = mcpConfig.groups or { };

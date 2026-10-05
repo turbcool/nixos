@@ -1,215 +1,35 @@
 {
-  inputs,
-  osConfig,
-  config,
   lib,
   pkgs,
   ...
 }:
 
-let
-  realClaude = inputs.claude-code.packages.${pkgs.stdenv.hostPlatform.system}.default;
-
-  # Claude Code MCP config, sourced from config/mcp.nix. Built into the store as
-  # a template: it carries @@SECRET:<name>@@ sentinels, never real keys.
-  # Commands are rewritten to absolute $HOME/.npm/bin paths: the wrapper runs
-  # inside the agent's environment, which may predate home.sessionPath
-  # (e.g. GUI-launched) — never rely on PATH.
-  claudeMcpTemplate = pkgs.writeText "claude-code-mcp.json" (
-    builtins.toJSON {
-      mcpServers = builtins.mapAttrs (
-        name: srv: srv // { command = "${config.home.homeDirectory}/.npm/bin/${name}"; }
-      ) (import ../../config/mcp.nix { inherit pkgs; }).claudeCode;
-    }
-  );
-
-  # Resolves the managed MCP config (secrets landed to a mode-0600 file under the
-  # user's cache dir — never the store or CLI args) and execs the real claude with
-  # it. Falls back to plain `claude` if anything goes wrong. Shared by the default
-  # `claude` and per-provider wrappers (claude-neoplatform).
-  mkClaudeMcp = binName: ''
-    umask 077   # resolved secrets land in $out — never world/group readable
-    real="${realClaude}/bin/claude"
-    out="''${XDG_CACHE_HOME:-$HOME/.cache}/claude-code/mcp-${binName}.json"
-    ok=0
-    if mkdir -p "$(dirname "$out")" 2>/dev/null; then
-      json="$(cat ${claudeMcpTemplate})"
-      while [[ "$json" == *"@@SECRET:"* ]]; do
-        name="''${json#*@@SECRET:}"
-        name="''${name%%@@*}"
-        json="''${json/@@SECRET:$name@@/$(cat "/run/agenix/$name" 2>/dev/null || true)}"
-      done
-      if printf '%s\n' "$json" > "$out" 2>/dev/null; then
-        chmod 600 "$out"   # umask only governs creation; fix pre-existing perms too
-        ok=1
-      fi
-    fi
-    exec "$real" --mcp-config="$out" "$@"
-  '';
-
-  # Wraps `claude` (the default neoplatform build) so every invocation gets the
-  # managed MCP config via --mcp-config. Non-strict, so it merges with
-  # ~/.claude.json and project .mcp.json servers, and `claude mcp add` keeps
-  # working. Env here overrides the global .zshrc exports
-  # (common/hm/claude-code.nix) for this process only.
-  #
-  # `claude` = neoplatform endpoint (llm.neoplatform.ru). Main model →
-  # deepseek-v4-flash (Opus/Sonnet tier), smallModel → qwen3-coder-128k:30b
-  # (Haiku/subagent tier).
-  neoPlatform = osConfig.local.llm.providers.neoplatform;
-  neoToken = osConfig.age.secrets."neoplatform-token".path;
-  neoMainModel = "deepseek-v4-flash";
-  neoSmallModel = "qwen3-coder-128k:30b";
-  claudeWithMcp = lib.hiPrio (pkgs.writeShellScriptBin "claude" ''
-    export ANTHROPIC_BASE_URL="${neoPlatform.url}"
-    export ANTHROPIC_API_KEY="$(cat "${neoToken}" 2>/dev/null || true)"
-    export ANTHROPIC_DEFAULT_OPUS_MODEL="${neoMainModel}"
-    export ANTHROPIC_DEFAULT_SONNET_MODEL="${neoMainModel}"
-    export ANTHROPIC_DEFAULT_HAIKU_MODEL="${neoSmallModel}"
-    export CLAUDE_CODE_SUBAGENT_MODEL="${neoSmallModel}"
-    ${mkClaudeMcp "claude"}
-  '');
-
-  # `claude-free` — same claude, but repointed at the free endpoint
-  # (llm-free.naidanov.ru). Free-endpoint model names, with the free-account
-  # token. Deliberately NOT local.llm.claudeCode.mainModel/smallModel — those
-  # are the neoplatform defaults.
-  freeProvider = osConfig.local.llm.providers.free;
-  freeToken = osConfig.age.secrets."free-token".path;
-  freeMainModel = "main";
-  freeSmallModel = "small";
-  claudeFree = pkgs.writeShellScriptBin "claude-free" ''
-    export ANTHROPIC_BASE_URL="${freeProvider.anthropicUrl or freeProvider.url}"
-    export ANTHROPIC_API_KEY="$(cat "${freeToken}" 2>/dev/null || true)"
-    export ANTHROPIC_DEFAULT_OPUS_MODEL="${freeMainModel}"
-    export ANTHROPIC_DEFAULT_SONNET_MODEL="${freeMainModel}"
-    export ANTHROPIC_DEFAULT_HAIKU_MODEL="${freeSmallModel}"
-    export CLAUDE_CODE_SUBAGENT_MODEL="${freeSmallModel}"
-    ${mkClaudeMcp "claude-free"}
-  '';
-
-  # Custom provider that `writing` repoints Claude Code at, folder-locally. Same
-  # endpoint + agenix token as providers.custom (llm.naidanov.ru). Deepseek serves
-  # the Opus/Sonnet tiers, qwen3-coder-next the Haiku tier (per its /v1/models).
-  ccCustom = osConfig.local.llm.providers.custom;
-  ccCustomUrl = ccCustom.url;
-  ccCustomToken = osConfig.age.secrets."custom-token".path;
-  ccCustomModel = "deepseek-v4-flash";
-  ccCustomHaikuModel = "qwen3-coder-next";
-
-  # `writing` prepares the current folder for ARIS (Auto-Research-In-Sleep):
-  # clones the skill repo to ~/aris_repo (once) and symlinks its skills into
-  # .claude/skills/ here, so launching `claude` exposes the research/writing
-  # slash-commands (/research-pipeline, /paper-writing, ...). It also repoints
-  # Claude Code at the custom provider (llm.naidanov.ru / deepseek-v4-flash) for
-  # this folder only, via .claude/settings.local.json. Folder-local — the Codex
-  # MCP reviewer (for cross-model review skills) is a global, one-time step and
-  # is printed, not run.
-  # https://github.com/wanshuiyin/auto-claude-code-research-in-sleep
-  writing = pkgs.writeShellScriptBin "writing" ''
-    set -euo pipefail
-
-    # jq isn't a system-wide package (only in this flake's devShell), and `writing`
-    # runs from arbitrary folders — so invoke it by its absolute store path instead
-    # of relying on PATH.
-    JQ="${pkgs.jq}/bin/jq"
-
-    REPO="''${ARIS_REPO:-$HOME/aris_repo}"
-    URL="https://github.com/wanshuiyin/Auto-claude-code-research-in-sleep.git"
-
-    # 1. Ensure the ARIS repo exists in a stable location (clone once).
-    #    Bounded by `timeout` + --progress so a flaky/proxied network can't make
-    #    the clone hang silently; point at the 'proxy' toggle on failure.
-    if [ ! -d "$REPO/.git" ]; then
-      echo "› Cloning ARIS → $REPO"
-      if ! timeout 180 git clone --progress --depth 1 "$URL" "$REPO"; then
-        echo "✗ Clone failed or timed out."
-        echo "  GitHub may need a proxy — run 'proxy' to enable it, then retry 'writing'."
-        exit 1
-      fi
-    else
-      echo "› Updating ARIS ($REPO)"
-      git -C "$REPO" pull --ff-only 2>/dev/null || echo "  (could not update — continuing with the local copy)"
-    fi
-
-    # 2. Install ARIS skills into this folder (.claude/skills/<name> symlinks).
-    #    The installer prompts "Apply these N changes?" — feed 'y' so `writing`
-    #    is one-shot. Its safety rules *abort* (never prompt) on real conflicts,
-    #    so auto-confirming the apply gate is safe. Finite printf => no SIGPIPE
-    #    under pipefail.
-    echo "› Installing ARIS skills into: $PWD"
-    printf 'y\ny\ny\ny\n' | bash "$REPO/tools/install_aris.sh" "$PWD"
-
-    # Verify skills actually landed (the installer returns 0 even on user-abort,
-    # so an empty result would otherwise look like success).
-    skills_dir="$PWD/.claude/skills"
-    if [ ! -d "$skills_dir" ] || [ -z "$(ls -A "$skills_dir" 2>/dev/null)" ]; then
-      echo "✗ No ARIS skills were linked into $skills_dir"
-      exit 1
-    fi
-    echo "› $(ls -1 "$skills_dir" | wc -l | tr -d ' ') skill(s) linked into $skills_dir"
-
-    # 3. Repoint Claude Code at the custom provider (llm.naidanov.ru /
-    #    deepseek-v4-flash for Opus/Sonnet, qwen3-coder-next for Haiku) for THIS
-    #    folder only, by merging an env block into .claude/settings.local.json.
-    #    That file sits below the immutable managed-settings.json but ABOVE the
-    #    global exports from .zshrc, so it cleanly overrides ANTHROPIC_BASE_URL,
-    #    the token (both AUTH_TOKEN and API_KEY, so Claude's auth-precedence
-    #    can't pick a stale value), and the model tiers. Token is read fresh from
-    #    agenix and written mode-0600; jq merges so existing keys (permissions,
-    #    ...) survive.
-    #    NOTE: managed-settings.json locks CLAUDE_CODE_SUBAGENT_MODEL
-    #    system-wide, so subagents keep the global model — change it in
-    #    common/modules/llm.nix if the custom endpoint rejects the global id.
-    sfile="$PWD/.claude/settings.local.json"
-    mkdir -p "$PWD/.claude"
-    if [ ! -r "${ccCustomToken}" ]; then
-      echo "✗ Custom provider token missing (${ccCustomToken})"
-      echo "  Provision the agenix 'custom-token' secret, then re-run 'writing'."
-      exit 1
-    fi
-    tok="$(cat "${ccCustomToken}")"
-    base="$(cat "$sfile" 2>/dev/null || echo '{}')"
-    "$JQ" -e . >/dev/null 2>&1 <<<"$base" || base='{}'
-    merged="$("$JQ" --arg url "${ccCustomUrl}" --arg key "$tok" --arg m "${ccCustomModel}" --arg h "${ccCustomHaikuModel}" \
-      '.env = ((.env // {}) + {
-         "ANTHROPIC_BASE_URL": $url,
-         "ANTHROPIC_AUTH_TOKEN": $key,
-         "ANTHROPIC_API_KEY": $key,
-         "ANTHROPIC_DEFAULT_OPUS_MODEL": $m,
-         "ANTHROPIC_DEFAULT_SONNET_MODEL": $m,
-         "ANTHROPIC_DEFAULT_HAIKU_MODEL": $h
-       })' <<<"$base")"
-    ( umask 077; printf '%s\n' "$merged" > "$sfile" )
-    chmod 600 "$sfile"   # umask only governs creation; clamp a pre-existing file too
-    echo "› Claude → custom provider (${ccCustomUrl}, opus/sonnet=${ccCustomModel}, haiku=${ccCustomHaikuModel}) via $sfile"
-
-    # 4. Cross-model review skills need the Codex MCP reviewer — a global,
-    #    one-time step. Print it; don't mutate ~/.claude.json from here.
-    echo ""
-    echo "✅ ARIS ready in this folder (Claude → ${ccCustomUrl}). Next: run  claude"
-    echo "   then try a workflow, e.g.:"
-    echo '     /research-pipeline "your research direction"'
-    echo '     /paper-writing "NARRATIVE_REPORT.md"'
-    if command -v codex >/dev/null 2>&1; then
-      echo ""
-      echo "💡 Codex is installed — enable review skills (run once):"
-      echo "     claude mcp add codex -s user -- codex mcp-server"
-    else
-      echo ""
-      echo "💡 For review skills, install Codex and add it as an MCP server:"
-      echo "     npm i -g @openai/codex && claude mcp add codex -s user -- codex mcp-server"
-    fi
-  '';
-in
+# Shell/tooling setup only. The claude/opencode/pi binaries, their config and
+# their wrappers live in the agent-runtime flake (see agent-runtime/modules).
 {
-  home.packages = [
-    pkgs.yt-dlp
-    realClaude
-    claudeWithMcp
-    claudeFree
-    writing
-  ];
+  home = {
+    packages = [ pkgs.yt-dlp ];
+
+    # Global npm packages install into $HOME/.npm (set by programs.npm
+    # `/etc/npmrc`, the NixOS-wiki home approach). Add its bin dir to PATH.
+    # Requires programs.nix-ld (common/modules/nix-ld.nix) so prebuilt glibc
+    # binaries (bladebro, donsetch) can run.
+    sessionPath = [
+      "$HOME/.npm/bin"
+      "$HOME/.dotnet/tools"
+      "$HOME/.local/bin"
+    ];
+
+    # Keep the npm-installed MCP browsers present declaratively: a fresh
+    # machine (or a wiped $HOME/.npm) gets them back on the next switch
+    # instead of failing with "Executable not found in PATH". Skips when
+    # both binaries already run.
+    activation.installMcpBrowsers = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+      if [ ! -x "$HOME/.npm/bin/bladebro" ] || [ ! -x "$HOME/.npm/bin/donsetch" ]; then
+        $DRY_RUN_CMD ${pkgs.nodejs}/bin/npm install --prefix "$HOME/.npm" -g bladebro donsetch
+      fi
+    '';
+  };
 
   programs.zsh = {
     enable = true;
@@ -249,24 +69,4 @@ in
     enable = true;
     enableZshIntegration = true;
   };
-
-  # Global npm packages install into $HOME/.npm (set by programs.npm `/etc/npmrc`,
-  # the NixOS-wiki home approach). Add its bin dir to PATH. Requires
-  # programs.nix-ld (common/modules/nix-ld.nix) so prebuilt glibc binaries
-  # (bladebro, donsetch) can run.
-  home.sessionPath = [
-    "$HOME/.npm/bin"
-    "$HOME/.dotnet/tools"
-    "$HOME/.local/bin"
-  ];
-
-  # Keep the npm-installed MCP browsers present declaratively: a fresh
-  # machine (or a wiped $HOME/.npm) gets them back on the next switch
-  # instead of failing with "Executable not found in PATH". Skips when
-  # both binaries already run.
-  home.activation.installMcpBrowsers = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
-    if [ ! -x "$HOME/.npm/bin/bladebro" ] || [ ! -x "$HOME/.npm/bin/donsetch" ]; then
-      $DRY_RUN_CMD ${pkgs.nodejs}/bin/npm install --prefix "$HOME/.npm" -g bladebro donsetch
-    fi
-  '';
 }

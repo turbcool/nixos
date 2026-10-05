@@ -20,6 +20,37 @@
         "type": "github"
       }
     },
+    "agent-runtime": {
+      "inputs": {
+        "claude-code": [
+          "claude-code"
+        ],
+        "home-manager": [
+          "home-manager"
+        ],
+        "i-have-adhd": [
+          "i-have-adhd"
+        ],
+        "llm-agents": [
+          "llm-agents"
+        ],
+        "nixpkgs": [
+          "nixpkgs"
+        ],
+        "ponytail": [
+          "ponytail"
+        ]
+      },
+      "locked": {
+        "path": "./agent-runtime",
+        "type": "path"
+      },
+      "original": {
+        "path": "./agent-runtime",
+        "type": "path"
+      },
+      "parent": []
+    },
     "agent-skills": {
       "inputs": {
         "nixpkgs": "nixpkgs"
@@ -1499,6 +1530,7 @@
     "root": {
       "inputs": {
         "agenix": "agenix",
+        "agent-runtime": "agent-runtime",
         "agent-skills": "agent-skills",
         "archify": "archify",
         "claude-code": "claude-code",
