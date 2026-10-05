@@ -99,6 +99,10 @@
         # -L: the config is a link farm of store paths, dereference it so $HOME
         # ends up with real files.
         cp -rL ${agentRuntimeConfig}/. "$target/"
+        # ...but store paths are r-xr-xr-x, and cp carries the source mode
+        # over, so the result would be read-only and pi could not even create
+        # ~/.pi/agent/sessions.
+        chmod -R u+w "$target"
         echo "✓ agent config installed into $target"
         echo "  skills: $(ls -1 "$target/.agents/skills" | wc -l | tr -d ' ') into .agents, .claude and .config/opencode"
         echo "  export the AGENT_*_TOKEN env vars (see data/providers.nix) before running the agents"
