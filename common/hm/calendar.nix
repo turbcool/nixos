@@ -3,10 +3,7 @@
 let
   radicaleUrl = "https://cal.naidanov.ru";
   username = "turbcool";
-  passwordCommand = [
-    "cat"
-    "/home/${osConfig.local.profile.username}/.radicale-pass"
-  ];
+  passwordCommand = [ "cat" "/home/${osConfig.local.profile.username}/.radicale-pass" ];
 in
 {
   programs.khal = {
@@ -45,11 +42,8 @@ in
     };
     vdirsyncer = {
       enable = true;
-      collections = [
-        "from a"
-        "from b"
-      ];
-      metadata = [ "color" ];
+      collections = ["from a" "from b"];
+      metadata = ["color"];
     };
     khal = {
       enable = true;
