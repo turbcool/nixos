@@ -14,9 +14,9 @@
     # The agent runtime (claude-code + opencode + pi + providers/keys) is its
     # own flake, turbcool/agent-runtime, installable standalone in containers
     # via `nix profile install github:turbcool/agent-runtime`. A local checkout
-    # keeps the dev loop short: uncommitted changes are evaluated as-is, so no
-    # push is needed between edits (commit for a reproducible build). Its own
-    # inputs are forced to follow ours so nothing is fetched twice.
+    # keeps the dev loop short — but a git URL tracks committed history, so
+    # commit there first, then `nix flake update agent-runtime` (no push needed).
+    # Its own inputs are forced to follow ours so nothing is fetched twice.
     agent-runtime = {
       url = "git+file:/home/turb/repos/agent-runtime";
       inputs = {

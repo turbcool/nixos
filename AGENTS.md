@@ -93,8 +93,9 @@ Extension IDs: Bitwarden `nngceckbapebfimnlniiiahkandclblb`, Passbolt `didegimha
 
 Everything about the coding agents lives in that separate flake, not in `common/`. Paths below are relative to its root.
 
-- **`data/`** — pure data, no OS: `providers.nix` (endpoints, models, token sources), `mcp.nix`, `plugins.nix`, `skills.nix`, `pi-starship.toml`.
-- **`modules/home.nix`** — OS-agnostic Home Manager module: pi config, opencode.json, binaries, and all `agent.*` options. Works both under NixOS+HM and under the standalone `homeConfigurations.agent-runtime` (plain HM, no OS).
+- **`data/`** — pure data, no OS: `providers.nix` (endpoints, models, token sources), `mcp.nix` (servers + `groups` + the reserved `npm` set that both agents derive from), `plugins.nix`, `skills.nix`, `scripts/writing.sh` (bash for the `writing` wrapper).
+- **`modules/options.nix`** — the options both halves declare (`agent.providers`, `agent.plugins`, `agent.claudeCode.*`), imported by the two below so they can't drift.
+- **`modules/home.nix`** — OS-agnostic Home Manager module: pi config, opencode.json, binaries, and the remaining `agent.*` options. Works both under NixOS+HM and under the standalone `homeConfigurations.agent-runtime` (plain HM, no OS).
 - **`modules/nixos.nix`** — agenix secrets, `/etc/claude-code/managed-settings.json`, `ANTHROPIC_BASE_URL`. Rewrites the `tokenSource` of every provider named in `agent.agenixFiles` into the decrypted secret's store path (`agent.resolvedProviders`).
 - **`modules/wrappers.nix`** — `claude`, `claude-free`, `writing` (per-provider wrappers).
 - **`modules/skills.nix`** — the bundled skills (`data/skills.nix`). **The only** place that imports `agent-skills`' HM module: it is a Nix function, not a path, so a second import makes every `programs.agent-skills.*` option collide. Host modules may extend `programs.agent-skills.sources` but must never re-import it.

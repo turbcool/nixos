@@ -2,9 +2,10 @@
 
 let
   # data/ lives in the agent-runtime flake; + "/…" addresses its store path.
-  raw = import (inputs.agent-runtime + "/data/mcp.nix") { inherit pkgs; };
+  # `groups` and `npm` are reserved keys there, not servers.
+  raw = import (inputs.agent-runtime + "/data/mcp.nix");
   groups = raw.groups or { };
-  servers = builtins.removeAttrs raw [ "groups" ];
+  servers = builtins.removeAttrs raw [ "groups" "npm" ];
   serverNames = builtins.attrNames servers;
 
   mkMcpConfig =

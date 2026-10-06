@@ -54,11 +54,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1791260586,
-        "narHash": "sha256-zZKosM0Q3UQT5ZcezUjo1yzbQylpRbre4jP+NIqd+Wg=",
+        "lastModified": 1791263121,
+        "narHash": "sha256-Vm6S6hnL+uKZZX7GudwydPETB7bkqa3t+Mi7EeX6vPg=",
         "ref": "refs/heads/main",
-        "rev": "1b75fb997a0485c21a156554921cd98b2a7796b5",
-        "revCount": 3,
+        "rev": "c12039096c181deec50e519745a4ed76db30bd5c",
+        "revCount": 5,
         "type": "git",
         "url": "file:/home/turb/repos/agent-runtime"
       },

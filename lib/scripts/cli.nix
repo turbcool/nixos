@@ -2,11 +2,13 @@
 
 let
   # data/ lives in the agent-runtime flake; + "/…" addresses its store path.
-  mcpConfig = import (inputs.agent-runtime + "/data/mcp.nix") { inherit pkgs; };
+  # `groups` and `npm` are reserved keys there, not servers: npm is the
+  # npm-installed set the runtime writes into opencode.json itself.
+  mcpConfig = import (inputs.agent-runtime + "/data/mcp.nix");
   skillsConfig = import ../../config/skills.nix;
 
   mcpGroups = mcpConfig.groups or { };
-  mcpServers = builtins.removeAttrs mcpConfig [ "groups" ];
+  mcpServers = builtins.removeAttrs mcpConfig [ "groups" "npm" ];
   allMcpNames = (builtins.attrNames mcpServers) ++ (builtins.attrNames mcpGroups);
 
   skillsSources = builtins.attrNames (builtins.removeAttrs skillsConfig [ "groups" ]);
