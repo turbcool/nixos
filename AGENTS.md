@@ -35,8 +35,9 @@ donsetch doctor                   # health check (also prints MCP registration)
 
 # Claude Code MCP — the npm-installed servers (`data/mcp.nix`'s `npm` set) are delivered at
 # runtime by the `claude` command via --mcp-config, but that does NOT make them appear in
-# `claude mcp list`. Register them in the user scope once per host for visibility + health
-# checks:
+# `claude mcp list`. They are also on PATH and reinstalled by the runtime's activation
+# hook when missing; register them in the user scope once per host for visibility +
+# health checks:
 claude mcp add -s user bladebro -- ~/.npm/bin/bladebro mcp
 claude mcp add -s user donsetch -- ~/.npm/bin/donsetch mcp
 ```
@@ -103,6 +104,7 @@ Everything about the coding agents lives in that separate flake, not in `common/
 - **`modules/container.nix`** — home dir + headless tweaks for the standalone config only.
 - **`common/hm/agent-bridge.nix`** (3 lines) — the only NixOS↔HM glue: `agent.providers = osConfig.agent.resolvedProviders`.
 - **`common/hm/agent-skills.nix`** — adds the host-only skills (`config/skills.nix`) to `programs.agent-skills.sources`. Both modules merge into one source set → one catalog → one bundle → one sync.
+- **`common/hm/cli.nix`** — no longer owns `$HOME/.npm/bin` or the bladebro/donsetch `npm i -g` hook: `agent.npmPrefix` in the runtime module feeds both, from the MCP registry itself.
 - **`common/modules/agent-secrets.nix`** — host side of the token rewrite: `agent.agenixFiles` maps each provider to its `.age` ciphertext. The runtime flake carries no secrets and no paths, which is what keeps it standalone-installable.
 
 ### Tokens

@@ -5,30 +5,21 @@
 }:
 
 # Shell/tooling setup only. The claude/opencode/pi binaries, their config and
-# their wrappers live in the agent-runtime flake (see agent-runtime/modules).
+# the provider-pinned commands live in the agent-runtime flake (see
+# agent-runtime/modules).
 {
   home = {
     packages = [ pkgs.yt-dlp ];
 
-    # Global npm packages install into $HOME/.npm (set by programs.npm
-    # `/etc/npmrc`, the NixOS-wiki home approach). Add its bin dir to PATH.
-    # Requires programs.nix-ld (common/modules/nix-ld.nix) so prebuilt glibc
-    # binaries (bladebro, donsetch) can run.
+    # $HOME/.npm/bin (where programs.npm puts the global npm packages, and
+    # where the MCP servers live) comes from agent.npmPrefix in the runtime
+    # module. Requires programs.nix-ld (common/modules/nix-ld.nix) so prebuilt
+    # glibc binaries (bladebro, donsetch) can run; the runtime's activation
+    # hook reinstalls them when they go missing.
     sessionPath = [
-      "$HOME/.npm/bin"
       "$HOME/.dotnet/tools"
       "$HOME/.local/bin"
     ];
-
-    # Keep the npm-installed MCP browsers present declaratively: a fresh
-    # machine (or a wiped $HOME/.npm) gets them back on the next switch
-    # instead of failing with "Executable not found in PATH". Skips when
-    # both binaries already run.
-    activation.installMcpBrowsers = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
-      if [ ! -x "$HOME/.npm/bin/bladebro" ] || [ ! -x "$HOME/.npm/bin/donsetch" ]; then
-        $DRY_RUN_CMD ${pkgs.nodejs}/bin/npm install --prefix "$HOME/.npm" -g bladebro donsetch
-      fi
-    '';
   };
 
   programs.zsh = {
