@@ -11,12 +11,14 @@
     # themselves no longer reference any of them.
     llm-agents.url = "github:numtide/llm-agents.nix";
 
-    # The agent runtime (claude-code + opencode + pi + providers/keys) lives in
-    # a nested flake so the same definition can be installed standalone in the
-    # agent-runtime containers via `github:turbcool/nixos/agent-runtime`.
-    # Its own inputs are forced to follow ours so nothing is fetched twice.
+    # The agent runtime (claude-code + opencode + pi + providers/keys) is its
+    # own flake, turbcool/agent-runtime, installable standalone in containers
+    # via `nix profile install github:turbcool/agent-runtime`. A local checkout
+    # keeps the dev loop short: uncommitted changes are evaluated as-is, so no
+    # push is needed between edits (commit for a reproducible build). Its own
+    # inputs are forced to follow ours so nothing is fetched twice.
     agent-runtime = {
-      url = "path:./agent-runtime";
+      url = "git+file:/home/turb/repos/agent-runtime";
       inputs = {
         nixpkgs.follows = "nixpkgs";
         home-manager.follows = "home-manager";
@@ -144,7 +146,7 @@
         };
       };
 
-      mcp = import ./lib/devShells/mcp.nix { inherit pkgs; };
+      mcp = import ./lib/devShells/mcp.nix { inherit pkgs inputs; };
       skillsInstall = import ./lib/skills-install.nix { inherit pkgs inputs; };
       cli = import ./lib/scripts/cli.nix { inherit pkgs inputs; };
       playwright = import ./lib/devShells/playwright.nix { inherit pkgs inputs; };

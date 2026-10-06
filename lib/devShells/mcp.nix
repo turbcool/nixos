@@ -1,7 +1,8 @@
-{ pkgs }:
+{ pkgs, inputs }:
 
 let
-  raw = import ../../agent-runtime/data/mcp.nix { inherit pkgs; };
+  # data/ lives in the agent-runtime flake; + "/…" addresses its store path.
+  raw = import (inputs.agent-runtime + "/data/mcp.nix") { inherit pkgs; };
   groups = raw.groups or { };
   servers = builtins.removeAttrs raw [ "groups" ];
   serverNames = builtins.attrNames servers;

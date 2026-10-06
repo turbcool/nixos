@@ -2,6 +2,7 @@
 
 {
   imports = [
+    ./agent-secrets.nix
     ./cert.nix
     ./docker.nix
     ./git.nix

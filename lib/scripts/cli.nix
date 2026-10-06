@@ -1,7 +1,8 @@
 { pkgs, inputs }:
 
 let
-  mcpConfig = import ../../agent-runtime/data/mcp.nix { inherit pkgs; };
+  # data/ lives in the agent-runtime flake; + "/…" addresses its store path.
+  mcpConfig = import (inputs.agent-runtime + "/data/mcp.nix") { inherit pkgs; };
   skillsConfig = import ../../config/skills.nix;
 
   mcpGroups = mcpConfig.groups or { };

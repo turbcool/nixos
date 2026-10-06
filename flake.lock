@@ -54,14 +54,18 @@
         ]
       },
       "locked": {
-        "path": "./agent-runtime",
-        "type": "path"
+        "lastModified": 1791260586,
+        "narHash": "sha256-zZKosM0Q3UQT5ZcezUjo1yzbQylpRbre4jP+NIqd+Wg=",
+        "ref": "refs/heads/main",
+        "rev": "1b75fb997a0485c21a156554921cd98b2a7796b5",
+        "revCount": 3,
+        "type": "git",
+        "url": "file:/home/turb/repos/agent-runtime"
       },
       "original": {
-        "path": "./agent-runtime",
-        "type": "path"
-      },
-      "parent": []
+        "type": "git",
+        "url": "file:/home/turb/repos/agent-runtime"
+      }
     },
     "agent-skills": {
       "inputs": {
