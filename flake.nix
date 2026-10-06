@@ -22,11 +22,13 @@
       inputs = {
         nixpkgs.follows = "nixpkgs";
         home-manager.follows = "home-manager";
-        # The one agent input a host still touches: lib/skills-install.nix builds
-        # its per-project installers with agent-skills' lib.
-        agent-skills.follows = "agent-skills";
       };
     };
+
+    # The runtime ships its own copies of every agent input it needs (skill
+    # libraries, providers, MCP, plugins), so this host no longer declares
+    # agent-skills or any other agent input — importing the module is enough.
+    importing the module is enough.
 
     nixos-wsl = {
       url = "github:nix-community/NixOS-WSL/main";
@@ -50,8 +52,6 @@
     };
 
     nixos-hardware.url = "github:nixos/nixos-hardware/master";
-
-    agent-skills.url = "github:Kyure-A/agent-skills-nix";
 
     orca-skills = {
       url = "github:stablyai/orca";
@@ -123,21 +123,7 @@
         };
       };
 
-      mcp = inputs.agent-runtime.packages.${system}.mcp;
-      skillsInstall = import ./lib/skills-install.nix { inherit pkgs inputs; };
-      cli = import ./lib/scripts/cli.nix { inherit pkgs; };
       playwright = import ./lib/devShells/playwright.nix { inherit pkgs inputs; };
-
-      prefixAttrs =
-        prefix: attrs:
-        builtins.listToAttrs (
-          builtins.attrValues (
-            builtins.mapAttrs (name: value: {
-              name = "${prefix}${name}";
-              inherit value;
-            }) attrs
-          )
-        );
     in
     {
       nixosConfigurations = nixpkgs.lib.mapAttrs (_: cfg: mkHost cfg) hosts;
@@ -150,15 +136,12 @@
             pkgs.nixd
             pkgs.statix
             pkgs.jq
-            cli.skills
-            # Ships with the agent runtime: it renders that flake's MCP registry.
-            mcp
+            # pi, opencode, claude, claude-free, writing, mcp and the
+            # per-project `skills` CLI all ship in the agent-runtime bundle.
           ];
         };
 
         opencode-playwright = playwright.devShell;
       };
-
-      packages.${system} = prefixAttrs "skills-install-" skillsInstall.installs;
     };
 }

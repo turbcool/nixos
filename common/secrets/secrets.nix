@@ -1,48 +1,30 @@
-# Shared agenix secrets configuration.
-# Run `nix shell github:ryantm/agenix -c agenix -e neoplatform-token.age` from this directory to edit shared secrets.
+# Shared agenix secrets manifest.
+#
+# agenix only needs this while *editing* (encrypting); at evaluation the runtime
+# derives the ciphertext paths from `agent.agenixDir`. Run, from here:
+#   nix run nixos#agenix -e neoplatform-token.age
 let
-  nixos = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIAinMWGCX0qwJCprj4pAn+bSx+w2YGr8z6yqsMPuyi0X";
-  nixos-old = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIKTqEJJ50htCOsmbULT7xdANQ/9ZRwrEdyTJyOAVHKOl";
+  pubkeys = [
+    "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIAinMWGCX0qwJCprj4pAn+bSx+w2YGr8z6yqsMPuyi0X"
+    "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIKTqEJJ50htCOsmbULT7xdANQ/9ZRwrEdyTJyOAVHKOl"
+  ];
+  mk = name: {
+    name = name;
+    value = { publicKeys = pubkeys; };
+  };
 in
-{
-  "neoplatform-token.age".publicKeys = [
-    nixos
-    nixos-old
-  ];
-  "custom-token.age".publicKeys = [
-    nixos
-    nixos-old
-  ];
-  "free-token.age".publicKeys = [
-    nixos
-    nixos-old
-  ];
-  "../../hydenix/secrets/work-pc.age".publicKeys = [
-    nixos
-    nixos-old
-  ];
-  "vm-ai-neoplatform.age".publicKeys = [
-    nixos
-    nixos-old
-  ];
-  "vm-ai-skyori.age".publicKeys = [
-    nixos
-    nixos-old
-  ];
-  "vm-ai-proinfoservice.age".publicKeys = [
-    nixos
-    nixos-old
-  ];
-  "vm-ai-timepath.age".publicKeys = [
-    nixos
-    nixos-old
-  ];
-  "gitlab-neoplatform-token.age".publicKeys = [
-    nixos
-    nixos-old
-  ];
-  "gitlab-skyori-token.age".publicKeys = [
-    nixos
-    nixos-old
-  ];
+builtins.listToAttrs (
+  map mk [
+    "neoplatform-token.age"
+    "custom-token.age"
+    "free-token.age"
+    "gitlab-neoplatform-token.age"
+    "gitlab-skyori-token.age"
+    "vm-ai-neoplatform.age"
+    "vm-ai-proinfoservice.age"
+    "vm-ai-skyori.age"
+    "vm-ai-timepath.age"
+  ]
+) // {
+  "../../hydenix/secrets/work-pc.age" = { publicKeys = pubkeys; };
 }

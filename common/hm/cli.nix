@@ -11,11 +11,11 @@
   home = {
     packages = [ pkgs.yt-dlp ];
 
-    # $HOME/.npm/bin (where programs.npm puts the global npm packages, and
-    # where the MCP servers live) comes from agent.npmPrefix in the runtime
-    # module. Requires programs.nix-ld (common/modules/nix-ld.nix) so prebuilt
-    # glibc binaries (bladebro, donsetch) can run; the runtime's activation
-    # hook reinstalls them when they go missing.
+    # $HOME/.npm/bin (where programs.npm puts its global packages, and where the
+    # runtime installs its npm MCP servers when missing) comes from the runtime's
+    # `agent.npmPrefix` option (default $HOME/.npm). The runtime module also owns
+    # programs.nix-ld, which the bundled bladebro/donsetch need as prebuilt
+    # glibc binaries.
     sessionPath = [
       "$HOME/.dotnet/tools"
       "$HOME/.local/bin"

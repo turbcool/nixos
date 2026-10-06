@@ -7,7 +7,6 @@
 # server/client pairing, a browser, a local vault).
 {
   orca = {
-    input = "orca-skills";
-    subdir = "skills";
+    path = "${inputs.orca-skills}/skills";
   };
 }
