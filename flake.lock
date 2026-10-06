@@ -42,10 +42,10 @@
         "qmd": "qmd"
       },
       "locked": {
-        "lastModified": 1791272782,
-        "narHash": "sha256-Zqa4FGXIUUKHELReh3beEKcgQ9Gq6tPjirLWIqzPcOw=",
+        "lastModified": 1791273009,
+        "narHash": "sha256-+DCGQ+dxXuO7rpQrsQl0Ee9k1nazmFllNBkSf4QO7CE=",
         "ref": "refs/heads/main",
-        "rev": "ec55384f3f30b1dfd3ea7b900aa3612c7d5e590e",
+        "rev": "5fc4ea35633a5a8ef84d40bd22e52e750c82619b",
         "revCount": 8,
         "type": "git",
         "url": "file:/home/turb/repos/agent-runtime"
