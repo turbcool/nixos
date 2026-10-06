@@ -6,29 +6,25 @@
     # was only a Dec-2025 pin, not a fork — nothing needed it once the nixarchy
     # host stopped importing the hydenix module.
     #
-    # The agent-input block below (llm-agents, claude-code, ponytail, ...) is
-    # kept only so agent-runtime can `follows` it — the host modules
-    # themselves no longer reference any of them.
-    llm-agents.url = "github:numtide/llm-agents.nix";
-
-    # The agent runtime (claude-code + opencode + pi + providers/keys) is its
-    # own flake, turbcool/agent-runtime, installable standalone in containers
-    # via `nix profile install github:turbcool/agent-runtime`. A local checkout
-    # keeps the dev loop short — but a git URL tracks committed history, so
-    # commit there first, then `nix flake update agent-runtime` (no push needed).
-    # Its own inputs are forced to follow ours so nothing is fetched twice.
+    # The agent inputs (llm-agents, claude-code, the skill repos, ...) are NOT
+    # declared here any more: the runtime resolves them from its own lock, by
+    # absolute path, so a host cannot accidentally end up with a different pin
+    # than the module it imports.
+    #
+    # The agent runtime (claude-code + opencode + pi + providers/keys + skills +
+    # MCP) is its own flake, turbcool/agent-runtime, installable standalone in
+    # containers via `nix profile install github:turbcool/agent-runtime`. A local
+    # checkout keeps the dev loop short — but a git URL tracks committed history,
+    # so commit there first, then `nix flake update agent-runtime` (no push
+    # needed). Its own inputs follow ours, so nothing is fetched twice.
     agent-runtime = {
       url = "git+file:/home/turb/repos/agent-runtime";
       inputs = {
         nixpkgs.follows = "nixpkgs";
         home-manager.follows = "home-manager";
-        llm-agents.follows = "llm-agents";
-        claude-code.follows = "claude-code";
+        # The one agent input a host still touches: lib/skills-install.nix builds
+        # its per-project installers with agent-skills' lib.
         agent-skills.follows = "agent-skills";
-        archify.follows = "archify";
-        ponytail.follows = "ponytail";
-        qmd.follows = "qmd";
-        i-have-adhd.follows = "i-have-adhd";
       };
     };
 
@@ -62,27 +58,8 @@
       flake = false;
     };
 
-    i-have-adhd = {
-      url = "github:ayghri/i-have-adhd";
-      flake = false;
-    };
-
-    archify = {
-      url = "github:tt-a1i/archify";
-      flake = false;
-    };
-
-    qmd.url = "github:tobi/qmd";
-
-    claude-code.url = "github:sadjow/claude-code-nix";
-
     playwright-cli = {
       url = "github:microsoft/playwright-cli";
-      flake = false;
-    };
-
-    ponytail = {
-      url = "github:DietrichGebert/ponytail";
       flake = false;
     };
 
@@ -146,9 +123,9 @@
         };
       };
 
-      mcp = import ./lib/devShells/mcp.nix { inherit pkgs inputs; };
+      mcp = inputs.agent-runtime.packages.${system}.mcp;
       skillsInstall = import ./lib/skills-install.nix { inherit pkgs inputs; };
-      cli = import ./lib/scripts/cli.nix { inherit pkgs inputs; };
+      cli = import ./lib/scripts/cli.nix { inherit pkgs; };
       playwright = import ./lib/devShells/playwright.nix { inherit pkgs inputs; };
 
       prefixAttrs =
@@ -174,14 +151,14 @@
             pkgs.statix
             pkgs.jq
             cli.skills
-            cli.mcp
+            # Ships with the agent runtime: it renders that flake's MCP registry.
+            mcp
           ];
         };
 
         opencode-playwright = playwright.devShell;
       };
 
-      packages.${system} =
-        (prefixAttrs "mcp-config-" mcp.configs) // (prefixAttrs "skills-install-" skillsInstall.installs);
+      packages.${system} = prefixAttrs "skills-install-" skillsInstall.installs;
     };
 }

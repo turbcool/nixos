@@ -9,30 +9,27 @@ let
   };
 
   # Note: ../ (one level) — this file lives in lib/, not lib/scripts/.
-  rawConfig = import ../config/skills.nix;
-  groups = rawConfig.groups or { };
-  sources = builtins.removeAttrs rawConfig [ "groups" ];
-  sourceNames = builtins.attrNames sources;
+  # Host-only skills; the runtime's own skills are already installed globally by
+  # agent-skills, so this only offers the per-project copies.
+  sources = import ../config/skills.nix;
 
   catalog = agentLib.discoverCatalog sources;
 
   mkInstall =
-    sourceList:
-    let
+    name:
+    agentLib.mkLocalInstallProgram {
+      inherit pkgs;
       bundle = agentLib.mkBundle {
         inherit pkgs;
         selection = agentLib.selectSkills {
           inherit catalog sources;
           allowlist = agentLib.allowlistFor {
             inherit catalog sources;
-            enableAll = sourceList;
+            enableAll = [ name ];
           };
           skills = { };
         };
       };
-    in
-    agentLib.mkLocalInstallProgram {
-      inherit pkgs bundle;
       targets.opencode = {
         enable = true;
         dest = ".opencode/skills";
@@ -41,14 +38,5 @@ let
     };
 in
 {
-  names = sourceNames ++ (builtins.attrNames groups);
-
-  installs =
-    (builtins.listToAttrs (
-      builtins.map (name: {
-        inherit name;
-        value = mkInstall [ name ];
-      }) sourceNames
-    ))
-    // (builtins.mapAttrs (_: mkInstall) groups);
+  installs = builtins.mapAttrs (name: _: mkInstall name) sources;
 }
