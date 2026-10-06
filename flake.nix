@@ -28,7 +28,6 @@
     # The runtime ships its own copies of every agent input it needs (skill
     # libraries, providers, MCP, plugins), so this host no longer declares
     # agent-skills or any other agent input — importing the module is enough.
-    importing the module is enough.
 
     nixos-wsl = {
       url = "github:nix-community/NixOS-WSL/main";
