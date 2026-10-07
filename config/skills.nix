@@ -1,11 +1,7 @@
-# Host-only skills.
-#
-# Anything that should also run in the agent-runtime containers lives in
-# agent-runtime/data/skills.nix instead — `programs.agent-skills.sources` is a
-# plain attrsOf, so both modules contribute to one source set and one bundle.
-# Keep this list to skills that genuinely need the desktop host (orca's
-# server/client pairing, a browser, a local vault).
-{
+# Host-only skills. Resolved against the host flake's `inputs` by
+# `common/modules/agent.nix` (`import ../../config/skills.nix inputs`), so it
+# is a function of `inputs`, not a free-variable reference.
+{ inputs }: {
   orca = {
     path = "${inputs.orca-skills}/skills";
   };

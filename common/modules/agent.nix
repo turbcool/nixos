@@ -15,5 +15,5 @@
 
   # Host-only skills, merged by the runtime's modules/skills.nix into the same
   # source set as its own skills — one catalog, one bundle, one sync.
-  agent.skills.sources = import ../../config/skills.nix inputs;
+  agent.skills.sources = import ../../config/skills.nix { inputs = inputs; };
 }

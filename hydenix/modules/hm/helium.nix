@@ -1,40 +1,54 @@
 # Helium extensions installed as external extensions (local CRX files).
 #
 # uBlock Origin is NOT listed here - Helium bundles it as a built-in component.
-# Bitwarden and Passbolt are the user's remaining Firefox extensions, pulled
-# from the Chrome Web Store as signed CRX files and force-installed via the
-# standard Chromium "External Extensions" mechanism (no store server needed).
+# Bitwarden and Passbolt are the user's remaining Firefox extensions, installed
+# as signed CRX files through the standard Chromium "External Extensions"
+# mechanism (no store server needed).
 #
-# When a CRX version bumps on the Chrome Web Store, update BOTH the version
-# below and the hash (re-prefetch via):
-#   nix-prefetch-url "https://clients2.google.com/service/update2/crx?response=redirect&prodversion=127.0.0.0&acceptformat=crx3&x=id%3D<ID>%26installsource%3Dondemand%26uc"
+# The CRX files are *vendored*: `./helium-extensions/<id>.crx`. A literal path
+# is copied into the store by content hash, so a build never touches the
+# network and there is no sha256 to bump. The Chrome Web Store cannot be used as
+# a build input - clients2.google.com answers 204/empty for every
+# /service/update2/crx request, so `fetchurl` produced a 0-byte file and a
+# hash-mismatch build failure.
+#
+# To add or update an extension:
+#   1. hydenix/modules/hm/helium-extensions/fetch.sh <id>   (needs CWS access)
+#   2. bump `version` below to what fetch.sh printed
+#
+# An extension with no vendored file is skipped, with a warning on stderr, so a
+# missing CRX cannot break the whole system build.
 {
   config,
-  pkgs,
   lib,
   ...
 }:
 
 let
-  ext =
-    id: sha256:
-    pkgs.fetchurl {
-      url = "https://clients2.google.com/service/update2/crx?response=redirect&prodversion=127.0.0.0&acceptformat=crx3&x=id%3D${id}%26installsource%3Dondemand%26uc";
-      sha256 = sha256;
+  vendored =
+    id: version:
+    let
+      file = ./helium-extensions + "/${id}.crx";
+    in
+    {
+      inherit id version;
+      crx = if builtins.pathExists file then file else null;
     };
 
-  extensions = [
+  wanted = [
     {
       id = "nngceckbapebfimnlniiiahkandclblb"; # Bitwarden
       version = "2026.7.0";
-      crx = ext "nngceckbapebfimnlniiiahkandclblb" "sha256-PwXLkgGS9YjvBRUHgwiEtqiXkXmWngv3xA4Boqj9f74=";
     }
     {
       id = "didegimhafipceonhjepacocaffmoppf"; # Passbolt
       version = "5.14.3";
-      crx = ext "didegimhafipceonhjepacocaffmoppf" "sha256-aR51q5ee+ZVJtuHFk1UnJoqoybDwrmPr1AXJblKjWiA=";
     }
   ];
+
+  resolved = map (e: vendored e.id e.version) wanted;
+  installed = lib.filter (e: e.crx != null) resolved;
+  missing = map (e: e.id) (lib.filter (e: e.crx == null) resolved);
 in
 {
   home.file = lib.listToAttrs (
@@ -44,6 +58,11 @@ in
         external_crx = e.crx;
         external_version = e.version;
       };
-    }) extensions
+    }) installed
   );
+
+  # Loud, once, and impossible to miss in a rebuild log.
+  warnings = lib.optionals (missing != [ ]) [
+    "Helium extension CRX not vendored for: ${lib.concatStringsSep ", " missing}. These extensions are NOT installed. Run hydenix/modules/hm/helium-extensions/fetch.sh <id> to add them."
+  ];
 }
