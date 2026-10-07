@@ -28,8 +28,9 @@ direnv allow   # run once after entering /etc/nixos; provides nixfmt, nixd, stat
 
 # MCP tools (bladebro + donsetch) — installed per-user via npm into `$HOME/.npm/`
 # (NixOS-wiki home approach; prefix set by programs.npm in common/pkgs/dev.nix).
-# `programs.nix-ld` (common/modules/nix-ld.nix) is required: both ship prebuilt
-# glibc binaries that the NixOS stub loader would otherwise reject.
+# `programs.nix-ld` is enabled by the agent runtime's NixOS module itself (both
+# ship prebuilt glibc binaries the NixOS stub loader would otherwise reject), so
+# this repo no longer carries `common/modules/nix-ld.nix`.
 npm i -g bladebro donsetch        # install/update; binaries land in $HOME/.npm/bin
 donsetch doctor                   # health check (also prints MCP registration)
 
@@ -49,7 +50,7 @@ claude mcp add -s user donsetch -- ~/.npm/bin/donsetch mcp
 - **Three hosts** toggled by flake output attribute: `hydenix` (Hyde desktop), `nixarchy` (Omarchy desktop), `wsl`
 - **`common/`** — shared across both hosts:
   - `pkgs/` — system package lists (cli, dev, database, dotnet, networking, python)
-  - `modules/` — system modules (agent-secrets, cert, docker, git, nix, profile, shell); `profile.nix` defines `local.profile` options (username, email, timezone, locale), `agent-secrets.nix` wires the agent runtime's `agent.agenixFiles`
+  - `modules/` — system modules (agent, cert, docker, git, nix, profile, shell); `profile.nix` defines `local.profile` options (username, email, timezone, locale), `agent.nix` is the *entire* host side of the agent runtime (`agent.agenixDir` + `agent.skills.sources`)
   - `hm/` — shared Home Manager modules (agent-skills, calendar, cli, direnv, neovim, opencode, ssh, tmux, zoxide)
   - `secrets/` — agenix secrets and `secrets.nix` (public key manifest)
 - **`hydenix/`** — desktop-only:
@@ -65,7 +66,7 @@ claude mcp add -s user donsetch -- ~/.npm/bin/donsetch mcp
   - Reuses `hydenix/hardware-configuration.nix` (same physical machine)
 - **`wsl/`** — `configuration.nix` only; imports `common/pkgs` + `common/modules`; HM imports `common/hm/` directly
 - **`config/`** — host-only extras: `skills.nix` (the one skill that needs the desktop). Everything else (providers, MCP, plugins, runtime skills) lives in the agent-runtime flake.
-- **`lib/`** — `mk-host.nix`, `devShells/playwright.nix`, `skills-install.nix` (per-project `#skills-install-<name>` bundles), `scripts/cli.nix` (the `skills` wrapper). The `mcp` command comes from the runtime flake.
+- **`lib/`** — `mk-host.nix` and `devShells/playwright.nix`. The `mcp` and `skills` commands (plus their `#skills-install-<name>` siblings) come from the runtime flake, so `/etc/nixos` no longer ships its own wrappers — `lib/skills-install.nix` and `lib/scripts/cli.nix` are gone.
 - **`default.nix`** files in module directories import all child modules
 
 ## Feature toggles
@@ -74,38 +75,41 @@ claude mcp add -s user donsetch -- ~/.npm/bin/donsetch mcp
 
 ## Services
 
-- No containerized services remain. MCP web tools (donsetch = fetch/search/crawl, bladebro = stealth browser) are npm-installed per-user (`$HOME/.npm`) and run as native glibc binaries under `programs.nix-ld`; see `common/pkgs/dev.nix` (npm prefix) + `common/modules/nix-ld.nix`. CA trust for internal hosts (skyori, neoplatform, ff.ru, SRVHADCS) comes from `common/modules/cert.nix`, which bladebro inherits since it drives the host's Chromium.
+- No containerized services remain. MCP web tools (donsetch = fetch/search/crawl, bladebro = stealth browser) are npm-installed per-user (`$HOME/.npm`) and run as native glibc binaries; the runtime's NixOS module enables `programs.nix-ld` for them and sets `programs.npm` (with an `npmrc` matching `agent.npmPrefix`), so no host module has to. CA trust for internal hosts (skyori, neoplatform, ff.ru, SRVHADCS) comes from `common/modules/cert.nix`, which bladebro inherits since it drives the host's Chromium.
 
-## Helium extension bumps (Bitwarden/Passbolt)
+## Helium extensions (Bitwarden/Passbolt)
 
-When a rebuild fails on a CRX hash in `hydenix/modules/hm/helium.nix` (store version bumped):
+CRX files are **vendored**, not fetched: `hydenix/modules/hm/helium.nix` references
+`hydenix/modules/hm/helium-extensions/<id>.crx` as a literal path, so Nix copies
+each into the store by content hash — no network at build time and no `sha256` to
+bump. The Chrome Web Store cannot be a build input: `clients2.google.com` answers
+204/empty for every `/service/update2/crx` request, so a `fetchurl` there yields a
+0-byte file and a hash-mismatch build failure.
 
-1. Get new hash + version for the extension:
-   ```bash
-   curl -sL -o /tmp/e.crx "https://clients2.google.com/service/update2/crx?response=redirect&prodversion=127.0.0.0&acceptformat=crx3&x=id%3D<ID>%26installsource%3Dondemand%26uc"
-   nix hash convert --hash-algo sha256 --to sri $(nix hash path /tmp/e.crx)
-   unzip -p /tmp/e.crx manifest.json | jq -r .version
-   ```
-2. Update `version` + `sha256` for that extension in `hydenix/modules/hm/helium.nix`.
+To add or update an extension (needs a host that can still reach CWS):
+
+1. `hydenix/modules/hm/helium-extensions/fetch.sh <id>` — validates the `Cr24`
+   magic, writes `<id>.crx`, and prints the version to paste.
+2. Bump that extension's `version` in `hydenix/modules/hm/helium.nix`.
 3. `git add` then `nixos-rebuild switch --flake /etc/nixos#hydenix`.
 
-Extension IDs: Bitwarden `nngceckbapebfimnlniiiahkandclblb`, Passbolt `didegimhafipceonhjepacocaffmoppf`. uBlock is bundled as a Helium component — never bump it. Do NOT use `ExtensionInstallForcelist` (broken: Helium sends `prod=chromecrx`, CWS replies `noupdate`).
+Extension IDs: Bitwarden `nngceckbapebfimnlniiiahkandclblb`, Passbolt `didegimhafipceonhjepacocaffmoppf`. uBlock is bundled as a Helium component — never bump it. An extension with no vendored `.crx` is **skipped** and emits a `warnings` entry, so a missing file cannot break the build but is loud in the rebuild log. The `.crx` blobs are gitignored; `fetch.sh` + the README live next to them.
 
 ## Agent runtime (`~/repos/agent-runtime`, github:turbcool/agent-runtime)
 
 Everything about the coding agents lives in that separate flake, not in `common/`. Paths below are relative to its root.
 
 - **`data/`** — pure data, no OS: `providers.nix` (endpoints, models, Claude-dialect tiers, token sources), `mcp.nix` (`{ servers, groups, npm }`), `plugins.nix` (Claude marketplaces + plugins + the opencode plugin list), `skills.nix` (sources by absolute path), `scripts/writing.sh` (bash behind the `writing` command).
-- **`modules/options.nix`** — the options both halves declare (`agent.providers`, `agent.plugins`, `agent.claudeCode.*`), imported by the two below so they can't drift.
-- **`modules/home.nix`** — OS-agnostic Home Manager module: pi config, opencode.json, binaries, the per-provider commands, and the remaining `agent.*` options. Works both under NixOS+HM and under the standalone `homeConfigurations.agent-runtime` (plain HM, no OS). Closes over `runtimeInputs` (this flake's own inputs, threaded by its `flake.nix`), which is why a host declares no agent inputs.
-- **`modules/nixos.nix`** — agenix secrets, `/etc/claude-code/managed-settings.json`, `ANTHROPIC_BASE_URL`. Rewrites the `tokenSource` of every provider named in `agent.agenixFiles` into the decrypted secret's store path (`agent.resolvedProviders`).
-- **`flake.nix`** — also owns the `mcp <group|server>` command: it renders this flake's own MCP registry into a baked-in farm, so activating a server per project is a file read, not a `nix build`. The host takes it as `inputs.agent-runtime.packages.${system}.mcp`.
-- **`modules/skills.nix`** — the bundled skills (`data/skills.nix`). **The only** place that imports `agent-skills`' HM module: it is a Nix function, not a path, so a second import makes every `programs.agent-skills.*` option collide. Host modules may extend `programs.agent-skills.sources` but must never re-import it.
+- **`modules/options.nix`** — the options both halves declare (`agent.providers`, `agent.mcp`, `agent.plugins`, `agent.npmPrefix`, `agent.skills.sources`, `agent.claudeCode.*`), imported by the two below so they can't drift.
+- **`modules/home.nix`** — OS-agnostic Home Manager module: pi config, opencode.json, binaries, the per-provider commands, and the remaining `agent.*` options. Works both under NixOS+HM and under the standalone `homeConfigurations.agent-runtime` (plain HM, no OS). Closes over `runtimeInputs` (this flake's own inputs, threaded by its `flake.nix`), which is why a host declares no agent inputs. It is a plain *path*, so a client that also imports it dedupes instead of colliding.
+- **`modules/nixos.nix`** — agenix secrets (`agent.agenixDir`/`agenixFiles`/`agenixOwner`), `/etc/claude-code/managed-settings.json`, `ANTHROPIC_BASE_URL`, and the host prerequisites (`programs.npm` + `npmrc` assertion, `programs.nix-ld`). It injects the home half itself via `home-manager.sharedModules` + `home-manager.extraSpecialArgs.runtimeInputs`, so a NixOS host writes no HM code. Rewrites the `tokenSource` of every covered provider to its decrypted path (`agent.resolvedProviders`).
+- **`flake.nix`** — also owns the `mcp <group|server>` command: it renders this flake's own MCP registry into a baked-in farm, so activating a server per project is a file read, not a `nix build`. A client can take it as `inputs.agent-runtime.packages.${system}.mcp`. Also exports `lib.data` (the registries) and `lib.agentSkills`.
+- **`lib/install.sh`** — `packages.install`: the no-argument container installer (bundle on PATH, config into `$HOME`, seed npm, report missing tokens), with store paths substituted at build time.
+- **`modules/skills.nix`** — the bundled skills (`data/skills.nix`), merged with `agent.skills.sources`. **The only** place that imports `agent-skills`' HM module. It also builds the per-source `skills-install-<source>` binaries and the `skills <source>` dispatcher into `agent.skillTools`, so the CLI ships with the bundle. Host modules set `agent.skills.sources` but must never re-import the module.
 - **`modules/container.nix`** — home dir + headless tweaks for the standalone config only.
-- **`common/hm/agent-bridge.nix`** (3 lines) — the only NixOS↔HM glue: `agent.providers = osConfig.agent.resolvedProviders`.
-- **`common/hm/agent-skills.nix`** — adds the host-only skills (`config/skills.nix`) to `programs.agent-skills.sources`. Both modules merge into one source set → one catalog → one bundle → one sync.
+- **`common/modules/agent.nix`** — the entire host side: `agent.agenixDir = ../secrets` (one directory entry covers the whole registry) plus `agent.skills.sources` from `config/skills.nix`. The runtime flake carries no secrets and no paths, which is what keeps it standalone-installable.
+- **`config/skills.nix`** — host-only skills as a function of `inputs`; applied as `import ../../config/skills.nix { inputs = inputs; }` (a bare `{ inputs }:` pattern applied to the whole flake-inputs attrset looks for a field literally named `inputs` and throws).
 - **`common/hm/cli.nix`** — no longer owns `$HOME/.npm/bin` or the bladebro/donsetch `npm i -g` hook: `agent.npmPrefix` in the runtime module feeds both, from the MCP registry itself.
-- **`common/modules/agent-secrets.nix`** — host side of the token rewrite: `agent.agenixFiles` maps each provider to its `.age` ciphertext. The runtime flake carries no secrets and no paths, which is what keeps it standalone-installable.
 
 ### Tokens
 
@@ -131,9 +135,9 @@ Two registries that merge into one catalog:
 | **runtime** (hosts + containers) | `data/skills.nix` (agent-runtime) | `archify`, `archify-review`, `i-have-adhd`, `qmd`, `ponytail` + 5 `ponytail-*` = **10** |
 | **host only** | `config/skills.nix` | `orca` (its `orca-*` siblings ship inside that one source) |
 
-Targets: `.agents/skills` (cross-vendor), `.claude/skills`, `.config/opencode/skills`. `pi` is still not a target — it has no dir wired up. Per-project installs via the `skills <source>` CLI stay host-side (it builds `#skills-install-<name>` from `config/skills.nix`) and cover `config/skills.nix` only.
+Targets: `.agents/skills` (cross-vendor), `.claude/skills`, `.config/opencode/skills`. `pi` is still not a target — it has no dir wired up. Per-project installs ship with the runtime: `modules/skills.nix` builds a `skills-install-<source>` binary per merged source plus a `skills <source>` dispatcher into `agent.skillTools`, which lands in `home.packages` (and in the container bundle). `/etc/nixos` no longer carries a `skills` wrapper.
 
-**Skill sources name paths, not inputs.** `data/skills.nix` takes `runtimeInputs` and stores absolute paths, so agent-skills never resolves against the consuming flake's inputs: `/etc/nixos` declares no `archify`/`qmd`/`ponytail`/`i-have-adhd` and writes no `follows` for them. The only agent input a host still declares is `agent-skills`, which `lib/skills-install.nix` uses as a library.
+**Skill sources name paths, not inputs.** `data/skills.nix` takes `runtimeInputs` and stores absolute paths, so agent-skills never resolves against the consuming flake's inputs: `/etc/nixos` declares no `archify`/`qmd`/`ponytail`/`i-have-adhd` and writes no `follows` for them. A host declares no agent inputs at all — the runtime resolves them from its own lock and injects its home half itself.
 
 ### Container usage
 
@@ -155,8 +159,8 @@ Known container gaps: `bladebro`/`donsetch` stay a runtime `npm i -g` (need manu
 - Hydenix HM config files (hyprland, remmina, wolf) live alongside their `.nix` module as data directories
 - LLM/agent changes go in `~/repos/agent-runtime`, never in `common/` — that repo has its own `flake.lock` and its own `nix flake check`
 - The agent runtime is an input, not a directory: `nix flake update agent-runtime` after changing its URL or rebasing it, and never re-create `agent-runtime/` here. Uncommitted changes there *are* evaluated (`git+file:`), so commit + push when you want the host reproducible
-- A host declares **no** agent inputs (llm-agents, claude-code, archify, qmd, ponytail, i-have-adhd): the runtime resolves those from its own lock. Only `agent-skills` is also a host input, because `lib/skills-install.nix` uses its lib.
-- `.age` secret paths in `common/secrets/secrets.nix` can reference files outside `common/secrets/` via relative paths (e.g., `../../hydenix/secrets/work-pc.age`). Provider tokens are the exception to "secrets stay in `common/secrets`": they are consumed by the runtime flake, so `common/modules/agent-secrets.nix` hands the paths over through `agent.agenixFiles` instead of the flake reaching back with `../../common/...`
+- A host declares **no** agent inputs whatsoever (not `agent-skills`, not llm-agents, claude-code, archify, qmd, ponytail, i-have-adhd): the runtime resolves all of them from its own lock, and `nixosModules.default` injects its home half via `home-manager.sharedModules` + `extraSpecialArgs.runtimeInputs`.
+- `.age` secret paths in `common/secrets/secrets.nix` can reference files outside `common/secrets/` via relative paths (e.g., `../../hydenix/secrets/work-pc.age`). Provider tokens are the exception to "secrets stay in `common/secrets`": they are consumed by the runtime flake, so `common/modules/agent.nix` hands the *directory* over through `agent.agenixDir` instead of the flake reaching back with `../../common/...`
 - The runtime flake declares no top-level `formatter` — nix evaluates a `formatter` output at system `«none»` here and `nix flake check` fails on it. Format with the devshell's `nixfmt` (the old `nixfmt-rfc-style` alias)
 - `inputs` is available in all NixOS and HM modules via `specialArgs`
 - Flakes require a git-tracked tree — `git add` new files before rebuild
@@ -181,6 +185,16 @@ Known container gaps: `bladebro`/`donsetch` stay a runtime `npm i -g` (need manu
   `pkgs.hyde` (the `hyde-modified` derivation) is realised — hydenix's HM interpolates its store
   path into `home.file.source`. Fix: `nix build --impure --no-link --expr
   '(builtins.getFlake "git+file:///etc/nixos").nixosConfigurations.hydenix.pkgs.hyde'`.
+- **hydenix does not build** (as of 2026-10-07): the `hyde` input builds
+  `Bibata-Modern-Ice` from a `fetchurl` against HyDE's *live*
+  `refs/heads/master` branch, where that archive has since been renamed away, so
+  the fetch 404s and the whole system build fails. `wsl` and `nixarchy` are
+  unaffected — they never build that package (nixarchy does not import the
+  hydenix input's modules, and `hydenix/modules/system/` never touches
+  `pkgs.hyde`). Upstream's pinned `hydenix` rev *is* the latest, so no
+  `nix flake update` fixes it. Re-enabling hydenix means either stubbing that one
+  package in a `nixpkgs.overlays`, or forking the input to pin the arc fetches to
+  a HyDE rev.
 - nixarchy sets `boot.kernelPackages = pkgs.linuxPackages_latest` at `mkDefault` (7.2.x), where
   hydenix pins `pkgs.linuxPackages` (6.18.x). The NVIDIA driver is built per kernel
   (`nvidia-kernel-modules-595.104.02-<kernel>`), so switching changes the kernel module that has to
