@@ -132,12 +132,12 @@ Two registries that merge into one catalog:
 
 | | file | skills |
 |---|---|---|
-| **runtime** (hosts + containers) | `data/skills.nix` (agent-runtime) | `archify`, `archify-review`, `i-have-adhd`, `qmd`, `ponytail` + 5 `ponytail-*` = **10** |
+| **runtime** (hosts + containers) | `data/skills.nix` (agent-runtime) | `archify`, `archify-review`, `i-have-adhd`, `ponytail` + 5 `ponytail-*` = **9** |
 | **host only** | `config/skills.nix` | `orca` (its `orca-*` siblings ship inside that one source) |
 
 Targets: `.agents/skills` (cross-vendor), `.claude/skills`, `.config/opencode/skills`. `pi` is still not a target — it has no dir wired up. Per-project installs ship with the runtime: `modules/skills.nix` builds a `skills-install-<source>` binary per merged source plus a `skills <source>` dispatcher into `agent.skillTools`, which lands in `home.packages` (and in the container bundle). `/etc/nixos` no longer carries a `skills` wrapper.
 
-**Skill sources name paths, not inputs.** `data/skills.nix` takes `runtimeInputs` and stores absolute paths, so agent-skills never resolves against the consuming flake's inputs: `/etc/nixos` declares no `archify`/`qmd`/`ponytail`/`i-have-adhd` and writes no `follows` for them. A host declares no agent inputs at all — the runtime resolves them from its own lock and injects its home half itself.
+**Skill sources name paths, not inputs.** `data/skills.nix` takes `runtimeInputs` and stores absolute paths, so agent-skills never resolves against the consuming flake's inputs: `/etc/nixos` declares no `archify`/`ponytail`/`i-have-adhd` and writes no `follows` for them. A host declares no agent inputs at all — the runtime resolves them from its own lock and injects its home half itself.
 
 ### Container usage
 
@@ -159,7 +159,7 @@ Known container gaps: `bladebro`/`donsetch` stay a runtime `npm i -g` (need manu
 - Hydenix HM config files (hyprland, remmina, wolf) live alongside their `.nix` module as data directories
 - LLM/agent changes go in `~/repos/agent-runtime`, never in `common/` — that repo has its own `flake.lock` and its own `nix flake check`
 - The agent runtime is an input, not a directory: `nix flake update agent-runtime` after changing its URL or rebasing it, and never re-create `agent-runtime/` here. Uncommitted changes there *are* evaluated (`git+file:`), so commit + push when you want the host reproducible
-- A host declares **no** agent inputs whatsoever (not `agent-skills`, not llm-agents, claude-code, archify, qmd, ponytail, i-have-adhd): the runtime resolves all of them from its own lock, and `nixosModules.default` injects its home half via `home-manager.sharedModules` + `extraSpecialArgs.runtimeInputs`.
+- A host declares **no** agent inputs whatsoever (not `agent-skills`, not llm-agents, claude-code, archify, ponytail, i-have-adhd): the runtime resolves all of them from its own lock, and `nixosModules.default` injects its home half via `home-manager.sharedModules` + `extraSpecialArgs.runtimeInputs`.
 - `.age` secret paths in `common/secrets/secrets.nix` can reference files outside `common/secrets/` via relative paths (e.g., `../../hydenix/secrets/work-pc.age`). Provider tokens are the exception to "secrets stay in `common/secrets`": they are consumed by the runtime flake, so `common/modules/agent.nix` hands the *directory* over through `agent.agenixDir` instead of the flake reaching back with `../../common/...`
 - The runtime flake declares no top-level `formatter` — nix evaluates a `formatter` output at system `«none»` here and `nix flake check` fails on it. Format with the devshell's `nixfmt` (the old `nixfmt-rfc-style` alias)
 - `inputs` is available in all NixOS and HM modules via `specialArgs`
