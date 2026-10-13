@@ -1,1 +1,7 @@
 .direnv/
+
+# agent-runtime per-project trees (created by `skills` / pi when run in this repo)
+.agents/
+.claude/
+.config/
+.pi/
