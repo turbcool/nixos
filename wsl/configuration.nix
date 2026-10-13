@@ -146,6 +146,10 @@ in
 
   time.timeZone = profile.timezone;
 
+  # journald had no cap anywhere in the config and had grown to 2.2G of
+  # archived logs. 200M is ~2 weeks at this log rate.
+  services.journald.settings.Journal.SystemMaxUse = "200M";
+
   environment.sessionVariables = {
     PROXY_URL = hostProxyUrl;
   };
@@ -167,6 +171,19 @@ in
   };
 
   nixpkgs.config.allowUnfree = true;
+
+  # NixOS pins nixpkgs in /etc/nix/registry.json to the nixpkgs *source* store
+  # path, so bare `nixpkgs#` reuses the system's nixpkgs. The module's own
+  # description warns this makes the system closure depend on the nixpkgs
+  # sources -- 481M of source tree for a convenience nothing here uses (every
+  # entry point is a flake with its own locked inputs). Turn it back on (any
+  # string/path) if `nix run nixpkgs#...` without a flake ref becomes a habit.
+  nixpkgs.flake.source = lib.mkForce null;
+
+  # WSL gets D3D12/DXCore from /usr/lib/wsl/lib (a 9p mount, outside the store),
+  # so nixpkgs' own graphics-drivers is dead weight: mesa + llvm + dri is a
+  # 1.05G closure on a machine with no GPU of its own.
+  hardware.graphics.enable = lib.mkForce false;
 
   age.identityPaths = [ "/home/${username}/.ssh/id_ed25519" ];
 
