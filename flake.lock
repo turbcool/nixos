@@ -39,11 +39,11 @@
         "ponytail": "ponytail"
       },
       "locked": {
-        "lastModified": 1791886254,
-        "narHash": "sha256-QXOitl/LWJWHex+RgEdda9la7VNJvmNnJIyqHkiQMWk=",
+        "lastModified": 1791888344,
+        "narHash": "sha256-2KtlmhjSeAbTcdWkb5PURb0cnYyforGHQlsOOfzX4Mg=",
         "ref": "refs/heads/main",
-        "rev": "4dd91317cb7e9827a7af6b24ca93fb1472680774",
-        "revCount": 20,
+        "rev": "db9e33720eebce800b093b82dfcc2541b76c2428",
+        "revCount": 21,
         "type": "git",
         "url": "file:/home/turb/repos/agent-runtime"
       },
