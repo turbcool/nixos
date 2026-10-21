@@ -1,4 +1,4 @@
-{ config, osConfig, ... }:
+{ config, osConfig, pkgs, ... }:
 
 let
   radicaleUrl = "https://cal.naidanov.ru";
@@ -8,6 +8,16 @@ in
 {
   programs.khal = {
     enable = true;
+    # ponytail: nixpkgs builds no man output for khal 0.14.1 (Sphinx emits HTML
+    # only), so its `man` output goes unproduced and the build fails. Drop it;
+    # remove this when nixpkgs stops requesting the man output.
+    package = pkgs.khal.overridePythonAttrs (_: {
+      outputs = [
+        "out"
+        "doc"
+      ];
+      outputsToInstall = [ "out" ];
+    });
     locale = {
       timeformat = "%H:%M";
     };
