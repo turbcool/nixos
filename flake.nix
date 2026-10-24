@@ -43,7 +43,15 @@
 
     # Omarchy 4.x vendored for NixOS. The `release` branch is a release branch,
     # not main: patch fixes arrive, nothing moves under you.
-    nixarchy.url = "github:olafkfreund/nixarchy/release";
+    #
+    # Its nixpkgs follows ours: one interpreter per language in the closure.
+    # Without this, nixarchy's plugin runtime deps come from its own pin
+    # (python 3.14.7) while the panels' `pkgs.python3` is the host's (3.14.8),
+    # and buildEnv refuses the HM profile over share/gdb/libpython.py.
+    nixarchy = {
+      url = "github:olafkfreund/nixarchy/release";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
 
     agenix = {
       url = "github:ryantm/agenix";
