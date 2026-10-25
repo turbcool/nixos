@@ -12,6 +12,7 @@
       powerManagement.enable = true;
       powerManagement.finegrained = false;
       open = false;
+      branch = "legacy_580"; # 1050 Ti (Pascal) is dropped by 590+
       nvidiaSettings = true;
     };
   };
