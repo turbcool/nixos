@@ -164,6 +164,7 @@ Known container gaps: `bladebro`/`donsetch` stay a runtime `npm i -g` (need manu
 - The runtime flake declares no top-level `formatter` — nix evaluates a `formatter` output at system `«none»` here and `nix flake check` fails on it. Format with the devshell's `nixfmt` (the old `nixfmt-rfc-style` alias)
 - `inputs` is available in all NixOS and HM modules via `specialArgs`
 - Flakes require a git-tracked tree — `git add` new files before rebuild
+- **Always commit and push** changes to this repo as part of the work — do not wait to be asked
 
 ## Gotchas
 
