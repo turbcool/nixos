@@ -189,6 +189,18 @@ in
 
   environment.systemPackages = with pkgs; [
     wslRefreshWindowsSshProxy
+
+    # Base tools the nixarchy desktop gets from omarchy and wsl does not have.
+    ripgrep
+    fd
+    unzip
+    lazygit
+    lazydocker
+    gh
+    glab
+    ffmpeg
+    gcc
+    yt-dlp
   ];
 
   users.users.${username} = {

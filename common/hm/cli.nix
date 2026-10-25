@@ -1,6 +1,4 @@
 {
-  lib,
-  pkgs,
   ...
 }:
 
@@ -9,8 +7,7 @@
 # agent-runtime/modules).
 {
   home = {
-    packages = [ pkgs.yt-dlp ];
-
+    # yt-dlp is nixarchy base (omarchy runtimeDeps); wsl declares it itself.
     # $HOME/.npm/bin (where programs.npm puts its global packages, and where the
     # runtime installs its npm MCP servers when missing) comes from the runtime's
     # `agent.npmPrefix` option (default $HOME/.npm). The runtime module also owns

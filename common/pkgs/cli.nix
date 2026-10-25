@@ -15,25 +15,16 @@ in
   };
 
   config = lib.mkIf cfg.enable {
-    environment.systemPackages =
-      with pkgs;
-      [
-        ripgrep
-        fd
-        gdu
-        yazi
-        wget
-        unzip
-        vim
-        lazygit
-        lazydocker
-        gh
-        glab
-        ffmpeg
-        repomix
-        sshpass
-        gnumake
-        openssl
-      ];
+    # ripgrep, fd, unzip, lazygit, lazydocker, ffmpeg, gh and glab are nixarchy
+    # base on the desktop; wsl declares its own copies.
+    environment.systemPackages = with pkgs; [
+      gdu
+      wget
+      vim
+      repomix
+      sshpass
+      gnumake
+      openssl
+    ];
   };
 }

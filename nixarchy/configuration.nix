@@ -42,6 +42,10 @@ in
     work.syncthing.enable = false;
   };
 
+  # nixarchy's base already ships python3 (omarchy runtimeDeps + default
+  # plugins); the shared module exists for wsl/hydenix.
+  local.pkgs.python.enable = false;
+
   i18n.defaultLocale = profile.locale;
 
   users.users.${username} = {
@@ -114,7 +118,6 @@ in
         programs = {
           # Required for app selection, theme state and the seeded config.
           nixarchy.enable = true;
-          mpv.enable = true;
           qutebrowser.enable = true;
         };
       };
