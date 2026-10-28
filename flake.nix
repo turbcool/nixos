@@ -128,6 +128,19 @@
             ./nixarchy/configuration.nix
           ];
         };
+
+        # nixarchy inside Hyper-V: same config plus nixarchy/vm.nix, which swaps
+        # the physical hardware out for a Generation 2 guest. Install from the
+        # NixOS ISO, see nixarchy/HYPERV.md.
+        nixarchy-vm = {
+          modules = commonModules ++ [
+            inputs.home-manager.nixosModules.home-manager
+            inputs.nixarchy.nixosModules.nixarchy
+            inputs.nixos-hardware.nixosModules.common-cpu-intel
+            ./nixarchy/configuration.nix
+            ./nixarchy/vm.nix
+          ];
+        };
       };
 
       playwright = import ./lib/devShells/playwright.nix { inherit pkgs inputs; };
