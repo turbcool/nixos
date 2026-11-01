@@ -15,10 +15,5 @@
       source = ./hyprland/kitty.conf;
       force = true;
     };
-    ".local/share/toggle-sidepad.sh" = {
-      source = ./hyprland/toggle-sidepad.sh;
-      executable = true;
-      force = true;
-    };
   };
 }

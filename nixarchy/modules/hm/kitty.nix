@@ -6,14 +6,8 @@
   # if you want the menu to open kitty.
   home.packages = [ pkgs.kitty ];
 
-  home.file = {
-    ".config/kitty/kitty.conf" = {
-      source = ./kitty/kitty.conf;
-      force = true;
-    };
-    ".local/share/toggle-sidepad.sh" = {
-      source = ../../../hydenix/modules/hm/hyprland/toggle-sidepad.sh;
-      executable = true;
-    };
+  home.file.".config/kitty/kitty.conf" = {
+    source = ./kitty/kitty.conf;
+    force = true;
   };
 }
