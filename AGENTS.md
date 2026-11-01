@@ -204,5 +204,15 @@ Known container gaps: `bladebro`/`donsetch` stay a runtime `npm i -g` (need manu
   default on both, with the NVIDIA userspace arriving via `graphics.extraPackages`. This is the
   one genuinely unproven path — prove it with `nixos-rebuild build --flake /etc/nixos#nixarchy`.
 - bladebro/donsetch are not packages — they're npm-installed into `$HOME/.npm` and need `programs.nix-ld` enabled (the NixOS stub loader rejects their prebuilt glibc binaries otherwise). Run `npm i -g bladebro donsetch` after a fresh install.
+- **Nixarchy keybinds die the moment a Cyrillic XKB group is active.** Hyprland matches binds by
+  *keysym*, and Omarchy binds numbers/arrows with `code:` (keycode) but letters by keysym — so a
+  Russian layout leaves `SUPER+1..0`, `SPACE`, `RETURN`, `ESCAPE`, arrows working while every
+  `SUPER+<letter>` silently falls through to the client. Nothing in this repo is involved:
+  `~/.config/hypr/{input.lua,bindings.lua}` are user-owned (`nixarchySeed` uses
+  `cp --update=none`, so a rebuild never overwrites them). Keep `input.lua` Latin-only
+  (`kb_layout = "us"`; Russian is typed through the fcitx5 that nixarchy's `modules/nixos.nix`
+  enables) and never reintroduce a `kb_file` whose group 1 is Cyrillic —
+  `~/.config/hypr/nixarchy-keymap.xkb.disabled` is the abandoned custom keymap that did exactly
+  that (it existed to put the group switch on both Alt+Shift and Ctrl+Shift).
 
 P.S. When user asks to install a NixOS package, use MCP Tool `nixos` to search and validate configuration options.
