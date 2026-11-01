@@ -13,5 +13,6 @@
     ../../../hydenix/modules/hm/wolf.nix
 
     ./kitty.nix
+    ./fcitx5.nix
   ];
 }

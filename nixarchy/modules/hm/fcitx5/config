@@ -1,0 +1,12 @@
+[Hotkey]
+ModifierOnlyKeyTimeout=-1
+
+[Hotkey/TriggerKeys]
+0=Control+space
+1=Zenkaku_Hankaku
+2=Hangul
+3=Shift+Alt_L
+4=Alt+Shift_L
+5=Shift+Alt_R
+6=Shift+Control_L
+7=Control+Shift_L
