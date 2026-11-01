@@ -214,5 +214,11 @@ Known container gaps: `bladebro`/`donsetch` stay a runtime `npm i -g` (need manu
   enables) and never reintroduce a `kb_file` whose group 1 is Cyrillic —
   `~/.config/hypr/nixarchy-keymap.xkb.disabled` is the abandoned custom keymap that did exactly
   that (it existed to put the group switch on both Alt+Shift and Ctrl+Shift).
+- **fcitx5 hotkey lists are numeric sub-sections.** `~/.config/fcitx5/config` is seeded by
+  `nixarchy/modules/hm/fcitx5.nix` (copy-if-absent; fcitx5 rewrites the file itself, so it cannot be
+  a `home.file` store symlink). `TriggerKeys=a,b,c` is read as a plain string, the `List|Key` parser
+  finds no items, and *every* trigger dies — including `Ctrl+Space`. Use
+  `[Hotkey/TriggerKeys]` + `0=…`. Note also that the **left Alt key arrives at fcitx5 as `Meta_L`**,
+  not `Alt_L`, so a left-Alt chord needs `Shift+Meta_L`; right Alt uses `Alt_R`.
 
 P.S. When user asks to install a NixOS package, use MCP Tool `nixos` to search and validate configuration options.

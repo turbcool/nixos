@@ -15,6 +15,9 @@
 #     ([Hotkey/TriggerKeys] 0=... 1=...). A comma-separated one-liner is read as
 #     a plain string, the List|Key parser finds no items, and the list is empty
 #     -- which silently disables Ctrl+Space too.
+#   * the left Alt key arrives at fcitx5 as Meta_L, not Alt_L, so a left-Alt
+#     chord needs Shift+Meta_L alongside Shift+Alt_L. Right Alt needs only the
+#     Alt_R form.
 #   * fcitx5 rewrites this file itself (auto-save and on exit), so it cannot be
 #     a read-only home.file symlink into the store. Seed a copy instead, and
 #     leave an existing file alone: the user's own edits win, same rule as
