@@ -46,6 +46,26 @@ git clone https://github.com/turbcool/agent-runtime /mnt/home/turb/repos/agent-r
 mkdir -p /home/turb && ln -s /mnt/home/turb/repos /home/turb/repos
 ```
 
+## 3b. Binary caches (otherwise the install compiles Hyprland)
+
+The ISO's `/etc/nix/nix.conf` only knows `cache.nixos.org`, and `nixos-install`
+uses the ISO's settings, not the target's. Without these two caches the whole
+Hyprland stack is built from source. As the ISO's root user:
+
+```bash
+cat >> /etc/nix/nix.conf <<'EOF'
+substituters = https://cache.nixos.org https://nixarchy.cachix.org https://hyprland.cachix.org
+trusted-public-keys = cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY= nixarchy.cachix.org-1:05JOuIlsQOWY2/5DQMq7JEA1hwlhgvmMWowMfka8mMM= hyprland.cachix.org-1:a7pgxzMz7+chwVL3/pzj6jIBMioiJM7ypFP8PwtkuGc=
+EOF
+systemctl restart nix-daemon    # the daemon only reads nix.conf at start
+```
+
+What is still local after that (no cache has it): `firefox` — Hydra lags the
+pinned nixpkgs commit by days — plus a handful of small Rust/Qt packages.
+Firefox needs RAM to compile: give the VM 16 GB, or wait until
+`nix path-info --store https://cache.nixos.org` resolves the firefox output
+from `nix build --dry-run`.
+
 ## 4. agenix identity
 
 `nixos-install` runs activation, which decrypts the `agent`, `glab` and `vm-ssh`

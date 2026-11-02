@@ -1,6 +1,9 @@
 { lib, ... }:
 
 {
+  # gtk2 is marked broken in the pinned nixpkgs; onlyoffice still needs it.
+  nixpkgs.config = lib.mkDefault { problems.handlers."gtk+".broken = "warn"; };
+
   nix.settings = {
     experimental-features = [ "nix-command" "flakes" ];
     # Tolerate slow/throttled binary-cache edges: raise the stall ceiling and
