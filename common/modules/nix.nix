@@ -6,13 +6,15 @@
 
   nix.settings = {
     experimental-features = [ "nix-command" "flakes" ];
-    # Tolerate slow/throttled binary-cache edges: raise the stall ceiling and
-    # retry harder so a transient blip doesn't fail a whole `nixos-rebuild`.
-    # (Throttled cachix transfers are handled separately via the nix-daemon
-    # proxy in wsl/configuration.nix; these values are the backstop.)
-    "connect-timeout" = 30;
+    # Tolerate slow/throttled binary-cache edges: abandon an unreachable cache
+    # sooner, retry harder, and never fail a whole `nixos-rebuild` over one --
+    # fall back to building locally. The cachix CDN is intermittently slow from
+    # this network; wsl additionally proxies the daemon (wsl/configuration.nix),
+    # these values are the backstop everywhere else.
+    "connect-timeout" = 15;
     "stalled-download-timeout" = 60;
-    "download-attempts" = 5;
+    "download-attempts" = 10;
+    fallback = true;
     substituters = [
       "https://cache.nixos.org"
       "https://claude-code.cachix.org"
